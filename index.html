@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reckoning Radar — Light vs Dark</title>
+<title>The Reckoning Radar — Epstein Files Intelligence</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://use.typekit.net/zzw7dfl.css">
 <style>
@@ -1269,20 +1269,319 @@ body::before {
   </aside>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 
+// ─── SUPABASE CONFIG ───────────────────────────────────────────────
+const SUPABASE_URL = 'https://gljuffkufkggynlaoyim.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdsanVmZmt1ZmtnZ3lubGFveWltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NDQxNzAsImV4cCI6MjA4NzUyMDE3MH0.TYRbhgiWOFp-Zc5LysfySLR8NeVQdZ9_zh6TpYyNQJE';
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  function toggleTheme() {
-    const html  = document.documentElement;
-    const label = document.getElementById('toggleLabel');
-    if (html.getAttribute('data-theme') === 'light') {
-      html.setAttribute('data-theme', 'dark');
-      label.textContent = 'DARK';
-    } else {
-      html.setAttribute('data-theme', 'light');
-      label.textContent = 'LIGHT';
-    }
+// ─── THEME TOGGLE ──────────────────────────────────────────────────
+function toggleTheme() {
+  const html  = document.documentElement;
+  const label = document.getElementById('toggleLabel');
+  if (html.getAttribute('data-theme') === 'light') {
+    html.setAttribute('data-theme', 'dark');
+    label.textContent = 'DARK';
+  } else {
+    html.setAttribute('data-theme', 'light');
+    label.textContent = 'LIGHT';
   }
+}
+
+// ─── SEARCH ────────────────────────────────────────────────────────
+const searchInput = document.querySelector('.search-bar');
+let searchTimeout;
+
+searchInput.addEventListener('input', (e) => {
+  clearTimeout(searchTimeout);
+  searchTimeout = setTimeout(() => {
+    const query = e.target.value.trim();
+    if (query.length > 2) searchPersons(query);
+  }, 400);
+});
+
+searchInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    clearTimeout(searchTimeout);
+    const query = e.target.value.trim();
+    if (query.length > 0) searchPersons(query);
+  }
+});
+
+document.querySelector('.btn-primary').addEventListener('click', () => {
+  const query = searchInput.value.trim();
+  if (query.length > 0) searchPersons(query);
+});
+
+// ─── PERSON SEARCH ─────────────────────────────────────────────────
+async function searchPersons(query) {
+  showLoading();
+  try {
+    const { data, error } = await db
+      .from('persons')
+      .select(`
+        id, full_name, confidence, category,
+        total_document_count, active_period_start, active_period_end,
+        power_public_profile, power_institutional,
+        power_network_centrality, power_corroboration,
+        upgrade_gap_note, redaction_status
+      `)
+      .ilike('full_name', `%${query}%`)
+      .eq('is_victim', false)
+      .eq('victim_protected', false)
+      .order('total_document_count', { ascending: false })
+      .limit(10);
+
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
+      showEmpty(query);
+    } else if (data.length === 1) {
+      loadPersonProfile(data[0]);
+    } else {
+      showSearchResults(data, query);
+    }
+  } catch (err) {
+    showError(err.message);
+  }
+}
+
+// ─── LOAD FULL PERSON PROFILE ──────────────────────────────────────
+async function loadPersonProfile(person) {
+  showLoading();
+  try {
+    // Load events for this person
+    const { data: eventPersons } = await db
+      .from('event_persons')
+      .select(`
+        events (
+          id, event_type, title, event_date, date_precision,
+          confidence, upgrade_gap_note, notes,
+          locations ( name, location_type )
+        )
+      `)
+      .eq('person_id', person.id)
+      .order('events(event_date)', { ascending: false })
+      .limit(20);
+
+    // Load co-present persons
+    const { data: relationships } = await db
+      .from('person_relationships')
+      .select(`
+        evidence_strength, co_occurrence_count, relationship_type,
+        persons_b:person_b_id ( full_name, category, total_document_count )
+      `)
+      .eq('person_a_id', person.id)
+      .order('co_occurrence_count', { ascending: false })
+      .limit(5);
+
+    // Load locations
+    const { data: personLocations } = await db
+      .from('person_locations')
+      .select(`
+        visit_count,
+        locations ( name, location_type )
+      `)
+      .eq('person_id', person.id)
+      .order('visit_count', { ascending: false })
+      .limit(6);
+
+    // Load source documents
+    const { data: personDocs } = await db
+      .from('person_documents')
+      .select(`
+        confidence,
+        documents ( doc_reference_id, document_type, document_date )
+      `)
+      .eq('person_id', person.id)
+      .order('documents(document_date)', { ascending: false })
+      .limit(6);
+
+    renderProfile(person, eventPersons, relationships, personLocations, personDocs);
+
+  } catch (err) {
+    showError(err.message);
+  }
+}
+
+// ─── RENDER PROFILE ────────────────────────────────────────────────
+function renderProfile(person, eventPersons, relationships, locations, docs) {
+  const main = document.querySelector('.main');
+  const events = eventPersons?.map(ep => ep.events).filter(Boolean) || [];
+
+  const activeYears = person.active_period_start && person.active_period_end
+    ? `${person.active_period_start}–${person.active_period_end}`
+    : 'Unknown';
+
+  const confClass = person.confidence || 'unverified';
+  const confLabel = confClass.charAt(0).toUpperCase() + confClass.slice(1);
+
+  main.innerHTML = `
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;">
+      <div>
+        <div class="subject-name">${person.full_name}</div>
+        <div class="subject-meta">
+          <span class="meta-pill accent">${person.total_document_count || 0} Documents</span>
+          ${person.category ? `<span class="meta-pill">${capitalize(person.category)}</span>` : ''}
+          <span class="meta-pill">Active ${activeYears}</span>
+          ${person.redaction_status !== 'none' ? `<span class="meta-pill">⚠ Partial Redaction</span>` : ''}
+        </div>
+      </div>
+      <div style="display:flex;gap:0.6rem;align-items:center;">
+        <span class="conf-badge ${confClass}">● ${confLabel}</span>
+        <button class="btn-primary" style="font-size:0.75rem;padding:0.45rem 1rem;">Export Chain</button>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-value">${person.total_document_count || 0}</div><div class="stat-label">Total Documents</div></div>
+      <div class="stat-card"><div class="stat-value">${locations?.length || 0}</div><div class="stat-label">Locations</div></div>
+      <div class="stat-card"><div class="stat-value">${relationships?.length || 0}</div><div class="stat-label">Co-Present Persons</div></div>
+      <div class="stat-card"><div class="stat-value">${calcYearsActive(person)}</div><div class="stat-label">Years Active in Files</div></div>
+    </div>
+
+    <div>
+      <div class="section-title">Event Timeline — Cross-Referenced</div>
+      <div class="timeline">
+        ${events.length > 0 ? events.map(event => renderEvent(event)).join('') : renderNoEvents()}
+      </div>
+    </div>
+
+    ${person.upgrade_gap_note ? `
+    <div class="gap-notice">
+      <strong>⚠ Evidence Gap — Action Required</strong>
+      ${person.upgrade_gap_note}
+    </div>` : ''}
+  `;
+
+  // Update right panel
+  updateRightPanel(person, relationships, locations, docs);
+}
+
+function renderEvent(event) {
+  if (!event) return '';
+  const date = event.event_date ? formatDate(event.event_date) : 'Unknown';
+  const conf = event.confidence || 'unverified';
+  const location = event.locations?.name || '';
+
+  return `
+    <div class="tl-item">
+      <div class="tl-date">${date}</div>
+      <div class="tl-node" style="background:var(--${conf});"></div>
+      <div class="tl-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.35rem;">
+          <div class="tl-title">${event.title || capitalize(event.event_type)}</div>
+          <span class="conf-badge ${conf}" style="font-size:0.58rem;padding:0.2rem 0.5rem;">${capitalize(conf)}</span>
+        </div>
+        ${event.notes ? `<div class="tl-detail">${event.notes}</div>` : ''}
+        <div class="tl-tags">
+          ${location ? `<span class="tl-tag location">${location}</span>` : ''}
+          ${event.upgrade_gap_note ? `<span class="tl-tag doc">⚠ Gap</span>` : ''}
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderNoEvents() {
+  return `<div style="padding:2rem;text-align:center;color:var(--text-tertiary);font-family:'DM Mono',monospace;font-size:0.75rem;letter-spacing:0.1em;">NO EVENTS INDEXED YET — PIPELINE PROCESSING</div>`;
+}
+
+function updateRightPanel(person, relationships, locations, docs) {
+  // Power Index
+  document.querySelectorAll('.power-fill')[0].style.width = (person.power_public_profile || 0) + '%';
+  document.querySelectorAll('.power-fill')[1].style.width = (person.power_institutional || 0) + '%';
+  document.querySelectorAll('.power-fill')[2].style.width = (person.power_network_centrality || 0) + '%';
+  document.querySelectorAll('.power-fill')[3].style.width = (person.power_corroboration || 0) + '%';
+  document.querySelectorAll('.power-val')[0].textContent = person.power_public_profile || 0;
+  document.querySelectorAll('.power-val')[1].textContent = person.power_institutional || 0;
+  document.querySelectorAll('.power-val')[2].textContent = person.power_network_centrality || 0;
+  document.querySelectorAll('.power-val')[3].textContent = person.power_corroboration || 0;
+
+  // Associates
+  const assocContainer = document.querySelector('.panel-card:nth-child(2)');
+  if (assocContainer && relationships?.length > 0) {
+    const items = relationships.map(rel => {
+      const name = rel.persons_b?.full_name || 'Unknown';
+      const initials = name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase();
+      const pct = Math.min(100, (rel.co_occurrence_count || 1) * 10);
+      return `
+        <div class="assoc-item">
+          <div class="assoc-avatar">${initials}</div>
+          <div class="assoc-info">
+            <div class="assoc-name">${name}</div>
+            <div class="assoc-role">${capitalize(rel.relationship_type || 'unknown')} · ${capitalize(rel.persons_b?.category || '')}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.2rem;">
+            <div class="strength-bar"><div class="strength-fill" style="width:${pct}%"></div></div>
+            <span class="strength-val">${rel.co_occurrence_count || 1} docs</span>
+          </div>
+        </div>`;
+    }).join('');
+    assocContainer.innerHTML = `<div class="panel-card-title">Co-Present Persons — Top Connections</div>${items}`;
+  }
+}
+
+// ─── SEARCH RESULTS LIST ───────────────────────────────────────────
+function showSearchResults(persons, query) {
+  const main = document.querySelector('.main');
+  main.innerHTML = `
+    <div>
+      <div class="section-title">${persons.length} Results for "${query}"</div>
+      ${persons.map(p => `
+        <div class="tl-card" style="margin-bottom:0.75rem;cursor:pointer;" onclick="loadPersonProfile(${JSON.stringify(p).replace(/"/g, '&quot;')})">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div class="tl-title">${p.full_name}</div>
+              <div class="tl-detail">${p.category ? capitalize(p.category) : 'Unknown'} · ${p.total_document_count || 0} documents</div>
+            </div>
+            <span class="conf-badge ${p.confidence || 'unverified'}">${capitalize(p.confidence || 'unverified')}</span>
+          </div>
+        </div>`).join('')}
+    </div>`;
+}
+
+// ─── STATES ────────────────────────────────────────────────────────
+function showLoading() {
+  document.querySelector('.main').innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:center;height:300px;color:var(--text-tertiary);font-family:'DM Mono',monospace;font-size:0.75rem;letter-spacing:0.15em;">
+      QUERYING DATABASE...
+    </div>`;
+}
+
+function showEmpty(query) {
+  document.querySelector('.main').innerHTML = `
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:300px;gap:1rem;">
+      <div style="font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--text-tertiary);letter-spacing:0.15em;">NO RESULTS FOR "${query.toUpperCase()}"</div>
+      <div style="font-size:0.85rem;color:var(--text-secondary);">This person may not yet be indexed. Pipeline is processing 3.5M+ documents.</div>
+    </div>`;
+}
+
+function showError(msg) {
+  document.querySelector('.main').innerHTML = `
+    <div style="padding:2rem;color:var(--unverified);font-family:'DM Mono',monospace;font-size:0.75rem;">
+      ERROR: ${msg}
+    </div>`;
+}
+
+// ─── HELPERS ───────────────────────────────────────────────────────
+function capitalize(str) {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1).replace(/_/g, ' ');
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return 'Unknown';
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function calcYearsActive(person) {
+  if (!person.active_period_start || !person.active_period_end) return '—';
+  return person.active_period_end - person.active_period_start;
+}
+
 </script>
 
 </body>
