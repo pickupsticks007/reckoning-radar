@@ -359,9 +359,81 @@ body {
   pointer-events: none;
 }
 
+/* hamburger */
+.mobile-nav-btn {
+  display: none;
+  background: none;
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  color: var(--text-tertiary);
+  font-size: 1rem;
+  width: 32px; height: 32px;
+  cursor: pointer;
+  align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.mobile-nav-drawer {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+}
+.mobile-nav-drawer.open { display: block; }
+.drawer-overlay {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.5);
+}
+.drawer-panel {
+  position: absolute;
+  top: 0; right: 0;
+  width: 220px; height: 100%;
+  background: var(--surface);
+  border-left: 1px solid var(--border-strong);
+  padding: 1.25rem 1rem;
+  display: flex; flex-direction: column; gap: 0;
+}
+.drawer-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 1.5rem;
+}
+.drawer-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+.drawer-close-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--text-tertiary); font-size: 1rem; line-height: 1;
+}
+.drawer-nav-link {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600; font-size: 0.78rem;
+  letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 0.75rem 0.5rem;
+  border-bottom: 1px solid var(--border);
+  display: block;
+  transition: color 0.15s;
+}
+.drawer-nav-link:hover, .drawer-nav-link.active { color: var(--text-primary); }
+.drawer-theme-btn {
+  margin-top: 1.5rem;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600; font-size: 0.72rem; letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: none; border: 1px solid var(--border-strong);
+  border-radius: 4px; padding: 0.5rem 1rem;
+  color: var(--text-tertiary); cursor: pointer;
+  transition: all 0.15s; text-align: left;
+}
+
 @media (max-width: 600px) {
   .controls { display: none; }
   .profile-panel { width: 100%; }
+  .topbar-right { display: none; }
+  .mobile-nav-btn { display: flex; }
+  .page-title { display: none; }
 }
 </style>
 </head>
@@ -373,6 +445,7 @@ body {
     <span class="logo-main">Reckoning Radar</span>
   </div></a>
   <span class="page-title">Network Graph</span>
+  <button class="mobile-nav-btn" onclick="openMobileNav()" aria-label="Menu">☰</button>
   <div class="topbar-right">
     <a href="index.html" class="back-btn">Profiles</a>
     <a href="graph.html" class="back-btn" style="color:var(--text-primary);border-color:var(--border-strong);">Network</a>
@@ -1000,6 +1073,31 @@ window.addEventListener('resize', () => {
     }
   }, 300);
 });
+</script>
+
+<!-- MOBILE NAV DRAWER -->
+<div class="mobile-nav-drawer" id="mobileNavDrawer">
+  <div class="drawer-overlay" onclick="closeMobileNav()"></div>
+  <div class="drawer-panel">
+    <div class="drawer-header">
+      <span class="drawer-title">Navigate</span>
+      <button class="drawer-close-btn" onclick="closeMobileNav()">✕</button>
+    </div>
+    <a href="index.html" class="drawer-nav-link">Profiles</a>
+    <a href="graph.html" class="drawer-nav-link active">Network</a>
+    <a href="redacted.html" class="drawer-nav-link">Unidentified</a>
+    <a href="connections.html" class="drawer-nav-link">Connections</a>
+    <button class="drawer-theme-btn" onclick="toggleTheme(); closeMobileNav();" id="drawerThemeBtn">Toggle Theme</button>
+  </div>
+</div>
+
+<script>
+function openMobileNav() {
+  document.getElementById('mobileNavDrawer').classList.add('open');
+}
+function closeMobileNav() {
+  document.getElementById('mobileNavDrawer').classList.remove('open');
+}
 </script>
 </body>
 </html>
