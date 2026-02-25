@@ -431,15 +431,15 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const CAT_COLORS = {
-  finance:      '#C4813A',
-  politics:     '#4A7FC4',
-  technology:   '#5AB45A',
-  legal:        '#9B59B6',
-  academia:     '#E67E22',
-  entertainment:'#E84393',
-  royalty:      '#C4A030',
-  media:        '#1ABC9C',
-  other:        '#888888'
+  finance:      '#2E6F40',
+  politics:     '#FF2C2C',
+  technology:   '#000080',
+  legal:        '#FFEF00',
+  academia:     '#2B1700',
+  entertainment:'#FF5C00',
+  royalty:      '#FFC8D3',
+  media:        '#00B9B3',
+  other:        '#FFA21F'
 };
 
 const REL_WEIGHTS = {
@@ -567,12 +567,22 @@ async function loadData() {
 
 function buildLegend() {
   const leg = document.getElementById('legend');
-  leg.innerHTML = Object.entries(CAT_COLORS).map(([cat, color]) => `
+  // Colors that need a border to be visible on light bg
+  const darkColors = new Set(['#2B1700', '#253D2C', '#000080']);
+  leg.innerHTML = Object.entries(CAT_COLORS).map(([cat, color]) => {
+    const needsBorder = darkColors.has(color);
+    const isYellow = color === '#FFEF00';
+    const dotStyle = needsBorder
+      ? `background:${color};border:1.5px solid var(--border-strong);`
+      : isYellow
+        ? `background:${color};border:1.5px solid rgba(0,0,0,0.2);`
+        : `background:${color};`;
+    return `
     <div class="legend-item" id="leg-${cat}" onclick="highlightCategory('${cat}')">
-      <div class="legend-dot" style="background:${color}"></div>
+      <div class="legend-dot" style="${dotStyle}"></div>
       ${cap(cat)}
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 }
 
 function updateStats(nodes, edges) {
@@ -667,10 +677,17 @@ function buildGraph(nodes, edges) {
   // Node circles
   node.append('circle')
     .attr('r', d => getR(d))
-    .attr('fill', d => CAT_COLORS[d.category] || '#888')
-    .attr('fill-opacity', 0.85)
-    .attr('stroke', d => d.relationship_to_epstein === 'direct_contact' ? '#dc2626' : 'white')
-    .attr('stroke-width', d => d.relationship_to_epstein === 'direct_contact' ? 2.5 : 1)
+    .attr('fill', d => CAT_COLORS[d.category] || '#FFA21F')
+    .attr('fill-opacity', 0.92)
+    .attr('stroke', d => {
+      if (d.relationship_to_epstein === 'direct_contact') return '#dc2626';
+      // Dark nodes get light stroke, yellow gets dark stroke
+      const darkNodes = ['academia','technology'];
+      if (darkNodes.includes(d.category)) return 'rgba(255,255,255,0.5)';
+      if (d.category === 'legal') return 'rgba(0,0,0,0.3)';
+      return 'white';
+    })
+    .attr('stroke-width', d => d.relationship_to_epstein === 'direct_contact' ? 2.5 : 1.5)
     .style('cursor', 'pointer')
     .on('mouseover', showTooltip)
     .on('mousemove', moveTooltip)
