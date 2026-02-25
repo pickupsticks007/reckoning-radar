@@ -595,9 +595,13 @@ function updateStats(nodes, edges) {
 
 function buildGraph(nodes, edges) {
   const el = document.getElementById('graph-svg');
-  const W = el.clientWidth;
-  const H = el.clientHeight;
+  const rect = el.getBoundingClientRect();
+  const W = rect.width || el.parentElement.clientWidth || window.innerWidth - 220;
+  const H = rect.height || el.parentElement.clientHeight || window.innerHeight - 52;
+  console.log('Graph dimensions:', W, H, 'Nodes:', nodes.length, 'Edges:', edges.length);
 
+  // Set explicit SVG dimensions as attributes (D3 needs these)
+  d3.select('#graph-svg').attr('width', W).attr('height', H);
   svg = d3.select('#graph-svg');
   svg.selectAll('*').remove();
 
@@ -962,14 +966,40 @@ function checkSearchParam() {
 
 async function init() {
   buildLegend();
-  const { nodes, edges } = await loadData();
-  document.getElementById('loading').style.display = 'none';
-  updateStats(nodes, edges);
-  buildGraph(nodes, edges);
-  checkSearchParam();
+  try {
+    const { nodes, edges } = await loadData();
+    if (!nodes || nodes.length === 0) {
+      document.getElementById('loading').innerHTML = '<div class="loading-text">NO DATA RETURNED</div><div class="loading-sub">Check Supabase connection</div>';
+      return;
+    }
+    // Wait for browser to fully paint layout before measuring SVG dimensions
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        document.getElementById('loading').style.display = 'none';
+        updateStats(nodes, edges);
+        buildGraph(nodes, edges);
+        checkSearchParam();
+      }, 100);
+    });
+  } catch (err) {
+    document.getElementById('loading').innerHTML = '<div class="loading-text">ERROR</div><div class="loading-sub">' + err.message + '</div>';
+    console.error('Graph init error:', err);
+  }
 }
 
 init();
+
+// Redraw on resize
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    if (allNodes.length > 0) {
+      if (simulation) simulation.stop();
+      buildGraph(allNodes, allEdges);
+    }
+  }, 300);
+});
 </script>
 </body>
 </html>
