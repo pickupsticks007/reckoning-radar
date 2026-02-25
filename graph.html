@@ -80,7 +80,8 @@ body {
   gap: 1rem;
 }
 .back-btn {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
   font-size: 0.65rem;
   letter-spacing: 0.08em;
   color: var(--text-tertiary);
@@ -367,13 +368,16 @@ body {
 <body>
 
 <div class="topbar">
-  <div class="logo-group">
+  <a href="index.html" style="text-decoration:none;color:inherit;"><div class="logo-group">
     <span class="logo-the">THE</span>
     <span class="logo-main">Reckoning Radar</span>
-  </div>
+  </div></a>
   <span class="page-title">Network Graph</span>
   <div class="topbar-right">
-    <a href="index.html" class="back-btn">← BACK</a>
+    <a href="index.html" class="back-btn">Profiles</a>
+    <a href="graph.html" class="back-btn" style="color:var(--text-primary);border-color:var(--border-strong);">Network</a>
+    <a href="redacted.html" class="back-btn">Unidentified</a>
+    <a href="connections.html" class="back-btn">Connections</a>
     <button class="theme-toggle" onclick="toggleTheme()">DARK</button>
   </div>
 </div>
