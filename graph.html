@@ -467,23 +467,19 @@ function cap(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
 
 async function loadData() {
   // 1. Get all persons
-  const { data: persons } = await db
+  const personsRes = await db
     .from('persons')
     .select('id, full_name, category, relationship_to_epstein, power_public_profile, confidence, current_status, total_document_count, public_title, notes')
     .eq('is_victim', false)
     .order('total_document_count', { ascending: false });
+  const persons = personsRes.data || [];
 
-  // 2. Get co-flight pairs
-  const { data: coFlights } = await db.rpc
-    ? null
-    : null;
-
-  // We'll do the co-flight query via SQL through the JS client
-  // Get all identified flight passengers
-  const { data: fps } = await db
+  // 2. Get all identified flight passengers
+  const fpsRes = await db
     .from('flight_passengers')
     .select('flight_id, person_id')
     .eq('is_identified', true);
+  const fps = fpsRes.data || [];
 
   // Build co-flight edges in JS
   const flightMap = {};
