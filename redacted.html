@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unidentified Passengers — Reckoning Radar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://use.typekit.net/ycq7lwb.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+  :root {
+    --bg:           #F7F4EF;
+    --bg-secondary: #EDE9E1;
+    --bg-card:      #FAFAF7;
+    --border:       rgba(0,0,0,0.07);
+    --border-mid:   rgba(0,0,0,0.12);
+    --border-strong:rgba(0,0,0,0.18);
+    --text-primary: #0D0D0D;
+    --text-secondary:#4A4A4A;
+    --text-tertiary: #888888;
+    --accent:       #1A1A1A;
+    --redact-color: #1A1A1A;
+    --redact-glow:  rgba(26,26,26,0.12);
+    --header-bg:    #0D0D0D;
+    --header-text:  #F7F4EF;
+    --stamp-color:  rgba(180,40,40,0.18);
+    --stamp-border: rgba(180,40,40,0.55);
+  }
+
+  [data-theme="dark"] {
+    --bg:           #111111;
+    --bg-secondary: #0A0A0A;
+    --bg-card:      #161616;
+    --border:       rgba(255,255,255,0.07);
+    --border-mid:   rgba(255,255,255,0.11);
+    --border-strong:rgba(255,255,255,0.18);
+    --text-primary: #F0EDE8;
+    --text-secondary:#9A9590;
+    --text-tertiary: #555550;
+    --accent:       #FFED29;
+    --redact-color: #F0EDE8;
+    --redact-glow:  rgba(240,237,232,0.08);
+    --header-bg:    #0A0A0A;
+    --header-text:  #F0EDE8;
+    --stamp-color:  rgba(220,60,60,0.12);
+    --stamp-border: rgba(220,80,80,0.45);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    transition: background 0.3s, color 0.3s;
+  }
+
+  /* ── NAV ── */
+  .site-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    height: 52px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border-mid);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-brand {
+    font-family: 'neue-haas-grotesk-display', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+  .nav-link {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    text-decoration: none;
+    padding: 0.3rem 0.7rem;
+    border-radius: 3px;
+    transition: color 0.15s, background 0.15s;
+  }
+  .nav-link:hover { color: var(--text-primary); background: var(--border); }
+  .nav-link.active { color: var(--text-primary); }
+  .theme-toggle {
+    background: none;
+    border: 1px solid var(--border-mid);
+    color: var(--text-tertiary);
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.75rem;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    margin-left: 0.5rem;
+  }
+  .theme-toggle:hover { color: var(--text-primary); border-color: var(--border-strong); }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    background: var(--header-bg);
+    color: var(--header-text);
+    padding: 4rem 2rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .page-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 39px,
+      rgba(255,255,255,0.025) 39px,
+      rgba(255,255,255,0.025) 40px
+    );
+    pointer-events: none;
+  }
+  .header-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .header-classification {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .header-classification::before,
+  .header-classification::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.1);
+  }
+  .header-title {
+    font-family: 'neue-haas-grotesk-display', sans-serif;
+    font-weight: 500;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+    color: #F7F4EF;
+  }
+  .header-title em {
+    font-style: normal;
+    color: rgba(247,244,239,0.35);
+  }
+  .header-desc {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: rgba(247,244,239,0.6);
+    max-width: 580px;
+    margin-bottom: 2.5rem;
+  }
+  .header-stats {
+    display: flex;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+  }
+  .stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  .stat-num {
+    font-family: 'neue-haas-grotesk-display', sans-serif;
+    font-size: 2rem;
+    font-weight: 600;
+    color: #F7F4EF;
+    line-height: 1;
+  }
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(247,244,239,0.35);
+  }
+  .stat-divider {
+    width: 1px;
+    background: rgba(255,255,255,0.1);
+    align-self: stretch;
+  }
+
+  /* ── METHODOLOGY BAND ── */
+  .methodology {
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-mid);
+    padding: 1.2rem 2rem;
+  }
+  .methodology-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .method-icon {
+    font-size: 0.8rem;
+    color: var(--text-tertiary);
+    margin-top: 0.15rem;
+    flex-shrink: 0;
+  }
+  .method-text {
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+  .method-text strong { color: var(--text-primary); font-weight: 600; }
+
+  /* ── MAIN CONTENT ── */
+  .main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 3rem 2rem 5rem;
+  }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border-mid);
+  }
+
+  /* ── FEATURED FLIGHT (Clinton) ── */
+  .featured-flight {
+    position: relative;
+    background: var(--bg-card);
+    border: 1px solid var(--border-mid);
+    border-radius: 4px;
+    padding: 2.5rem;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+  }
+  .featured-flight::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--text-primary);
+  }
+  .featured-stamp {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.75rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--stamp-border);
+    border: 1.5px solid var(--stamp-border);
+    padding: 0.25rem 0.6rem;
+    border-radius: 2px;
+    background: var(--stamp-color);
+    transform: rotate(1.5deg);
+    white-space: nowrap;
+  }
+
+  /* ── STANDARD FLIGHT CARD ── */
+  .flight-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.75rem 2rem;
+    margin-bottom: 0.75rem;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+  .flight-card:hover {
+    border-color: var(--border-strong);
+  }
+
+  /* ── FLIGHT METADATA ── */
+  .flight-meta {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .flight-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    letter-spacing: 0.05em;
+  }
+  .flight-route {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+  .route-arrow {
+    color: var(--text-tertiary);
+    font-size: 0.7rem;
+  }
+  .flight-route-name {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    font-family: 'Source Sans 3', sans-serif;
+  }
+  .unknown-count-pill {
+    margin-left: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    border: 1px solid var(--border-strong);
+    padding: 0.2rem 0.55rem;
+    border-radius: 2px;
+    white-space: nowrap;
+    background: var(--bg-secondary);
+  }
+
+  /* ── PASSENGER MANIFEST ── */
+  .manifest-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 0.75rem;
+  }
+  .passenger-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .passenger-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.88rem;
+  }
+  .passenger-dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--border-strong);
+    flex-shrink: 0;
+  }
+  .passenger-name {
+    color: var(--text-primary);
+    font-weight: 400;
+  }
+  .passenger-name a {
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid var(--border-mid);
+    transition: border-color 0.15s;
+  }
+  .passenger-name a:hover {
+    border-bottom-color: var(--text-primary);
+  }
+  .passenger-role {
+    font-size: 0.76rem;
+    color: var(--text-tertiary);
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.03em;
+  }
+
+  /* ── THE REDACTED ENTRY ── */
+  .passenger-row.redacted .passenger-dot {
+    background: var(--redact-color);
+  }
+  .redacted-bar {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+  }
+  .redacted-label {
+    display: inline-block;
+    background: var(--redact-color);
+    color: var(--bg);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    padding: 0.18rem 0.65rem;
+    border-radius: 2px;
+    opacity: 0.85;
+    user-select: none;
+  }
+  .redacted-count {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--text-tertiary);
+    letter-spacing: 0.05em;
+  }
+
+  /* Subtle shimmer on hover */
+  .flight-card:hover .redacted-label,
+  .featured-flight:hover .redacted-label {
+    animation: shimmer 1.8s ease infinite;
+  }
+  @keyframes shimmer {
+    0%, 100% { opacity: 0.85; }
+    50% { opacity: 0.55; }
+  }
+
+  /* ── MANIFEST DIVIDER ── */
+  .manifest-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 1rem 0;
+  }
+
+  /* ── CONTEXT NOTE ── */
+  .context-note {
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    font-style: italic;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+    margin-top: 1rem;
+  }
+
+  /* ── SUMMARY TABLE ── */
+  .summary-section {
+    margin-top: 3.5rem;
+  }
+  .summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border-mid);
+    border: 1px solid var(--border-mid);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 1.5rem;
+  }
+  .summary-cell {
+    background: var(--bg-card);
+    padding: 1.25rem 1.5rem;
+  }
+  .summary-cell-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    margin-bottom: 0.5rem;
+  }
+  .summary-cell-value {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    line-height: 1.5;
+  }
+  .summary-cell-value strong {
+    font-weight: 600;
+  }
+
+  /* ── PATTERN INSIGHT ── */
+  .pattern-block {
+    margin-top: 3.5rem;
+    padding: 2rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-mid);
+    border-radius: 4px;
+  }
+  .pattern-title {
+    font-family: 'neue-haas-grotesk-display', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    letter-spacing: -0.01em;
+  }
+  .pattern-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+  .pattern-item {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: var(--text-secondary);
+  }
+  .pattern-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-tertiary);
+    flex-shrink: 0;
+    padding-top: 0.15rem;
+    min-width: 1.5rem;
+  }
+  .pattern-item strong { color: var(--text-primary); font-weight: 600; }
+
+  /* ── FOOTER ── */
+  .page-footer {
+    border-top: 1px solid var(--border-mid);
+    padding: 1.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .footer-note {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    color: var(--text-tertiary);
+  }
+  .footer-link {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-tertiary);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border-mid);
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .footer-link:hover { color: var(--text-primary); border-color: var(--text-primary); }
+
+  /* ── LOADING ── */
+  .loading-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-tertiary);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── UTILITY ── */
+  .highlight { color: var(--text-primary); font-weight: 600; }
+
+  @media (max-width: 640px) {
+    .page-header { padding: 2.5rem 1.25rem 2rem; }
+    .main { padding: 2rem 1.25rem 4rem; }
+    .header-stats { gap: 1.5rem; }
+    .stat-divider { display: none; }
+    .flight-card, .featured-flight { padding: 1.25rem; }
+    .summary-grid { grid-template-columns: 1fr; }
+    .nav-links { gap: 0; }
+    .nav-link { padding: 0.3rem 0.4rem; font-size: 0.65rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="site-nav">
+  <a href="index.html" class="nav-brand">Reckoning Radar</a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Profiles</a>
+    <a href="graph.html" class="nav-link">Network</a>
+    <a href="redacted.html" class="nav-link active">Unidentified</a>
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn" title="Toggle theme">◐</button>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<header class="page-header">
+  <div class="header-inner">
+    <div class="header-classification">pilot logbook analysis · 1997–2005</div>
+    <h1 class="header-title">
+      The Unnamed<br>
+      <em>Passengers</em>
+    </h1>
+    <p class="header-desc">
+      Across the documented flight logs, a recurring notation appears alongside named passengers: <strong style="color:rgba(247,244,239,0.85)">"1 FEMALE"</strong>, <strong style="color:rgba(247,244,239,0.85)">"2 FEMALES"</strong>, <strong style="color:rgba(247,244,239,0.85)">"3 FEMALES"</strong>. These individuals were never identified by name in the official records.
+    </p>
+    <div class="header-stats" id="headerStats">
+      <div class="stat-item">
+        <span class="stat-num" id="statFlights">—</span>
+        <span class="stat-label">Flights with unnamed passengers</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-num" id="statPersons">—</span>
+        <span class="stat-label">Unidentified individuals</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-num" id="statYears">8</span>
+        <span class="stat-label">Years of documented records</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- METHODOLOGY -->
+<div class="methodology">
+  <div class="methodology-inner">
+    <span class="method-icon">◎</span>
+    <p class="method-text">
+      <strong>Source:</strong> Handwritten pilot logbooks entered into evidence at the U.S. v. Maxwell trial and released via DOJ court exhibits. When pilots did not record a passenger's name, they logged generic descriptors. These entries are reproduced here exactly as written. The identity of these passengers remains unknown in public record.
+    </p>
+  </div>
+</div>
+
+<!-- MAIN -->
+<main class="main">
+  <div id="flightContainer">
+    <div class="loading-state">Loading manifest records…</div>
+  </div>
+
+  <!-- PATTERN ANALYSIS -->
+  <div class="pattern-block" id="patternBlock" style="display:none">
+    <div class="pattern-title">What the pattern shows</div>
+    <div class="pattern-list">
+      <div class="pattern-item">
+        <span class="pattern-num">01</span>
+        <span>
+          <strong>Ghislaine Maxwell and Sarah Kellen are present on the vast majority of flights with unnamed female passengers.</strong> Their role as the primary organizers of Epstein's social calendar — documented extensively in the archive — places them as the most likely individuals responsible for recruiting and managing these unnamed travelers.
+        </span>
+      </div>
+      <div class="pattern-item">
+        <span class="pattern-num">02</span>
+        <span>
+          <strong>The Clinton flight (Feb 9, 2002) remains the most scrutinized single entry.</strong> Miami to Westchester with Bill Clinton, 4 Secret Service agents, Ghislaine Maxwell, Sarah Kellen — and one unnamed female. Clinton has stated he flew on Epstein's plane four times; his team has never addressed who the unnamed passenger was.
+        </span>
+      </div>
+      <div class="pattern-item">
+        <span class="pattern-num">03</span>
+        <span>
+          <strong>The Columbus, Ohio flight (Feb 3, 2005) is among the most legally significant.</strong> Logged three months before the Palm Beach police investigation opened, it carries Jean-Luc Brunel — the French modeling agent who died in a Paris jail in 2022 while facing rape charges — alongside Nadia Marcinko, Sarah Kellen, and three unnamed women. The route, Columbus to Palm Beach, matches testimony about Brunel's model recruitment operations in the midwest.
+        </span>
+      </div>
+      <div class="pattern-item">
+        <span class="pattern-num">04</span>
+        <span>
+          <strong>Unnamed females appear even on the earliest documented trips, 1998–1999.</strong> The 1998 Van Nuys to Monterey flight, carrying three unnamed women alongside Epstein and associates, predates the criminal investigation by seven years. These individuals have never been publicly identified.
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="summary-section" id="summarySection" style="display:none">
+    <div class="section-label">By the numbers</div>
+    <div class="summary-grid">
+      <div class="summary-cell">
+        <div class="summary-cell-label">Most frequent co-travelers</div>
+        <div class="summary-cell-value">
+          <strong>Ghislaine Maxwell</strong> — present on 9 of 13 flights<br>
+          <strong>Sarah Kellen</strong> — present on 8 of 13 flights
+        </div>
+      </div>
+      <div class="summary-cell">
+        <div class="summary-cell-label">Routes to St. Thomas / Little Saint James</div>
+        <div class="summary-cell-value">
+          4 flights carrying unnamed female passengers flew directly to St. Thomas — the island nearest Epstein's private island.
+        </div>
+      </div>
+      <div class="summary-cell">
+        <div class="summary-cell-label">High-profile passengers on same flights</div>
+        <div class="summary-cell-value">
+          Bill Clinton, Jean-Luc Brunel, Glen Dubin, and Paul Mellon all appear on flights that also carried unnamed females.
+        </div>
+      </div>
+      <div class="summary-cell">
+        <div class="summary-cell-label">Earliest documented instance</div>
+        <div class="summary-cell-value">
+          <strong>February 18, 1998</strong> — Van Nuys to Monterey, three unnamed females, seven years before the Palm Beach investigation.
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="page-footer">
+  <span class="footer-note">Source: U.S. v. Maxwell trial exhibits · Pilot logbook records 1997–2005</span>
+  <a href="index.html" class="footer-link">← All profiles</a>
+</footer>
+
+<script>
+// ── THEME ──
+function getTheme() {
+  return localStorage.getItem('rr-theme') ||
+    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+}
+function applyTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  document.getElementById('themeBtn').textContent = t === 'dark' ? '○' : '◐';
+}
+function toggleTheme() {
+  const next = getTheme() === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('rr-theme', next);
+  applyTheme(next);
+}
+applyTheme(getTheme());
+
+// ── SUPABASE ──
+const SUPABASE_URL = 'https://gljuffkufkggynlaoyim.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdsanVmZmt1Zmtnb3lubGFveWltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM5NjU5MDksImV4cCI6MjA1OTU0MTkwOX0.h3Ng3tH-0GVkzDqWxv0yGBDPcj0OyuXYnCQ9NnCHMhY';
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// Airport display names
+const AIRPORT_NAMES = {
+  PBI: 'Palm Beach', TEB: 'Teterboro', JFK: 'New York JFK',
+  HPN: 'Westchester', EWR: 'Newark', MIA: 'Miami',
+  TIST: 'St. Thomas / Little Saint James', LAX: 'Los Angeles',
+  VNY: 'Van Nuys', MRY: 'Monterey', CMH: 'Columbus OH',
+  ABY: 'Albany GA', SAF: 'Santa Fe', BOS: 'Boston',
+  MVY: "Martha's Vineyard", BED: 'Bedford MA', ASE: 'Aspen',
+  IAD: 'Washington Dulles', DCA: 'Washington National',
+  MYNN: 'Nassau', MTPP: 'Port-au-Prince', TNCM: 'St. Maarten',
+  RIC: 'Richmond VA', HTO: 'East Hampton', LAS: 'Las Vegas',
+  MDW: 'Chicago Midway', OXC: 'Waterbury CT', JAX: 'Jacksonville',
+};
+
+function airportDisplay(code) {
+  return AIRPORT_NAMES[code] || code;
+}
+
+// Person slug for deep-links
+function nameSlug(name) {
+  return encodeURIComponent(name);
+}
+
+// Parse redacted entries from notes
+function parseRedacted(notes) {
+  if (!notes) return [];
+  const results = [];
+  const patterns = [
+    { regex: /(\d+)\s+FEMALE/gi, gender: 'female' },
+    { regex: /(\d+)\s+MALE/gi, gender: 'male' },
+    { regex: /1\s+FEMALE/gi, gender: 'female', count: 1 },
+  ];
+  const matches = notes.matchAll(/(\d+)\s+(FEMALE|MALE)/gi);
+  for (const m of matches) {
+    results.push({ count: parseInt(m[1]), gender: m[2].toLowerCase() });
+  }
+  if (notes.match(/\b1 FEMALE\b/i) && results.length === 0) {
+    results.push({ count: 1, gender: 'female' });
+  }
+  return results;
+}
+
+function redactedLabel(entry) {
+  const word = entry.gender === 'female' ? 'FEMALE' : 'MALE';
+  if (entry.count === 1) return `UNNAMED ${word}`;
+  return `${entry.count} UNNAMED ${word}S`;
+}
+
+// Known person roles
+const PERSON_ROLES = {
+  'Ghislaine Maxwell': 'Epstein associate · convicted',
+  'Sarah Kellen': 'Epstein associate · charged',
+  'Bill Clinton': '42nd President of the United States',
+  'Jean-Luc Brunel': 'Model agent · died in custody 2022',
+  'Nadia Marcinko': 'Epstein associate',
+  'Johanna Sjoberg': 'Epstein accuser',
+  'Alan Dershowitz': 'Attorney · accused in Giuffre suit',
+  'Larry Summers': 'U.S. Treasury Secretary 1999–2001',
+  'Prince Andrew, Duke of York': 'Duke of York · settled Giuffre suit 2022',
+  'Sarah Ferguson': 'Duchess of York',
+  'Glen Dubin': 'Hedge fund manager',
+  'Eva Dubin': 'Physician · wife of Glen Dubin',
+  'Gary Kerney': 'Epstein pilot',
+};
+
+async function loadData() {
+  // Get all flights with redacted passengers
+  const flightsRes = await db
+    .from('flights')
+    .select('*')
+    .order('flight_date', { ascending: true });
+  const flights = flightsRes.data || [];
+
+  // Get all flight_passengers with identified persons
+  const fpRes = await db
+    .from('flight_passengers')
+    .select('flight_id, person_id, name_as_logged, is_identified, is_redacted');
+  const fps = fpRes.data || [];
+
+  // Get all persons
+  const personsRes = await db
+    .from('persons')
+    .select('id, full_name, category');
+  const persons = personsRes.data || [];
+  const personMap = {};
+  persons.forEach(p => personMap[p.id] = p);
+
+  // Group fp by flight
+  const fpByFlight = {};
+  fps.forEach(fp => {
+    if (!fpByFlight[fp.flight_id]) fpByFlight[fp.flight_id] = [];
+    fpByFlight[fp.flight_id].push(fp);
+  });
+
+  // Filter to flights that have redacted entries OR notes with FEMALE/MALE unnamed
+  const redactedFlights = flights.filter(f => {
+    const fps = fpByFlight[f.id] || [];
+    const hasRedactedFP = fps.some(fp => fp.is_redacted);
+    const notesHasUnnamed = f.notes && /\d+\s+(FEMALE|MALE)/i.test(f.notes);
+    return hasRedactedFP || notesHasUnnamed;
+  });
+
+  return { redactedFlights, fpByFlight, personMap };
+}
+
+function buildCard(flight, fpByFlight, personMap, isFeatured = false) {
+  const fps = fpByFlight[flight.id] || [];
+  const namedPassengers = fps
+    .filter(fp => fp.is_identified && !fp.is_redacted && fp.person_id)
+    .map(fp => personMap[fp.person_id])
+    .filter(Boolean);
+
+  // Parse unnamed from notes
+  const unnamedEntries = parseRedacted(flight.notes || '');
+  const totalUnnamed = unnamedEntries.reduce((s, e) => s + e.count, 0);
+  const unnamedFemales = unnamedEntries
+    .filter(e => e.gender === 'female')
+    .reduce((s, e) => s + e.count, 0);
+
+  const card = document.createElement('div');
+  card.className = isFeatured ? 'featured-flight' : 'flight-card';
+
+  const dateObj = new Date(flight.flight_date + 'T12:00:00');
+  const dateStr = dateObj.toLocaleDateString('en-US', {
+    year: 'numeric', month: 'long', day: 'numeric'
+  });
+
+  const originName = airportDisplay(flight.origin);
+  const destName = airportDisplay(flight.destination);
+
+  let html = `
+    ${isFeatured ? `<div class="featured-stamp">Notable flight</div>` : ''}
+    <div class="flight-meta">
+      <span class="flight-date">${dateStr}</span>
+      <span class="flight-route">
+        <span>${flight.origin}</span>
+        <span class="route-arrow">→</span>
+        <span>${flight.destination}</span>
+      </span>
+      <span class="flight-route-name">${originName} → ${destName}</span>
+      <span class="unknown-count-pill">${totalUnnamed} unnamed</span>
+    </div>
+    <div class="manifest-label">Passenger manifest — as logged</div>
+    <div class="passenger-list">
+  `;
+
+  // Named passengers
+  namedPassengers.forEach(p => {
+    const role = PERSON_ROLES[p.full_name] || '';
+    const link = `index.html?search=${nameSlug(p.full_name)}`;
+    html += `
+      <div class="passenger-row">
+        <span class="passenger-dot"></span>
+        <span class="passenger-name"><a href="${link}">${p.full_name}</a></span>
+        ${role ? `<span class="passenger-role">${role}</span>` : ''}
+      </div>
+    `;
+  });
+
+  // Add JE and other named-but-unlinked from notes (rough parse for Epstein himself)
+  if (flight.notes && /\bJE\b/.test(flight.notes)) {
+    // Check if Epstein isn't already listed
+    const hasEpstein = namedPassengers.some(p => p.full_name.includes('Epstein'));
+    if (!hasEpstein) {
+      html += `
+        <div class="passenger-row">
+          <span class="passenger-dot"></span>
+          <span class="passenger-name">Jeffrey Epstein</span>
+          <span class="passenger-role">Convicted sex offender</span>
+        </div>
+      `;
+    }
+  }
+
+  if (namedPassengers.length > 0 || /\bJE\b/.test(flight.notes || '')) {
+    html += `<div class="manifest-divider"></div>`;
+  }
+
+  // Unnamed entries
+  unnamedEntries.forEach(entry => {
+    html += `
+      <div class="passenger-row redacted">
+        <span class="passenger-dot"></span>
+        <span class="redacted-bar">
+          <span class="redacted-label">${redactedLabel(entry)}</span>
+          <span class="redacted-count">logged as "${entry.count > 1 ? entry.count + ' ' : ''}${entry.gender.toUpperCase()}${entry.count > 1 ? 'S' : ''}"</span>
+        </span>
+      </div>
+    `;
+  });
+
+  html += `</div>`;
+
+  // Context note for significant flights
+  const contextNotes = {
+    '2002-02-09': 'Clinton has stated he took four flights on Epstein\'s plane in 2002–2003. His spokesperson has never identified who the unnamed female passenger on this flight was.',
+    '2005-02-03': 'This flight occurred three months before Palm Beach police opened their investigation into Epstein in May 2005. Jean-Luc Brunel died in a French prison in February 2022 while awaiting trial on rape charges.',
+    '2002-01-17': 'One of six flights in a rapid cluster (Jan–Apr 2002) carrying unnamed female passengers to St. Thomas, the island closest to Epstein\'s private island Little Saint James.',
+    '1998-02-18': 'The earliest documented flight in this analysis carrying unnamed female passengers. Records from 1998 predate the criminal investigation by approximately seven years.',
+  };
+
+  if (contextNotes[flight.flight_date]) {
+    html += `<div class="context-note">${contextNotes[flight.flight_date]}</div>`;
+  }
+
+  card.innerHTML = html;
+  return card;
+}
+
+async function init() {
+  const container = document.getElementById('flightContainer');
+
+  try {
+    const { redactedFlights, fpByFlight, personMap } = await loadData();
+
+    if (redactedFlights.length === 0) {
+      container.innerHTML = '<div class="loading-state">No records found.</div>';
+      return;
+    }
+
+    const totalUnnamed = redactedFlights.reduce((sum, f) => {
+      const entries = parseRedacted(f.notes || '');
+      return sum + entries.reduce((s, e) => s + e.count, 0);
+    }, 0);
+
+    // Update header stats
+    document.getElementById('statFlights').textContent = redactedFlights.length;
+    document.getElementById('statPersons').textContent = totalUnnamed + '+';
+
+    container.innerHTML = '';
+
+    // Featured flight label
+    const clintonFlight = redactedFlights.find(f => f.flight_date === '2002-02-09');
+    const otherFlights = redactedFlights.filter(f => f.flight_date !== '2002-02-09');
+
+    // Sort: Clinton first (featured), then chronological
+    const ordered = clintonFlight
+      ? [clintonFlight, ...otherFlights]
+      : redactedFlights;
+
+    // Featured label for Clinton flight
+    if (clintonFlight) {
+      const featuredLabel = document.createElement('div');
+      featuredLabel.className = 'section-label';
+      featuredLabel.textContent = 'Most scrutinized entry';
+      container.appendChild(featuredLabel);
+      container.appendChild(buildCard(clintonFlight, fpByFlight, personMap, true));
+    }
+
+    // All flights label
+    const allLabel = document.createElement('div');
+    allLabel.className = 'section-label';
+    allLabel.style.marginTop = '2.5rem';
+    allLabel.textContent = 'All documented instances';
+    container.appendChild(allLabel);
+
+    otherFlights.forEach(flight => {
+      container.appendChild(buildCard(flight, fpByFlight, personMap, false));
+    });
+
+    // Show pattern + summary sections
+    document.getElementById('patternBlock').style.display = 'block';
+    document.getElementById('summarySection').style.display = 'block';
+
+  } catch (err) {
+    console.error(err);
+    container.innerHTML = `<div class="loading-state">Error loading data: ${err.message}</div>`;
+  }
+}
+
+init();
+</script>
+</body>
+</html>
