@@ -783,7 +783,7 @@ function renderProfile(p) {
       <div>Source: Epstein email archive</div>
       <div>Confidence: ${cap(conf)}</div>
       <div>Indexed: Feb 2026</div>
-      <div style="margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid var(--border);color:var(--text-tertiary);">Flight data: active · 50+ legs indexed</div>
+      <div style="margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid var(--border);color:var(--text-tertiary);">Flight data: active · 90+ legs indexed · 1997–2005</div>
     </div>
   `;
 }
@@ -801,7 +801,7 @@ async function fetchFlights(personId, personName) {
     if (error) throw error;
 
     if (!fps || fps.length === 0) {
-      el.innerHTML = `<div style="font-size:0.82rem;color:var(--text-secondary);padding:1rem 0;">No documented flights found for this individual in the current manifest database. Flight data covers pilot logbook records 2002–2005.</div>`;
+      el.innerHTML = `<div style="font-size:0.82rem;color:var(--text-secondary);padding:1rem 0;">No documented flights found for this individual in the current manifest database. Flight data covers pilot logbook records 1997–2005.</div>`;
       return;
     }
 
