@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,22 +9,22 @@
 <style>
 
 /* ── THEME TOKENS ── */
-[data-theme="light"] {
-  --bg:             #F7F4EF;
-  --bg-secondary:   #EDE9E1;
-  --bg-card:        #FAFAF7;
-  --surface:        #FFFFFF;
+:root {
+  --bg:             #f4f1ed;
+  --bg-secondary:   #f0ede7;
+  --bg-card:        #f4f1ed;
+  --surface:        #f4f1ed;
   --border:         rgba(0,0,0,0.08);
   --border-mid:     rgba(0,0,0,0.12);
   --border-strong:  rgba(0,0,0,0.18);
   --accent:         #1A1A1A;
-  --accent-dim:     rgba(26,26,26,0.06);
-  --accent-bg:      rgba(26,26,26,0.06);
+  --accent-dim:     rgba(26,26,26,0.10);
+  --accent-bg:      rgba(26,26,26,0.08);
   --accent-btn:     #1A1A1A;
   --accent-btn-text:#FFFFFF;
-  --text-primary:   #0D0D0D;
-  --text-secondary: #4A4A4A;
-  --text-tertiary:  #888888;
+  --text-primary:   #474543;
+  --text-secondary: #474543;
+  --text-tertiary:  #474543;
   --confirmed:      #1A6B3C;
   --confirmed-bg:   rgba(26,107,60,0.08);
   --confirmed-border:rgba(26,107,60,0.25);
@@ -38,7 +38,7 @@
   --unverified-bg:  rgba(138,26,26,0.08);
   --unverified-border:rgba(138,26,26,0.25);
   --shadow-sm:      0 1px 3px rgba(0,0,0,0.06);
-  --topbar-bg:      rgba(247,244,239,0.97);
+  --topbar-bg:      #f0ede7;
   --header-bg:      #0D0D0D;
   --header-text:    #F7F4EF;
   --redact-color:   #1A1A1A;
@@ -49,48 +49,6 @@
   --highlight-mid:  rgba(200,16,46,0.2);
   --node-bg:        #1A1A1A;
   --node-text:      #F7F4EF;
-}
-
-[data-theme="dark"] {
-  --bg:             #1a1a1a;
-  --bg-secondary:   #141414;
-  --bg-card:        #161616;
-  --surface:        rgba(255,255,255,0.03);
-  --border:         rgba(255,255,255,0.07);
-  --border-mid:     rgba(255,255,255,0.11);
-  --border-strong:  rgba(255,255,255,0.18);
-  --accent:         #FFED29;
-  --accent-dim:     rgba(255,237,41,0.08);
-  --accent-bg:      rgba(255,237,41,0.06);
-  --accent-btn:     #FFED29;
-  --accent-btn-text:#2A2A2A;
-  --text-primary:   #FFFFFF;
-  --text-secondary: #b0b0b0;
-  --text-tertiary:  #606060;
-  --confirmed:      #4ade80;
-  --confirmed-bg:   rgba(74,222,128,0.08);
-  --confirmed-border:rgba(74,222,128,0.25);
-  --corroborated:   #60a5fa;
-  --corroborated-bg:rgba(96,165,250,0.08);
-  --corroborated-border:rgba(96,165,250,0.25);
-  --indicated:      #FFED29;
-  --indicated-bg:   rgba(255,237,41,0.08);
-  --indicated-border:rgba(255,237,41,0.25);
-  --unverified:     #f87171;
-  --unverified-bg:  rgba(248,113,113,0.08);
-  --unverified-border:rgba(248,113,113,0.25);
-  --shadow-sm:      0 1px 3px rgba(0,0,0,0.3);
-  --topbar-bg:      rgba(26,26,26,0.97);
-  --header-bg:      #0A0A0A;
-  --header-text:    #F0EDE8;
-  --redact-color:   #F0EDE8;
-  --stamp-color:    rgba(220,60,60,0.12);
-  --stamp-border:   rgba(220,80,80,0.45);
-  --highlight:      #FF4060;
-  --highlight-dim:  rgba(255,64,96,0.08);
-  --highlight-mid:  rgba(255,64,96,0.2);
-  --node-bg:        #F0EDE8;
-  --node-text:      #111111;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -147,7 +105,7 @@ body {
   overflow-y: auto;
   border-left: 1px solid var(--border);
   padding: 1rem;
-  background: var(--bg-secondary);
+  background: var(--bg);
 }
 
 /* ── TOPBAR LOGO ── */
@@ -177,8 +135,10 @@ body {
 }
 
 .topbar-center {
-  flex: 1;
-  max-width: 520px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 480px;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -222,49 +182,23 @@ body {
   color: var(--text-secondary);
   white-space: nowrap;
 }
-.theme-toggle {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  background: none;
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 0.25rem 0.65rem;
-  cursor: pointer;
-  color: var(--text-secondary);
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  font-size: 0.68rem;
-  letter-spacing: 0.05em;
-}
-.toggle-track {
-  width: 28px; height: 16px;
-  background: var(--border-strong);
-  border-radius: 8px;
-  position: relative;
-}
-.toggle-thumb {
-  width: 12px; height: 12px;
-  background: var(--accent);
-  border-radius: 50%;
-  position: absolute;
-  top: 2px; left: 2px;
-  transition: transform 0.2s;
-}
-[data-theme="dark"] .toggle-thumb { transform: translateX(12px); }
 
-/* ── SIDEBAR ── */
+/* ── SIDEBAR — LOCKED TYPOGRAPHY, NEVER CHANGES ── */
 .sidebar-section { margin-bottom: 1.6rem; }
+
+/* QUERY TYPE / CATEGORY / RELATIONSHIP headers */
 .sidebar-label {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 600;
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 0.68rem !important;
+  color: var(--text-tertiary) !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
   margin-bottom: 0.6rem;
   padding: 0 0.25rem;
 }
+
+/* Individual nav items — SemiBold */
 .nav-item {
   display: flex;
   justify-content: space-between;
@@ -273,17 +207,25 @@ body {
   border-radius: 6px;
   cursor: pointer;
   color: var(--text-secondary);
-  font-size: 0.9rem;
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 0.82rem !important;
+  letter-spacing: 0.01em !important;
   margin-bottom: 0.15rem;
 }
 .nav-item:hover { background: var(--accent-dim); color: var(--text-primary); }
 .nav-item.active {
-  background: var(--accent-dim);
+  background: rgba(26,26,26,0.09);
   color: var(--text-primary);
-  font-weight: 600;
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 0.82rem !important;
   border-left: 2px solid var(--accent);
+  padding-left: calc(0.5rem - 2px);
 }
+
 .nav-item.coming-soon { opacity: 0.38; cursor: default; }
+
 .coming-soon-badge {
   font-family: 'Montserrat', sans-serif;
   font-size: 0.55rem;
@@ -389,12 +331,67 @@ body {
 
 /* ── RIGHT PANEL ── */
 .panel-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; margin-bottom: 0.75rem; }
-.panel-card-title { font-family: 'Montserrat', sans-serif; font-size: 0.6rem; color: var(--text-tertiary); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.75rem; }
+.panel-card-title { font-family: 'Montserrat', sans-serif !important; font-weight: 400 !important; font-size: 0.6rem; color: var(--text-tertiary); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.75rem; }
 .power-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
-.power-label { font-size: 0.72rem; color: var(--text-secondary); width: 95px; flex-shrink: 0; }
-.power-track { flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.power-row:last-child { margin-bottom: 0; }
+.power-label { font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; font-size: 0.62rem; color: var(--text-secondary); width: 90px; flex-shrink: 0; line-height: 1.3; }
+.power-track { flex: 1; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
 .power-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.6s ease; }
-.power-val { font-family: 'Montserrat', sans-serif; font-size: 0.68rem; color: var(--text-secondary); width: 24px; text-align: right; }
+.power-val { font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; font-size: 0.68rem; color: var(--text-primary); width: 22px; text-align: right; flex-shrink: 0; }
+
+/* Co-present persons */
+.copresent-row { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+.copresent-row:last-child { border-bottom: none; }
+.copresent-avatar { width: 28px; height: 28px; border-radius: 50%; background: rgba(0,0,0,0.07); display: flex; align-items: center; justify-content: center; font-family: 'Montserrat', sans-serif !important; font-weight: 700 !important; font-size: 0.58rem; color: var(--text-secondary); flex-shrink: 0; }
+.copresent-info { flex: 1; min-width: 0; }
+.copresent-name { font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; font-size: 0.8rem; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; }
+.copresent-name:hover { text-decoration: underline; }
+.copresent-meta { font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; font-size: 0.58rem; color: var(--text-tertiary); margin-top: 1px; }
+.copresent-right { display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0; }
+.copresent-bar-wrap { width: 50px; height: 2px; background: var(--border); border-radius: 1px; overflow: hidden; }
+.copresent-bar-fill { height: 100%; background: var(--accent); border-radius: 1px; }
+.copresent-count { font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; font-size: 0.6rem; color: var(--text-tertiary); white-space: nowrap; }
+
+/* Locations */
+.location-row { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+.location-row:last-child { border-bottom: none; }
+.location-icon { width: 26px; height: 26px; border-radius: 6px; background: var(--surface); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; flex-shrink: 0; }
+.location-info { flex: 1; min-width: 0; }
+.location-name { font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; font-size: 0.8rem; color: var(--text-primary); }
+.location-meta { font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; font-size: 0.58rem; color: var(--text-tertiary); margin-top: 1px; }
+.location-count { font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; font-size: 0.68rem; color: var(--text-primary); white-space: nowrap; flex-shrink: 0; }
+
+/* Source docs */
+.source-doc-row { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+.source-doc-row:last-child { border-bottom: none; }
+.source-doc-id { font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; font-size: 0.72rem; color: var(--text-primary); }
+.source-doc-meta { font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; font-size: 0.58rem; color: var(--text-tertiary); margin-top: 2px; }
+.conf-circle { width: 20px; height: 20px; border-radius: 50%; border: 1px solid; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; font-size: 0.6rem; }
+.conf-circle.confirmed { border-color: var(--confirmed); color: var(--confirmed); }
+.conf-circle.corroborated { border-color: var(--corroborated); color: var(--corroborated); }
+.conf-circle.none { border-color: var(--border-mid); color: var(--text-tertiary); }
+
+/* Timeline events */
+.timeline-wrap { position: relative; padding-left: 1rem; }
+.timeline-item { display: flex; gap: 1rem; margin-bottom: 1.25rem; position: relative; }
+.timeline-date { font-family: 'Montserrat', sans-serif; font-size: 0.62rem; color: var(--text-tertiary); min-width: 64px; text-align: right; padding-top: 0.85rem; flex-shrink: 0; }
+.timeline-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--text-tertiary); flex-shrink: 0; margin-top: 1rem; position: relative; z-index: 1; }
+.timeline-dot.confirmed { background: var(--confirmed); }
+.timeline-dot.corroborated { background: var(--corroborated); }
+.timeline-dot.indicated { background: var(--indicated); }
+.timeline-dot.unverified { background: var(--unverified); }
+.timeline-card { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 0.85rem 1rem; }
+.timeline-card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.5rem; }
+.timeline-card-title { font-size: 0.88rem; font-weight: 600; color: var(--text-primary); }
+.timeline-card-body { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 0.6rem; }
+.timeline-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.timeline-tag { font-family: 'Montserrat', sans-serif; font-size: 0.6rem; color: var(--text-secondary); background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 4px; padding: 2px 7px; letter-spacing: 0.02em; }
+.timeline-tag.island { color: #dc2626; border-color: rgba(220,38,38,0.3); background: rgba(220,38,38,0.06); }
+
+/* Evidence gap banner */
+.evidence-gap { margin-top: 1rem; padding: 0.85rem 1rem; background: rgba(220,38,38,0.06); border: 1px solid rgba(220,38,38,0.2); border-radius: 10px; }
+.evidence-gap-label { font-family: 'Montserrat', sans-serif; font-size: 0.58rem; color: #dc2626; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.4rem; }
+.evidence-gap-text { font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; }
 
 /* ── TAB PANELS ── */
 .tab-panel { display: none; width: 100%; }
@@ -404,26 +401,17 @@ body {
 #tabUnidentified {
   font-family: 'Source Sans 3', sans-serif;
 }
-/* Page header (dark band) */
+/* Page header */
 #tabUnidentified .page-header {
-  background: var(--header-bg);
-  color: var(--header-text);
+  background: var(--bg);
+  color: var(--text-primary);
   padding: 3rem 2rem 2.5rem;
   position: relative;
   overflow: hidden;
+  border-bottom: 1px solid var(--border);
 }
 #tabUnidentified .page-header::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 39px,
-    rgba(255,255,255,0.025) 39px,
-    rgba(255,255,255,0.025) 40px
-  );
-  pointer-events: none;
+  display: none;
 }
 #tabUnidentified .header-inner {
   max-width: 760px;
@@ -435,7 +423,7 @@ body {
   font-size: 0.68rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.35);
+  color: var(--text-tertiary);
   margin-bottom: 1.2rem;
   display: flex;
   align-items: center;
@@ -446,7 +434,7 @@ body {
   content: '';
   flex: 1;
   height: 1px;
-  background: rgba(255,255,255,0.1);
+  background: var(--border);
 }
 #tabUnidentified .header-title {
   font-family: 'neue-haas-grotesk-display', sans-serif;
@@ -455,13 +443,13 @@ body {
   line-height: 1.05;
   letter-spacing: -0.02em;
   margin-bottom: 1rem;
-  color: #F7F4EF;
+  color: var(--text-primary);
 }
-#tabUnidentified .header-title em { font-style: normal; color: rgba(247,244,239,0.35); }
+#tabUnidentified .header-title em { font-style: normal; color: var(--text-tertiary); }
 #tabUnidentified .header-desc {
   font-size: 0.95rem;
   line-height: 1.65;
-  color: rgba(247,244,239,0.6);
+  color: var(--text-secondary);
   max-width: 520px;
   margin-bottom: 1.75rem;
 }
@@ -470,14 +458,14 @@ body {
 #tabUnidentified .stat-num {
   font-family: 'neue-haas-grotesk-display', sans-serif;
   font-size: 1.75rem; font-weight: 600;
-  color: #F7F4EF; line-height: 1;
+  color: var(--text-primary); line-height: 1;
 }
 #tabUnidentified .stat-label {
   font-family: 'Montserrat', sans-serif;
   font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
-  color: rgba(247,244,239,0.35);
+  color: var(--text-tertiary);
 }
-#tabUnidentified .stat-divider { width: 1px; background: rgba(255,255,255,0.1); align-self: stretch; }
+#tabUnidentified .stat-divider { width: 1px; background: var(--border); align-self: stretch; }
 
 #tabUnidentified .methodology {
   background: var(--bg-secondary);
@@ -752,8 +740,7 @@ body {
 .cat-royalty     { color: #C8909A; }
 .cat-media       { color: #008B87; }
 .cat-other       { color: #888888; }
-[data-theme="dark"] .cat-technology { color: #7777DD; }
-[data-theme="dark"] .cat-legal { color: #D4B800; }
+
 
 /* ── MOBILE HAMBURGER ── */
 .mobile-menu-btn {
@@ -794,6 +781,85 @@ body {
   cursor: pointer; color: var(--text-secondary); font-size: 0.8rem;
 }
 
+
+/* ── FLIGHT MANIFEST BROWSER ── */
+.fm-list { display: flex; flex-direction: column; }
+.fm-row {
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.fm-row:hover, .fm-row.fm-row-open { background: var(--accent-dim); }
+.fm-row-main {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.7rem 0.5rem;
+  flex-wrap: wrap;
+}
+.fm-date {
+  font-family: 'Montserrat', sans-serif; font-size: 0.65rem;
+  color: var(--text-tertiary); min-width: 88px; flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+.fm-route {
+  display: flex; align-items: center; gap: 0.3rem;
+  font-family: 'Montserrat', sans-serif; font-weight: 600;
+  font-size: 0.82rem; color: var(--text-primary); flex-shrink: 0;
+}
+.fm-airport { letter-spacing: 0.04em; }
+.fm-arrow-route { color: var(--text-tertiary); font-size: 0.7rem; }
+.fm-city-names { font-size: 0.78rem; color: var(--text-secondary); flex: 1; min-width: 0; }
+.fm-badges { display: flex; gap: 0.35rem; align-items: center; flex-shrink: 0; }
+.fm-badge-island {
+  font-family: 'Montserrat', sans-serif; font-size: 0.55rem;
+  color: #dc2626; letter-spacing: 0.06em;
+  padding: 1px 5px; border: 1px solid #dc2626; border-radius: 3px;
+}
+.fm-pax-count {
+  font-family: 'Montserrat', sans-serif; font-size: 0.65rem;
+  color: var(--text-tertiary); flex-shrink: 0; min-width: 40px; text-align: right;
+}
+.fm-chevron {
+  font-size: 1.1rem; color: var(--text-tertiary); flex-shrink: 0;
+  transition: transform 0.2s; line-height: 1; width: 16px; text-align: center;
+}
+
+/* Expanded manifest panel */
+.fm-manifest { border-top: 1px dashed var(--border); }
+.fm-manifest-inner { padding: 1rem 0.5rem 1.25rem 1.5rem; }
+.fm-manifest-label {
+  font-family: 'Montserrat', sans-serif; font-size: 0.6rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-tertiary); margin-bottom: 0.75rem;
+}
+.fm-pax-list { display: flex; flex-direction: column; gap: 0.25rem; margin-bottom: 0.75rem; }
+.fm-pax-row {
+  display: flex; align-items: center; gap: 0.65rem;
+  padding: 0.45rem 0.6rem; border-radius: 6px;
+  cursor: pointer; transition: background 0.1s;
+}
+.fm-pax-row:not(.fm-pax-redacted):hover { background: var(--surface); }
+.fm-pax-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.fm-pax-name {
+  font-size: 0.88rem; font-weight: 600; color: var(--text-primary);
+  flex: 1;
+}
+.fm-pax-meta {
+  font-family: 'Montserrat', sans-serif; font-size: 0.62rem;
+  color: var(--text-tertiary); letter-spacing: 0.03em;
+}
+.fm-pax-arrow {
+  font-size: 0.75rem; color: var(--text-tertiary); flex-shrink: 0;
+  opacity: 0; transition: opacity 0.1s;
+}
+.fm-pax-row:hover .fm-pax-arrow { opacity: 1; }
+.fm-manifest-footer {
+  font-family: 'Montserrat', sans-serif; font-size: 0.6rem;
+  color: var(--text-tertiary); letter-spacing: 0.04em;
+  display: flex; flex-direction: column; gap: 0.2rem;
+  padding-top: 0.75rem; border-top: 1px solid var(--border);
+}
+.fm-notes { opacity: 0.7; font-style: italic; }
+
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   .app { grid-template-columns: 1fr; grid-template-rows: 56px 1fr; height: 100vh; overflow: hidden; }
@@ -809,7 +875,7 @@ body {
   .subject-name { font-size: 1.5rem; }
   .status-text { display: none; }
   .status-dot { display: none; }
-  .theme-toggle { display: none; }
+
   .topbar-right { display: none; }
   #tabUnidentified .page-header { padding: 2rem 1.25rem 1.5rem; }
   #tabUnidentified .u-main { padding: 1.5rem 1.25rem 3rem; }
@@ -841,10 +907,6 @@ body {
       <input class="search-bar" id="searchInput" type="text" placeholder="Search — Ghislaine Maxwell, Bill Gates, Lesley Groff…">
     </div>
     <div class="topbar-right">
-      <button class="theme-toggle" onclick="toggleTheme()">
-        <span id="toggleLabel">LIGHT</span>
-        <div class="toggle-track"><div class="toggle-thumb"></div></div>
-      </button>
       <div style="display:flex;align-items:center;gap:0.4rem;">
         <div class="status-dot"></div>
         <span class="status-text">141 profiles indexed</span>
@@ -1039,19 +1101,56 @@ body {
 
   <!-- RIGHT PANEL -->
   <aside class="sidebar-right" id="rightPanel">
-    <div class="panel-card">
+
+    <!-- ── PERSON PROFILE panels ── -->
+    <div class="panel-card" id="powerPanel" style="display:none">
       <div class="panel-card-title">Power Index</div>
       <div class="power-row"><span class="power-label">Public Profile</span><div class="power-track"><div class="power-fill" id="pw0" style="width:0%"></div></div><span class="power-val" id="pv0">—</span></div>
       <div class="power-row"><span class="power-label">Institutional</span><div class="power-track"><div class="power-fill" id="pw1" style="width:0%"></div></div><span class="power-val" id="pv1">—</span></div>
+      <div class="power-row"><span class="power-label">Network Centrality</span><div class="power-track"><div class="power-fill" id="pw2" style="width:0%"></div></div><span class="power-val" id="pv2">—</span></div>
+      <div class="power-row"><span class="power-label">Corroboration</span><div class="power-track"><div class="power-fill" id="pw3" style="width:0%"></div></div><span class="power-val" id="pv3">—</span></div>
     </div>
-    <div id="relPanel" style="display:none" class="panel-card">
-      <div class="panel-card-title">Relationship to Epstein</div>
-      <div id="relContent"></div>
+    <div id="coPresentPanel" style="display:none" class="panel-card">
+      <div class="panel-card-title">Co-Present Persons — Top Connections</div>
+      <div id="coPresentContent"></div>
     </div>
-    <div id="statusPanel" style="display:none" class="panel-card">
-      <div class="panel-card-title">Archive Stats</div>
-      <div id="statusContent"></div>
+    <div id="locationsPanel" style="display:none" class="panel-card">
+      <div class="panel-card-title">Locations — Documented Presence</div>
+      <div id="locationsContent"></div>
     </div>
+    <div id="sourceDocsPanel" style="display:none" class="panel-card">
+      <div class="panel-card-title">Source Documents</div>
+      <div id="sourceDocsContent"></div>
+    </div>
+
+    <!-- ── FLIGHT MANIFESTS panels ── -->
+    <div id="flightStatsPanel" style="display:none" class="panel-card">
+      <div class="panel-card-title">Archive Overview</div>
+      <div id="flightStatsContent"></div>
+    </div>
+    <div id="flightRoutesPanel" style="display:none" class="panel-card">
+      <div class="panel-card-title">Most Frequent Routes</div>
+      <div id="flightRoutesContent"></div>
+    </div>
+    <div id="flightTravelersPanel" style="display:none" class="panel-card">
+      <div class="panel-card-title">Most Frequent Travelers</div>
+      <div id="flightTravelersContent"></div>
+    </div>
+
+    <!-- ── CONNECTIONS panels ── -->
+    <div id="connPanelA" style="display:none" class="panel-card">
+      <div class="panel-card-title" id="connPanelATitle">Person A</div>
+      <div id="connPanelAContent"></div>
+    </div>
+    <div id="connPanelB" style="display:none" class="panel-card">
+      <div class="panel-card-title" id="connPanelBTitle">Person B</div>
+      <div id="connPanelBContent"></div>
+    </div>
+    <div id="connPathPanel" style="display:none" class="panel-card">
+      <div class="panel-card-title">Path Summary</div>
+      <div id="connPathContent"></div>
+    </div>
+
   </aside>
 
 </div>
@@ -1100,13 +1199,6 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ── THEME ──
-function toggleTheme() {
-  const html = document.documentElement;
-  const isDark = html.getAttribute('data-theme') === 'dark';
-  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
-  document.getElementById('toggleLabel').textContent = isDark ? 'LIGHT' : 'DARK';
-}
-
 // ── MOBILE DRAWER ──
 function openDrawer() { document.getElementById('mobileDrawer').classList.add('open'); }
 function closeDrawer() { document.getElementById('mobileDrawer').classList.remove('open'); }
@@ -1117,17 +1209,20 @@ let unidentifiedLoaded = false;
 let connectionsLoaded = false;
 
 function switchTab(tab) {
-  // Hide all panels
   document.querySelectorAll('.tab-panel').forEach(el => el.classList.remove('active'));
-  // Remove active from all nav items (type)
   ['navProfiles','navFlights','navUnidentified','navConnections'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.classList.remove('active');
+    const el = document.getElementById(id); if (el) el.classList.remove('active');
   });
 
   const filterSections = document.getElementById('sidebarFilters');
   const relFilterSections = document.getElementById('sidebarRelFilters');
   const rightPanel = document.getElementById('rightPanel');
+
+  // Hide all right panel cards first
+  const allPanelCards = ['powerPanel','coPresentPanel','locationsPanel','sourceDocsPanel',
+    'flightStatsPanel','flightRoutesPanel','flightTravelersPanel',
+    'connPanelA','connPanelB','connPathPanel'];
+  allPanelCards.forEach(id => { const el=document.getElementById(id); if(el) el.style.display='none'; });
 
   if (tab === 'profiles') {
     document.getElementById('tabProfiles').classList.add('active');
@@ -1135,7 +1230,6 @@ function switchTab(tab) {
     filterSections.style.display = '';
     relFilterSections.style.display = '';
     rightPanel.style.display = '';
-    // Also show search bar
     document.getElementById('searchInput').style.display = '';
   } else if (tab === 'flights') {
     document.getElementById('tabProfiles').classList.add('active');
@@ -1144,6 +1238,7 @@ function switchTab(tab) {
     relFilterSections.style.display = '';
     rightPanel.style.display = '';
     showFlightBrowser();
+    showFlightSidebarStats();
   } else if (tab === 'unidentified') {
     document.getElementById('tabUnidentified').classList.add('active');
     document.getElementById('navUnidentified').classList.add('active');
@@ -1156,8 +1251,9 @@ function switchTab(tab) {
     document.getElementById('navConnections').classList.add('active');
     filterSections.style.display = 'none';
     relFilterSections.style.display = 'none';
-    rightPanel.style.display = 'none';
+    rightPanel.style.display = '';
     if (!connectionsLoaded) { initConnections(); connectionsLoaded = true; }
+    // Show connection panels (A and B appear once people are selected)
   }
   currentTab = tab;
 }
@@ -1222,7 +1318,7 @@ async function searchPersons(query) {
   try {
     const { data, error } = await db
       .from('persons')
-      .select('id, full_name, confidence, category, relationship_to_epstein, public_title, total_document_count, power_public_profile, power_institutional, current_status, notes, nationality')
+      .select('id, full_name, confidence, category, relationship_to_epstein, public_title, total_document_count, power_public_profile, power_institutional, power_network_centrality, power_corroboration, current_status, notes, nationality, active_period_start, active_period_end, upgrade_gap_note')
       .ilike('full_name', `%${query}%`)
       .eq('is_victim', false)
       .order('total_document_count', { ascending: false })
@@ -1240,7 +1336,7 @@ async function browseByFilter(field, value) {
   try {
     const { data, error } = await db
       .from('persons')
-      .select('id, full_name, confidence, category, relationship_to_epstein, public_title, total_document_count, power_public_profile, power_institutional, current_status, notes, nationality')
+      .select('id, full_name, confidence, category, relationship_to_epstein, public_title, total_document_count, power_public_profile, power_institutional, power_network_centrality, power_corroboration, current_status, notes, nationality, active_period_start, active_period_end, upgrade_gap_note')
       .eq(col, value)
       .eq('is_victim', false)
       .order('total_document_count', { ascending: false })
@@ -1256,115 +1352,292 @@ function renderProfile(p) {
   const notes = p.notes || '';
   const summary = notes.replace(/\[jwiki:[^\]]+\]\s*/, '');
   const emailCount = p.total_document_count || 0;
-  const barPct = Math.min(100, Math.round((emailCount / 230115) * 100));
   const rel = p.relationship_to_epstein || 'associate';
   const conf = p.confidence || 'indicated';
   const slug = notes.match(/\[jwiki:([^\]]+)\]/)?.[1] || '';
+  const activeStart = p.active_period_start ? p.active_period_start.substring(0,4) : null;
+  const activeEnd = p.active_period_end ? p.active_period_end.substring(0,4) : null;
+  const activePeriod = activeStart ? `Active ${activeStart}${activeEnd && activeEnd !== activeStart ? '–'+activeEnd : ''}` : null;
 
   tabEl.innerHTML = `
     <div style="padding:1.5rem 1.75rem;">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:1rem;">
+      <!-- Header -->
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:0.75rem;">
         <div>
           <div class="subject-name">${p.full_name}</div>
-          <div class="subject-meta">
-            ${p.public_title ? `<span class="meta-pill">${p.public_title}</span>` : ''}
+          <div class="subject-meta" style="margin-top:0.5rem;">
+            ${emailCount > 0 ? `<span class="meta-pill">${emailCount.toLocaleString()} Documents</span>` : ''}
             ${p.category ? `<span class="meta-pill">${cap(p.category)}</span>` : ''}
-            ${p.nationality && p.nationality[0] ? `<span class="meta-pill">${p.nationality[0]}</span>` : ''}
+            ${activePeriod ? `<span class="meta-pill">${activePeriod}</span>` : ''}
+            ${p.current_status ? `<span class="meta-pill">${cap(p.current_status)}</span>` : ''}
           </div>
         </div>
         <span class="conf-badge ${conf}" style="flex-shrink:0;margin-top:0.25rem;">● ${cap(conf)}</span>
       </div>
-      <div class="stats-row">
-        <div class="stat-card"><div class="stat-value">${emailCount.toLocaleString()}</div><div class="stat-label">Emails in Archive</div></div>
-        <div class="stat-card"><div class="stat-value" style="font-size:1rem;line-height:1.3;">${cap(rel.replace(/_/g,' '))}</div><div class="stat-label">Relationship</div></div>
-        <div class="stat-card"><div class="stat-value" style="font-size:1rem;line-height:1.3;">${cap(p.current_status || 'Unknown')}</div><div class="stat-label">Status</div></div>
-        <div class="stat-card"><div class="stat-value">${p.power_public_profile || '—'}</div><div class="stat-label">Profile Score</div></div>
+
+      <!-- Stat cards -->
+      <div class="stats-row" style="margin-bottom:1.5rem;">
+        <div class="stat-card"><div class="stat-value">${emailCount.toLocaleString()}</div><div class="stat-label">Total Documents</div></div>
+        <div class="stat-card"><div class="stat-value" id="statLocations">—</div><div class="stat-label">Locations</div></div>
+        <div class="stat-card"><div class="stat-value" id="statCoPax">—</div><div class="stat-label">Co-Present Persons</div></div>
+        <div class="stat-card"><div class="stat-value" id="statYearsActive">—</div><div class="stat-label">Years Active in Files</div></div>
       </div>
+
+      <!-- Intelligence Summary -->
       ${summary ? `<div style="margin-bottom:1.5rem;"><div class="section-title">Intelligence Summary</div><div class="profile-summary">${summary}</div></div>` : ''}
-      <div style="margin-bottom:1.5rem;">
-        <div class="section-title">Email Volume — Archive Presence</div>
-        <div class="email-volume">
-          <div class="email-volume-label"><span>Emails documented in Epstein archive</span><span>${barPct}% of maximum</span></div>
-          <div class="email-volume-bar"><div class="email-volume-fill" style="width:${barPct}%"></div></div>
-          <div class="email-volume-count">${emailCount.toLocaleString()}</div>
-          <div class="email-volume-sub">source: jmail.world · house oversight committee release</div>
+
+      <!-- Timeline (populated async) -->
+      <div id="timelineSection">
+        <div class="section-title">Event Timeline — Flight Record</div>
+        <div id="timelineContent" style="padding:1.5rem;text-align:center;background:var(--surface);border:1px dashed var(--border);border-radius:10px;">
+          <div style="font-family:'Montserrat',sans-serif;font-size:0.72rem;color:var(--text-tertiary);letter-spacing:0.1em;">LOADING MANIFEST DATA...</div>
         </div>
       </div>
-      <div id="flightSection">
-        <div class="section-title">Flight Manifests</div>
-        <div id="flightContent" style="padding:1.5rem;text-align:center;background:var(--surface);border:1px dashed var(--border);border-radius:10px;">
-          <div style="font-family:'Montserrat', sans-serif;font-size:0.72rem;color:var(--text-tertiary);letter-spacing:0.1em;">LOADING MANIFEST DATA...</div>
-        </div>
-      </div>
+
+      <!-- Evidence gap (populated async) -->
+      <div id="evidenceGap"></div>
     </div>
   `;
 
-  document.getElementById('pw0').style.width = (p.power_public_profile || 0) + '%';
-  document.getElementById('pw1').style.width = (p.power_institutional || 0) + '%';
-  fetchFlights(p.id, p.full_name);
-  document.getElementById('pv0').textContent = p.power_public_profile || 0;
-  document.getElementById('pv1').textContent = p.power_institutional || 0;
+  // Populate right panel — Power Index
+  const pw = [p.power_public_profile, p.power_institutional, p.power_network_centrality, p.power_corroboration];
+  const pl = ['pw0','pw1','pw2','pw3'];
+  const vl = ['pv0','pv1','pv2','pv3'];
+  pw.forEach((v,i) => {
+    document.getElementById(pl[i]).style.width = (v||0)+'%';
+    document.getElementById(vl[i]).textContent = v||'—';
+  });
+  document.getElementById('powerPanel').style.display = 'block';
+  document.getElementById('coPresentPanel').style.display = 'none';
+  document.getElementById('locationsPanel').style.display = 'none';
+  document.getElementById('sourceDocsPanel').style.display = 'none';
 
-  document.getElementById('relPanel').style.display = 'block';
-  document.getElementById('relContent').innerHTML = `
-    <div style="font-size:0.82rem;color:var(--text-secondary);line-height:1.8;">
-      <div><strong style="color:var(--text-primary);">Type:</strong> ${cap(rel.replace(/_/g,' '))}</div>
-      <div><strong style="color:var(--text-primary);">Category:</strong> ${cap(p.category || 'Unknown')}</div>
-      <div><strong style="color:var(--text-primary);">Status:</strong> ${cap(p.current_status || 'Unknown')}</div>
-    </div>
-    ${slug ? `<div style="margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid var(--border);">
-      <a href="https://jmail.world/wiki/${slug}" target="_blank" style="font-family:'Montserrat', sans-serif;font-size:0.65rem;color:var(--text-tertiary);text-decoration:none;letter-spacing:0.06em;">VIEW SOURCE ON JMAIL.WORLD ↗</a>
-    </div>` : ''}
-  `;
-  document.getElementById('statusPanel').style.display = 'block';
-  document.getElementById('statusContent').innerHTML = `
-    <div style="font-family:'Montserrat', sans-serif;font-size:0.68rem;color:var(--text-secondary);line-height:2;">
-      <div>Source: Epstein email archive</div>
-      <div>Confidence: ${cap(conf)}</div>
-      <div>Indexed: Feb 2026</div>
-      <div style="margin-top:0.5rem;padding-top:0.5rem;border-top:1px solid var(--border);color:var(--text-tertiary);">Flight data: active · 90+ legs indexed · 1997–2005</div>
-    </div>
-  `;
+  fetchFlights(p.id, p.full_name, conf, p.upgrade_gap_note, emailCount);
 }
 
-async function fetchFlights(personId, personName) {
-  const el = document.getElementById('flightContent');
+async function fetchFlights(personId, personName, conf, upgradeGapNote, emailCount) {
+  const el = document.getElementById('timelineContent');
   if (!el) return;
   try {
-    const { data: fps, error } = await db.from('flight_passengers').select('flight_id, name_as_logged').eq('person_id', personId);
-    if (error) throw error;
+    const AL = {'TEB':'Teterboro, NJ','PBI':'Palm Beach, FL','TIST':'St. Thomas, USVI','JFK':'New York JFK','EWR':'Newark, NJ','LGA':'New York LGA','HPN':'White Plains, NY','MIA':'Miami, FL','SAF':'Santa Fe, NM','BOS':'Boston, MA','LAX':'Los Angeles, CA','VNY':'Van Nuys, CA','MVY':"Martha's Vineyard",'MRY':'Monterey, CA','CMH':'Columbus, OH','JAX':'Jacksonville, FL','ABQ':'Albuquerque, NM','BED':'Bedford, MA','BGR':'Bangor, ME','ABY':'Albany, GA','MYEF':'Great Exuma, Bahamas','LFPB':'Paris, France','LFMN':'Nice, France','EGBB':'Birmingham, UK','EGGW':'London Luton','ESSA':'Stockholm','EIDW':'Dublin','GMTT':'Tangier, Morocco','MBPV':'Turks & Caicos','DCA':'Washington, DC','IAD':'Dulles, VA','ASE':'Aspen, CO','LAS':'Las Vegas, NV','MDW':'Chicago, IL','HTO':'East Hampton, NY','RIC':'Richmond, VA','TNCM':'St. Maarten','MYNN':'Nassau, Bahamas'};
+    const loc = code => AL[code] || code;
+    const isIsland = code => ['TIST','MYEF','MBPV','TNCM','MYNN'].includes(code);
+    const fmt = d => new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    const fmtShort = d => { const dt = new Date(d+'T12:00:00'); return dt.toLocaleDateString('en-US',{month:'short',day:'numeric'})+'\n'+dt.getFullYear(); };
+
+    // Fetch this person's flight_passenger records
+    const { data: fps } = await db.from('flight_passengers').select('flight_id,name_as_logged').eq('person_id', personId);
     if (!fps || fps.length === 0) {
       el.innerHTML = `<div style="font-size:0.82rem;color:var(--text-secondary);padding:1rem 0;">No documented flights found for this individual in the current manifest database.</div>`;
+      document.getElementById('statYearsActive') && (document.getElementById('statYearsActive').textContent = '0');
+      document.getElementById('statLocations') && (document.getElementById('statLocations').textContent = '0');
+      document.getElementById('statCoPax') && (document.getElementById('statCoPax').textContent = '0');
+      // Still show empty right panel cards
+      document.getElementById('coPresentPanel').style.display = 'block';
+      document.getElementById('coPresentContent').innerHTML = `<div style="font-family:'Montserrat',sans-serif;font-size:0.72rem;color:var(--text-tertiary);padding:0.5rem 0;">No co-present persons documented in flight records.</div>`;
+      document.getElementById('locationsPanel').style.display = 'block';
+      document.getElementById('locationsContent').innerHTML = `<div style="font-family:'Montserrat',sans-serif;font-size:0.72rem;color:var(--text-tertiary);padding:0.5rem 0;">No flight location data available.</div>`;
+      document.getElementById('sourceDocsPanel').style.display = 'block';
+      document.getElementById('sourceDocsContent').innerHTML = `<div style="font-family:'Montserrat',sans-serif;font-size:0.72rem;color:var(--text-tertiary);padding:0.5rem 0;">Source: Epstein email archive · ${emailCount.toLocaleString()} documents indexed.</div>`;
       return;
     }
+
     const flightIds = fps.map(fp => fp.flight_id);
-    const { data: flights, error: fe } = await db.from('flights').select('id, flight_date, tail_number, aircraft_type, origin, destination, notes').in('id', flightIds).order('flight_date', { ascending: true });
-    if (fe) throw fe;
-    const airportLabels = {'TEB':'Teterboro, NJ','PBI':'Palm Beach, FL','TIST':'St. Thomas, USVI','JFK':'New York JFK','EWR':'Newark, NJ','LGA':'New York LGA','HPN':'White Plains, NY','MIA':'Miami, FL','SAF':'Santa Fe, NM','BOS':'Boston, MA','LAX':'Los Angeles, CA','VNY':'Van Nuys, CA','MVY':"Martha's Vineyard",'MRY':'Monterey, CA','CMH':'Columbus, OH','JAX':'Jacksonville, FL','ABQ':'Albuquerque, NM','BED':'Bedford, MA','BGR':'Bangor, ME','ABY':'Albany, GA','MYEF':'Great Exuma, Bahamas','LFPB':'Paris, France','LFML':'Marseille, France','LFMN':'Nice, France','EGBB':'Birmingham, UK','EGGW':'London Luton','ESSA':'Stockholm','EIDW':'Dublin','GMTT':'Tangier, Morocco','GMME':'Rabat, Morocco','LPAZ':'Azores, Portugal','MBPV':'Turks & Caicos'};
-    const fmt = d => new Date(d + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-    const loc = code => airportLabels[code] || code;
-    const isIsland = code => ['TIST','MYEF','MBPV'].includes(code);
-    el.innerHTML = `
-      <div style="font-family:'Montserrat', sans-serif;font-size:0.65rem;color:var(--text-tertiary);letter-spacing:0.08em;margin-bottom:1rem;">
-        ${flights.length} DOCUMENTED FLIGHT${flights.length !== 1 ? 'S' : ''} · TAIL: ${[...new Set(flights.map(f=>f.tail_number))].join(', ')} · SOURCE: PILOT LOGBOOK
-      </div>
-      ${flights.map(f => {
-        const highlight = isIsland(f.destination) || isIsland(f.origin);
-        return `<div style="display:flex;gap:1rem;align-items:flex-start;padding:0.75rem 0;border-bottom:1px solid var(--border);">
-          <div style="font-family:'Montserrat', sans-serif;font-size:0.68rem;color:var(--text-tertiary);min-width:80px;padding-top:2px;">${fmt(f.flight_date)}</div>
-          <div style="flex:1;">
-            <div style="font-size:0.85rem;color:var(--text-primary);font-weight:500;display:flex;align-items:center;gap:0.5rem;">
-              <span>${loc(f.origin)}</span><span style="color:var(--text-tertiary);">→</span><span>${loc(f.destination)}</span>
-              ${highlight ? `<span style="font-family:'Montserrat', sans-serif;font-size:0.58rem;color:#dc2626;letter-spacing:0.06em;padding:1px 5px;border:1px solid #dc2626;border-radius:3px;">ISLAND</span>` : ''}
-            </div>
-            <div style="font-family:'Montserrat', sans-serif;font-size:0.62rem;color:var(--text-tertiary);margin-top:3px;">${f.tail_number} · ${f.aircraft_type || 'PRIVATE JET'}</div>
+
+    // Fetch flights + all co-passengers in parallel
+    const [{ data: flights }, { data: allFPs }, { data: allPersons }] = await Promise.all([
+      db.from('flights').select('id,flight_date,tail_number,origin,destination,notes').in('id', flightIds).order('flight_date',{ascending:true}),
+      db.from('flight_passengers').select('flight_id,person_id,name_as_logged,is_identified,is_redacted').in('flight_id', flightIds),
+      db.from('persons').select('id,full_name,category,relationship_to_epstein').not('id','eq',personId),
+    ]);
+
+    document.getElementById('statYearsActive') && (document.getElementById('statYearsActive').textContent = (flights||[]).length > 0 ? (() => { const yrs = [...new Set((flights||[]).map(f=>f.flight_date.substring(0,4)))]; return yrs.length > 1 ? (Math.max(...yrs)-Math.min(...yrs)+1) : 1; })() : '—');
+
+    // Build person lookup
+    const pById = {};
+    (allPersons||[]).forEach(p => pById[p.id] = p);
+
+    // Build co-passenger frequency map
+    const coPaxCount = {};
+    const coPaxMeta = {};
+    (allFPs||[]).forEach(fp => {
+      if (fp.person_id && fp.person_id !== personId && pById[fp.person_id]) {
+        coPaxCount[fp.person_id] = (coPaxCount[fp.person_id] || 0) + 1;
+        coPaxMeta[fp.person_id] = pById[fp.person_id];
+      }
+    });
+
+    // Build location frequency map
+    const locCount = {};
+    (flights||[]).forEach(f => {
+      [f.origin, f.destination].forEach(code => {
+        if (code) locCount[code] = (locCount[code]||0) + 1;
+      });
+    });
+
+    // Build per-flight co-passenger map
+    const fpByFlight = {};
+    (allFPs||[]).forEach(fp => {
+      if (!fpByFlight[fp.flight_id]) fpByFlight[fp.flight_id] = [];
+      fpByFlight[fp.flight_id].push(fp);
+    });
+
+    // Stat: unique co-present persons
+    document.getElementById('statCoPax').textContent = Object.keys(coPaxCount).length;
+
+    // Stat: unique locations
+    const uniqueLocs = Object.keys(locCount).length;
+    document.getElementById('statLocations').textContent = uniqueLocs;
+
+    // === RIGHT PANEL: Co-Present Persons ===
+    const sortedCoPax = Object.entries(coPaxCount).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    if (sortedCoPax.length > 0) {
+      const maxCount = sortedCoPax[0][1];
+      const relLabel = { direct_contact:'Direct Contact', employee:'Employee/Staff', alleged_client:'Alleged Client', victim:'Victim/Survivor', legal_counsel:'Legal Counsel', associate:'Associate' };
+      document.getElementById('coPresentPanel').style.display = 'block';
+      document.getElementById('coPresentContent').innerHTML = sortedCoPax.map(([pid, count]) => {
+        const cp = coPaxMeta[pid];
+        const initials = cp.full_name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+        const rel = relLabel[cp.relationship_to_epstein] || cap(cp.relationship_to_epstein||'Associate');
+        const barPct = Math.round((count / maxCount) * 100);
+        return `<div class="copresent-row">
+          <div class="copresent-avatar">${initials}</div>
+          <div class="copresent-info">
+            <div class="copresent-name" onclick="loadById('${pid}')">${cp.full_name}</div>
+            <div class="copresent-meta">${cap(cp.category||'')} · ${rel}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex-shrink:0;min-width:70px;">
+            <div style="width:60px;height:3px;background:var(--border);border-radius:2px;overflow:hidden;"><div style="width:${barPct}%;height:100%;background:var(--accent);border-radius:2px;"></div></div>
+            <div class="copresent-count">${count} doc${count>1?'s':''}</div>
           </div>
         </div>`;
-      }).join('')}
-      <div style="margin-top:1rem;font-family:'Montserrat', sans-serif;font-size:0.6rem;color:var(--text-tertiary);letter-spacing:0.06em;">MANIFEST DATA: PILOT LOGBOOK 1997–2005 · ENTERED INTO EVIDENCE AT MAXWELL TRIAL</div>
-    `;
+      }).join('');
+    }
+
+    // === RIGHT PANEL: Locations — Named Places ===
+    const namedPlaces = {
+      TIST: { name:'Little Saint James', sub:'Private Island · USVI', icon:'🏝' },
+      MYEF: { name:'Great Exuma', sub:'Private Island · Bahamas', icon:'🏝' },
+      MBPV: { name:'Turks & Caicos', sub:'Island · Caribbean', icon:'🏝' },
+      TNCM: { name:'St. Maarten', sub:'Island · Caribbean', icon:'🏝' },
+      MYNN: { name:'Nassau', sub:'Island · Bahamas', icon:'🏝' },
+      PBI:  { name:'Palm Beach Estate', sub:'Residence · Florida', icon:'🏠' },
+      TEB:  { name:'Teterboro Airport', sub:'Hub · New Jersey', icon:'✈️' },
+      JFK:  { name:'New York — JFK', sub:'Airport · New York', icon:'✈️' },
+      EWR:  { name:'Newark Liberty', sub:'Airport · New Jersey', icon:'✈️' },
+      LGA:  { name:'LaGuardia', sub:'Airport · New York', icon:'✈️' },
+      HPN:  { name:'Westchester County', sub:'Airport · New York', icon:'✈️' },
+      MIA:  { name:'Miami International', sub:'Airport · Florida', icon:'✈️' },
+      LAX:  { name:'Los Angeles', sub:'Airport · California', icon:'✈️' },
+      VNY:  { name:'Van Nuys Airport', sub:'Private · California', icon:'✈️' },
+      BOS:  { name:'Boston Logan', sub:'Airport · Massachusetts', icon:'✈️' },
+      DCA:  { name:'Washington National', sub:'Airport · DC', icon:'✈️' },
+      IAD:  { name:'Dulles Airport', sub:'Airport · Virginia', icon:'✈️' },
+      SAF:  { name:'Santa Fe', sub:'Airport · New Mexico', icon:'✈️' },
+      MVY:  { name:"Martha's Vineyard", sub:'Island · Massachusetts', icon:'🏝' },
+      ASE:  { name:'Aspen', sub:'Airport · Colorado', icon:'✈️' },
+      CMH:  { name:'Columbus', sub:'Airport · Ohio', icon:'✈️' },
+      LFMN: { name:'Nice Côte d\'Azur', sub:'Airport · France', icon:'✈️' },
+      LFPB: { name:'Paris Le Bourget', sub:'Private · France', icon:'✈️' },
+      EGBB: { name:'Birmingham', sub:'Airport · UK', icon:'✈️' },
+      EGGW: { name:'London Luton', sub:'Airport · UK', icon:'✈️' },
+    };
+    // Also add the aircraft itself as a location entry
+    const tailNums = [...new Set((flights||[]).map(f=>f.tail_number).filter(Boolean))];
+
+    const sortedLocs = Object.entries(locCount).sort((a,b)=>b[1]-a[1]).slice(0,4);
+    const locRows = sortedLocs.map(([code, count]) => {
+      const place = namedPlaces[code] || { name: loc(code), sub: 'Airport · '+code, icon:'📍' };
+      return `<div class="location-row">
+        <div class="location-icon">${place.icon}</div>
+        <div class="location-info">
+          <div class="location-name">${place.name}</div>
+          <div class="location-meta">${place.sub}</div>
+        </div>
+        <div class="location-count">${count} visit${count>1?'s':''}</div>
+      </div>`;
+    });
+    // Add aircraft row
+    if (tailNums.length > 0) {
+      locRows.push(`<div class="location-row">
+        <div class="location-icon">✈</div>
+        <div class="location-info">
+          <div class="location-name">${tailNums.join(' · ')} — Lolita Express</div>
+          <div class="location-meta">Private Aircraft</div>
+        </div>
+        <div class="location-count">${(flights||[]).length} flight${(flights||[]).length>1?'s':''}</div>
+      </div>`);
+    }
+    document.getElementById('locationsPanel').style.display = 'block';
+    document.getElementById('locationsContent').innerHTML = locRows.join('');
+
+    // === RIGHT PANEL: Source Documents with check/dash indicators ===
+    const confCircle = (c) => {
+      if (c === 'confirmed') return `<div style="width:20px;height:20px;border-radius:50%;border:1px solid var(--confirmed);display:flex;align-items:center;justify-content:center;"><span style="color:var(--confirmed);font-size:0.65rem;">✓</span></div>`;
+      if (c === 'corroborated') return `<div style="width:20px;height:20px;border-radius:50%;border:1px solid var(--corroborated);display:flex;align-items:center;justify-content:center;"><span style="color:var(--corroborated);font-size:0.65rem;">✓</span></div>`;
+      return `<div style="width:20px;height:20px;border-radius:50%;border:1px solid var(--border-mid);display:flex;align-items:center;justify-content:center;"><span style="color:var(--text-tertiary);font-size:0.75rem;">−</span></div>`;
+    };
+    document.getElementById('sourceDocsPanel').style.display = 'block';
+    document.getElementById('sourceDocsContent').innerHTML = (flights||[]).slice(0,5).map((f,i) => {
+      const docId = `DOC-FL-${String(f.id).padStart(4,'0')}`;
+      const fDate = new Date(f.flight_date+'T12:00:00').toLocaleDateString('en-US',{month:'short',year:'numeric'});
+      const fConf = (isIsland(f.destination)||isIsland(f.origin)) ? 'confirmed' : conf;
+      return `<div class="source-doc-row">
+        <div>
+          <div class="source-doc-id">${docId}</div>
+          <div class="source-doc-meta">Flight Manifest · ${fDate}</div>
+        </div>
+        ${confCircle(fConf)}
+      </div>`;
+    }).join('');
+
+    // === MAIN: Event Timeline ===
+    el.innerHTML = (flights||[]).map(f => {
+      const fps_this = fpByFlight[f.id] || [];
+      const named = fps_this.filter(fp => fp.person_id && fp.person_id !== personId && pById[fp.person_id]).map(fp => pById[fp.person_id]).filter(Boolean);
+      const redactedFps = fps_this.filter(fp => fp.is_redacted || (!fp.person_id && fp.name_as_logged));
+      const island = isIsland(f.destination) || isIsland(f.origin);
+      const fConf = island ? 'confirmed' : conf;
+      const dt = f.flight_date;
+      const yr = dt.substring(0,4);
+      const dayMonth = new Date(dt+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
+      const tags = [
+        ...named.slice(0,3).map(cp => `<span class="timeline-tag" onclick="loadById('${cp.id}')" style="cursor:pointer;">${cp.full_name.split(' ').slice(-1)[0]}</span>`),
+        ...(redactedFps.length > 0 ? [`<span class="timeline-tag">[REDACTED — ${redactedFps.length} name${redactedFps.length>1?'s':''}]</span>`] : []),
+        island ? `<span class="timeline-tag island">${loc(f.destination)}</span>` : `<span class="timeline-tag">${loc(f.destination)}</span>`,
+        `<span class="timeline-tag" style="color:var(--text-tertiary);">DOC-FL-${String(f.id).padStart(4,'0')}</span>`,
+      ];
+      const coNames = named.length > 0 ? named.slice(0,3).map(cp=>cp.full_name).join(', ')+(named.length>3?`, +${named.length-3} more`:'') : null;
+      const desc = coNames
+        ? `Manifest lists ${personName.split(' ')[0]} alongside ${coNames}.${island ? ` Destination: ${loc(f.destination)}.` : ''}`
+        : `${personName.split(' ')[0]} listed on ${f.tail_number} manifest.${island ? ` Island destination: ${loc(f.destination)}.` : ''}`;
+      return `<div class="timeline-item">
+        <div class="timeline-date">${dayMonth}<br><span style="font-size:0.72rem;">${yr}</span></div>
+        <div class="timeline-dot ${fConf}" style="margin-top:0.85rem;"></div>
+        <div class="timeline-card">
+          <div class="timeline-card-header">
+            <div class="timeline-card-title">Flight: ${loc(f.origin)} → ${loc(f.destination)}</div>
+            <span class="conf-badge ${fConf}" style="font-size:0.6rem;padding:0.15rem 0.5rem;">● ${cap(fConf)}</span>
+          </div>
+          <div class="timeline-card-body">${desc}</div>
+          <div class="timeline-tags">${tags.join('')}</div>
+        </div>
+      </div>`;
+    }).join('');
+
+    // Evidence gap banner
+    if (upgradeGapNote || conf === 'corroborated' || conf === 'indicated') {
+      const gapText = upgradeGapNote || `${cap(conf)} status: additional independent documentation needed to upgrade confidence level. Cross-reference available in flight manifest records.`;
+      document.getElementById('evidenceGap').innerHTML = `
+        <div class="evidence-gap">
+          <div class="evidence-gap-label">⚠ Evidence Gap — Action Required</div>
+          <div class="evidence-gap-text">${gapText}</div>
+        </div>`;
+    }
+
   } catch(err) {
-    el.innerHTML = `<div style="font-size:0.8rem;color:var(--text-secondary);">Flight data unavailable.</div>`;
+    if (document.getElementById('timelineContent'))
+      document.getElementById('timelineContent').innerHTML = `<div style="font-size:0.8rem;color:var(--text-secondary);">Flight data unavailable: ${err.message}</div>`;
   }
 }
 
@@ -1400,36 +1673,128 @@ async function showFlightBrowser() {
   clearRightPanel();
   showProfilesLoading();
   try {
-    const { data: flights } = await db.from('flights').select('id, flight_date, tail_number, aircraft_type, origin, destination, notes').order('flight_date', { ascending: true });
-    const airportLabels = {'TEB':'Teterboro, NJ','PBI':'Palm Beach, FL','TIST':'St. Thomas, USVI','JFK':'New York JFK','EWR':'Newark, NJ','LGA':'New York LGA','HPN':'White Plains, NY','MIA':'Miami, FL','SAF':'Santa Fe, NM','BOS':'Boston, MA','LAX':'Los Angeles, CA','VNY':'Van Nuys, CA','MVY':"Martha's Vineyard",'MRY':'Monterey, CA','CMH':'Columbus, OH','JAX':'Jacksonville, FL','ABQ':'Albuquerque, NM','BED':'Bedford, MA','BGR':'Bangor, ME','ABY':'Albany, GA','MYEF':'Great Exuma, Bahamas','LFPB':'Paris, France','LFML':'Marseille, France','LFMN':'Nice, France','EGBB':'Birmingham, UK','EGGW':'London Luton','ESSA':'Stockholm','EIDW':'Dublin','GMTT':'Tangier, Morocco','GMME':'Rabat, Morocco','LPAZ':'Azores, Portugal','MBPV':'Turks & Caicos'};
-    const loc = code => airportLabels[code] || code;
-    const isIsland = code => ['TIST','MYEF','MBPV'].includes(code);
-    const fmt = d => new Date(d + 'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    const AL = {'TEB':'Teterboro, NJ','PBI':'Palm Beach, FL','TIST':'St. Thomas, USVI','JFK':'New York JFK','EWR':'Newark, NJ','LGA':'New York LGA','HPN':'White Plains, NY','MIA':'Miami, FL','SAF':'Santa Fe, NM','BOS':'Boston, MA','LAX':'Los Angeles, CA','VNY':'Van Nuys, CA','MVY':"Martha's Vineyard",'MRY':'Monterey, CA','CMH':'Columbus, OH','JAX':'Jacksonville, FL','ABQ':'Albuquerque, NM','BED':'Bedford, MA','BGR':'Bangor, ME','ABY':'Albany, GA','MYEF':'Great Exuma, Bahamas','LFPB':'Paris, France','LFML':'Marseille, France','LFMN':'Nice, France','EGBB':'Birmingham, UK','EGGW':'London Luton','ESSA':'Stockholm','EIDW':'Dublin','GMTT':'Tangier, Morocco','GMME':'Rabat, Morocco','LPAZ':'Azores, Portugal','MBPV':'Turks & Caicos','DCA':'Washington, DC','IAD':'Dulles, VA','ASE':'Aspen, CO','LAS':'Las Vegas, NV','MDW':'Chicago, IL','HTO':'East Hampton, NY','RIC':'Richmond, VA','TNCM':'St. Maarten','MYNN':'Nassau, Bahamas'};
+    const loc = code => AL[code] || code;
+    const isIsland = code => ['TIST','MYEF','MBPV','TNCM','MYNN'].includes(code);
+    const fmt = d => new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+
+    // Load flights + all passengers in parallel
+    const [flightsRes, fpsRes, personsRes] = await Promise.all([
+      db.from('flights').select('id,flight_date,tail_number,aircraft_type,origin,destination,notes').order('flight_date',{ascending:true}),
+      db.from('flight_passengers').select('flight_id,person_id,name_as_logged,is_identified,is_redacted'),
+      db.from('persons').select('id,full_name,category,relationship_to_epstein'),
+    ]);
+
+    if (flightsRes.error) throw flightsRes.error;
+    const flights = flightsRes.data || [];
+    const allFPs = fpsRes.data || [];
+    const allPersons = personsRes.data || [];
+
+    // Build lookup maps
+    const personById = {};
+    (allPersons||[]).forEach(p => personById[p.id] = p);
+    const fpByFlight = {};
+    (allFPs||[]).forEach(fp => {
+      if (!fpByFlight[fp.flight_id]) fpByFlight[fp.flight_id] = [];
+      fpByFlight[fp.flight_id].push(fp);
+    });
+
+    const relColor = { direct_contact:'var(--confirmed)', employee:'var(--corroborated)', alleged_client:'var(--indicated)', victim:'var(--corroborated)', legal_counsel:'var(--indicated)', associate:'var(--text-tertiary)' };
+
+    const rowsHtml = (flights||[]).map(f => {
+      const fps = fpByFlight[f.id] || [];
+      const named = fps.filter(fp => fp.is_identified && fp.person_id).map(fp => personById[fp.person_id]).filter(Boolean);
+      const redacted = fps.filter(fp => fp.is_redacted);
+      // count unnamed from notes
+      const unnamedMatches = (f.notes||'').match(/(\d+)\s+(FEMALE|MALE)/gi) || [];
+      const unnamedCount = unnamedMatches.reduce((s,m) => { const n=parseInt(m); return s+(isNaN(n)?1:n); }, unnamedMatches.length>0?0:0);
+      const totalPax = named.length + (unnamedMatches.length > 0 ? unnamedMatches.reduce((s,m)=>{ const parts=m.trim().split(/\s+/); return s+parseInt(parts[0]||1); },0) : 0);
+      const highlight = isIsland(f.destination) || isIsland(f.origin);
+
+      // Build manifest HTML (hidden by default)
+      const manifestHtml = `
+        <div class="fm-manifest" id="fm-${f.id}" style="display:none;">
+          <div class="fm-manifest-inner">
+            <div class="fm-manifest-label">Full passenger manifest</div>
+            <div class="fm-pax-list">
+              ${named.map(p => {
+                const rel = p.relationship_to_epstein || 'associate';
+                const col = relColor[rel] || 'var(--text-tertiary)';
+                const safeName = (p.full_name||'').replace(/'/g,"\\'").replace(/"/g,'&quot;');
+                return `<div class="fm-pax-row" onclick="doSearch('${safeName}');switchTab('profiles');" title="View profile">
+                  <span class="fm-pax-dot" style="background:${col};"></span>
+                  <span class="fm-pax-name">${p.full_name}</span>
+                  <span class="fm-pax-meta">${cap(rel.replace(/_/g,' '))} · ${cap(p.category||'')}</span>
+                  <span class="fm-pax-arrow">→</span>
+                </div>`;
+              }).join('')}
+              ${unnamedMatches.map(m => {
+                const parts = m.trim().split(/\s+/);
+                const n = parseInt(parts[0])||1;
+                const gender = parts[1]||'FEMALE';
+                return `<div class="fm-pax-row fm-pax-redacted" style="cursor:default;">
+                  <span class="fm-pax-dot" style="background:var(--text-primary);opacity:0.4;"></span>
+                  <span class="fm-pax-name" style="font-style:italic;opacity:0.65;">${n === 1 ? 'Unnamed '+gender.toLowerCase() : n+' unnamed '+gender.toLowerCase()+'s'}</span>
+                  <span class="fm-pax-meta">Identity not recorded in logbook</span>
+                </div>`;
+              }).join('')}
+              ${named.length===0 && unnamedMatches.length===0 ? `<div style="font-size:0.8rem;color:var(--text-tertiary);font-style:italic;padding:0.5rem 0;">No passenger names recorded for this leg</div>` : ''}
+            </div>
+            <div class="fm-manifest-footer">
+              <span>${f.tail_number} · ${f.aircraft_type||'Private Aircraft'}</span>
+              ${f.notes ? `<span class="fm-notes">${f.notes}</span>` : ''}
+            </div>
+          </div>
+        </div>`;
+
+      return `
+        <div class="fm-row" onclick="toggleFlight('${f.id}')" id="fm-row-${f.id}">
+          <div class="fm-row-main">
+            <span class="fm-date">${fmt(f.flight_date)}</span>
+            <span class="fm-route">
+              <span class="fm-airport">${f.origin}</span>
+              <span class="fm-arrow-route">→</span>
+              <span class="fm-airport">${f.destination}</span>
+            </span>
+            <span class="fm-city-names">${loc(f.origin)} → ${loc(f.destination)}</span>
+            <span class="fm-badges">
+              ${highlight ? `<span class="fm-badge-island">ISLAND</span>` : ''}
+            </span>
+            <span class="fm-pax-count">${named.length > 0 ? named.length+(unnamedMatches.length>0?'+':'') : unnamedMatches.length > 0 ? '?' : '—'} pax</span>
+            <span class="fm-chevron" id="fm-chev-${f.id}">›</span>
+          </div>
+          ${manifestHtml}
+        </div>`;
+    }).join('');
+
     document.getElementById('tabProfiles').innerHTML = `
       <div style="padding:1.5rem 1.75rem;">
-        <div style="margin-bottom:1.5rem;">
-          <div class="subject-name" style="font-size:1.6rem;">Flight Manifests</div>
-          <div style="font-family:'Montserrat', sans-serif;font-size:0.65rem;color:var(--text-tertiary);margin-top:0.25rem;letter-spacing:0.08em;">${flights.length} DOCUMENTED FLIGHT LEGS · N908JE & N909JE · PILOT LOGBOOK 1997–2005</div>
+        <div style="margin-bottom:1.25rem;display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;flex-wrap:wrap;">
+          <div>
+            <div class="subject-name" style="font-size:1.6rem;">Flight Manifests</div>
+            <div style="font-family:'Montserrat',sans-serif;font-size:0.65rem;color:var(--text-tertiary);margin-top:0.25rem;letter-spacing:0.08em;">${(flights||[]).length} DOCUMENTED FLIGHT LEGS · N908JE & N909JE · PILOT LOGBOOK 1997–2005</div>
+          </div>
+          <div style="font-size:0.78rem;color:var(--text-secondary);">Click any flight to expand the full passenger manifest</div>
         </div>
-        <div style="margin-bottom:1rem;font-size:0.8rem;color:var(--text-secondary);">Source: pilot logbooks entered into evidence at the Ghislaine Maxwell federal trial. <span style="color:#dc2626;">Red badge</span> = island destination or origin.</div>
-        ${flights.map(f => {
-          const highlight = isIsland(f.destination) || isIsland(f.origin);
-          return `<div style="display:flex;gap:1rem;align-items:flex-start;padding:0.75rem 0;border-bottom:1px solid var(--border);">
-            <div style="font-family:'Montserrat', sans-serif;font-size:0.65rem;color:var(--text-tertiary);min-width:88px;padding-top:2px;">${fmt(f.flight_date)}</div>
-            <div style="flex:1;">
-              <div style="font-size:0.85rem;color:var(--text-primary);font-weight:500;display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
-                <span>${loc(f.origin)}</span><span style="color:var(--text-tertiary);">→</span><span>${loc(f.destination)}</span>
-                ${highlight ? `<span style="font-family:'Montserrat', sans-serif;font-size:0.58rem;color:#dc2626;letter-spacing:0.06em;padding:1px 5px;border:1px solid #dc2626;border-radius:3px;">ISLAND</span>` : ''}
-              </div>
-              <div style="font-family:'Montserrat', sans-serif;font-size:0.62rem;color:var(--text-tertiary);margin-top:3px;">${f.tail_number} · ${f.notes ? f.notes.substring(0,80)+(f.notes.length>80?'…':'') : ''}</div>
-            </div>
-          </div>`;
-        }).join('')}
-        <div style="margin-top:1.5rem;padding:1rem;background:var(--surface);border-radius:8px;font-family:'Montserrat', sans-serif;font-size:0.62rem;color:var(--text-tertiary);line-height:1.8;letter-spacing:0.04em;">
-          SOURCE: PILOT LOGBOOKS (DAVID RODGERS) · ENTERED INTO EVIDENCE UNITED STATES V. MAXWELL · USDC SDNY 2021
+        <div class="fm-list">${rowsHtml}</div>
+        <div style="margin-top:1.5rem;padding:1rem;background:var(--surface);border-radius:8px;font-family:'Montserrat',sans-serif;font-size:0.62rem;color:var(--text-tertiary);line-height:1.8;letter-spacing:0.04em;">
+          SOURCE: PILOT LOGBOOKS (DAVID RODGERS) · ENTERED INTO EVIDENCE UNITED STATES V. MAXWELL · USDC SDNY 2021<br>
+          CLICK ANY FLIGHT ROW TO VIEW FULL PASSENGER MANIFEST AND LINKED PROFILES
         </div>
       </div>`;
-  } catch(err) { showError(err.message); }
+  } catch(err) {
+    document.getElementById('tabProfiles').innerHTML = `<div style="padding:1.5rem;"><div class="state-msg"><div class="state-label" style="color:#dc2626;">FLIGHT BROWSER ERROR: ${err.message || String(err)}</div></div></div>`;
+  }
+}
+
+function toggleFlight(id) {
+  const manifest = document.getElementById('fm-'+id);
+  const row = document.getElementById('fm-row-'+id);
+  const chev = document.getElementById('fm-chev-'+id);
+  const isOpen = manifest.style.display !== 'none';
+  manifest.style.display = isOpen ? 'none' : 'block';
+  chev.style.transform = isOpen ? '' : 'rotate(90deg)';
+  row.classList.toggle('fm-row-open', !isOpen);
 }
 
 function showLanding() {
@@ -1469,12 +1834,122 @@ function showError(msg) {
   document.getElementById('tabProfiles').innerHTML = `<div style="padding:1.5rem;"><div class="state-msg"><div class="state-label" style="color:var(--unverified);">ERROR: ${msg}</div></div></div>`;
 }
 function clearRightPanel() {
-  document.getElementById('pw0').style.width = '0%';
-  document.getElementById('pw1').style.width = '0%';
-  document.getElementById('pv0').textContent = '—';
-  document.getElementById('pv1').textContent = '—';
-  document.getElementById('relPanel').style.display = 'none';
-  document.getElementById('statusPanel').style.display = 'none';
+  ['pw0','pw1','pw2','pw3'].forEach(id => { const el=document.getElementById(id); if(el) el.style.width='0%'; });
+  ['pv0','pv1','pv2','pv3'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent='—'; });
+  ['powerPanel','coPresentPanel','locationsPanel','sourceDocsPanel',
+   'flightStatsPanel','flightRoutesPanel','flightTravelersPanel',
+   'connPanelA','connPanelB','connPathPanel'].forEach(id => { const el=document.getElementById(id); if(el) el.style.display='none'; });
+}
+
+// ── FLIGHT MANIFESTS sidebar ──
+async function showFlightSidebarStats() {
+  try {
+    const [flightsRes, fpsRes, personsRes] = await Promise.all([
+      db.from('flights').select('id,flight_date,origin,destination,tail_number'),
+      db.from('flight_passengers').select('flight_id,person_id'),
+      db.from('persons').select('id,full_name,category,relationship_to_epstein').eq('is_victim',false),
+    ]);
+    const flights = flightsRes.data || [];
+    const fps = fpsRes.data || [];
+    const persons = personsRes.data || [];
+    const pById = {}; persons.forEach(p => pById[p.id] = p);
+
+    // Archive stats
+    const years = flights.map(f => f.flight_date.substring(0,4)).sort();
+    const tails = [...new Set(flights.map(f=>f.tail_number).filter(Boolean))];
+    const islandCodes = ['TIST','MYEF','MBPV','TNCM','MYNN'];
+    const islandFlights = flights.filter(f => islandCodes.includes(f.destination) || islandCodes.includes(f.origin));
+    document.getElementById('flightStatsPanel').style.display = 'block';
+    document.getElementById('flightStatsContent').innerHTML = `
+      <div class="source-doc-row"><div><div class="source-doc-id">${flights.length}</div><div class="source-doc-meta">Total flight legs</div></div></div>
+      <div class="source-doc-row"><div><div class="source-doc-id">${years[0]} – ${years[years.length-1]}</div><div class="source-doc-meta">Date range in archive</div></div></div>
+      <div class="source-doc-row"><div><div class="source-doc-id">${tails.join(', ')}</div><div class="source-doc-meta">Tail numbers documented</div></div></div>
+      <div class="source-doc-row" style="border:none"><div><div class="source-doc-id">${islandFlights.length}</div><div class="source-doc-meta">Flights to island destinations</div></div></div>`;
+
+    // Most frequent routes
+    const routeCount = {};
+    const AL = {'TEB':'Teterboro','PBI':'Palm Beach','TIST':'St. Thomas','JFK':'JFK','EWR':'Newark','LGA':'LaGuardia','HPN':'White Plains','MIA':'Miami','LAX':'Los Angeles','VNY':'Van Nuys','BOS':'Boston','SAF':'Santa Fe','MYEF':'Great Exuma','MBPV':'Turks & Caicos','TNCM':'St. Maarten','MYNN':'Nassau','LFMN':'Nice','LFPB':'Paris','DCA':'Washington','MVY':'Vineyard','ASE':'Aspen','HTO':'East Hampton'};
+    const ln = c => AL[c]||c;
+    flights.forEach(f => { const key = f.origin+'→'+f.destination; routeCount[key] = (routeCount[key]||0)+1; });
+    const topRoutes = Object.entries(routeCount).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    const maxR = topRoutes[0]?.[1]||1;
+    document.getElementById('flightRoutesPanel').style.display = 'block';
+    document.getElementById('flightRoutesContent').innerHTML = topRoutes.map(([route,count]) => {
+      const [orig,dest] = route.split('→');
+      const isIsland = islandCodes.includes(dest)||islandCodes.includes(orig);
+      return `<div class="copresent-row">
+        <div class="copresent-info">
+          <div class="copresent-name" style="font-size:0.75rem;">${ln(orig)} → ${ln(dest)}</div>
+          <div class="copresent-meta">${isIsland?'Island route':'Domestic route'}</div>
+        </div>
+        <div class="copresent-right">
+          <div class="copresent-bar-wrap"><div class="copresent-bar-fill" style="width:${Math.round(count/maxR*100)}%"></div></div>
+          <div class="copresent-count">${count}×</div>
+        </div>
+      </div>`;
+    }).join('');
+
+    // Most frequent travelers
+    const travCount = {};
+    fps.forEach(fp => { if(fp.person_id && pById[fp.person_id]) travCount[fp.person_id] = (travCount[fp.person_id]||0)+1; });
+    const topTrav = Object.entries(travCount).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    const maxT = topTrav[0]?.[1]||1;
+    document.getElementById('flightTravelersPanel').style.display = 'block';
+    document.getElementById('flightTravelersContent').innerHTML = topTrav.map(([pid,count]) => {
+      const p = pById[pid];
+      const initials = p.full_name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase();
+      return `<div class="copresent-row">
+        <div class="copresent-avatar">${initials}</div>
+        <div class="copresent-info">
+          <div class="copresent-name" onclick="doSearch('${p.full_name.replace(/'/g,"\\'")}');switchTab('profiles')">${p.full_name}</div>
+          <div class="copresent-meta">${cap(p.category||'')} · ${cap((p.relationship_to_epstein||'').replace(/_/g,' '))}</div>
+        </div>
+        <div class="copresent-right">
+          <div class="copresent-bar-wrap"><div class="copresent-bar-fill" style="width:${Math.round(count/maxT*100)}%"></div></div>
+          <div class="copresent-count">${count} flights</div>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) { console.error('Flight sidebar error:', e); }
+}
+
+// ── CONNECTIONS sidebar ──
+function connUpdateSidebar(personA, personB, pathResult) {
+  const renderPersonCard = (p, panelId, contentId) => {
+    if (!p) return;
+    const panel = document.getElementById(panelId);
+    const content = document.getElementById(contentId);
+    const title = panel?.querySelector('.panel-card-title');
+    if (!panel || !content || !title) return;
+    title.textContent = p.full_name;
+    const pw = [p.power_public_profile, p.power_institutional, p.power_network_centrality, p.power_corroboration];
+    const labels = ['Public Profile','Institutional','Network Centrality','Corroboration'];
+    content.innerHTML = pw.map((v,i) =>
+      `<div class="power-row"><span class="power-label">${labels[i]}</span><div class="power-track"><div class="power-fill" style="width:${v||0}%"></div></div><span class="power-val">${v||'—'}</span></div>`
+    ).join('') + `<div style="margin-top:0.6rem;padding-top:0.6rem;border-top:1px solid var(--border);">
+      <div class="copresent-meta">${cap((p.relationship_to_epstein||'associate').replace(/_/g,' '))} · ${cap(p.category||'')}</div>
+    </div>`;
+    panel.style.display = 'block';
+  };
+
+  if (personA?.id) {
+    db.from('persons').select('full_name,category,relationship_to_epstein,power_public_profile,power_institutional,power_network_centrality,power_corroboration').eq('id', personA.id).single()
+      .then(({data}) => { if(data) renderPersonCard(data, 'connPanelA', 'connPanelAContent'); });
+  }
+  if (personB?.id) {
+    db.from('persons').select('full_name,category,relationship_to_epstein,power_public_profile,power_institutional,power_network_centrality,power_corroboration').eq('id', personB.id).single()
+      .then(({data}) => { if(data) renderPersonCard(data, 'connPanelB', 'connPanelBContent'); });
+  }
+
+  // Path summary
+  if (pathResult) {
+    const degrees = pathResult.nodePath.length - 1;
+    const via = pathResult.nodePath.slice(1,-1);
+    document.getElementById('connPathPanel').style.display = 'block';
+    document.getElementById('connPathContent').innerHTML = `
+      <div class="source-doc-row"><div><div class="source-doc-id">${degrees} degree${degrees!==1?'s':''}</div><div class="source-doc-meta">Separation between subjects</div></div></div>
+      <div class="source-doc-row" style="border:none"><div><div class="source-doc-id">${pathResult.edgePath.length} shared connection${pathResult.edgePath.length!==1?'s':''}</div><div class="source-doc-meta">${via.length>0?'Via: '+via.map(id=>pathResult._pMap?.[id]?.full_name||'?').join(' → '):'Direct connection'}</div></div></div>`;
+  }
 }
 function cap(str) { if (!str) return ''; return str.charAt(0).toUpperCase() + str.slice(1); }
 
@@ -1710,10 +2185,12 @@ async function initConnections() {
   connSetupAutocomplete('connInputA', 'connDropA', p => {
     connSelectedA = p;
     document.getElementById('connFindBtn').disabled = !(connSelectedA && connSelectedB);
+    connUpdateSidebar(connSelectedA, connSelectedB, null);
   });
   connSetupAutocomplete('connInputB', 'connDropB', p => {
     connSelectedB = p;
     document.getElementById('connFindBtn').disabled = !(connSelectedA && connSelectedB);
+    connUpdateSidebar(connSelectedA, connSelectedB, null);
   });
 }
 
@@ -1856,6 +2333,9 @@ function connFindPath() {
   const pMap = connGetPersonMap();
   const paths = connFindAllPaths(connSelectedA.id, connSelectedB.id);
   connRenderResult(paths, pMap);
+  // Attach pMap to primary path for sidebar
+  if (paths && paths.length > 0) { paths[0]._pMap = pMap; }
+  connUpdateSidebar(connSelectedA, connSelectedB, paths?.[0] || null);
   document.getElementById('connResultArea').scrollIntoView({ behavior:'smooth', block:'start' });
 }
 
@@ -1869,6 +2349,7 @@ function connSetQuick(nameA, nameB) {
   connSelectedA = a; connSelectedB = b;
   document.getElementById('connFindBtn').disabled = false;
   connFindPath();
+  connUpdateSidebar(connSelectedA, connSelectedB, null);
 }
 
 </script>
