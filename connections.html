@@ -489,12 +489,70 @@
   }
   .footer-link:hover { color: var(--text-primary); border-color: var(--text-primary); }
 
+
+  /* Mobile nav drawer */
+  .mobile-nav-btn {
+    display: none;
+    background: none;
+    border: 1px solid var(--border-mid);
+    border-radius: 4px;
+    color: var(--text-tertiary);
+    font-size: 1rem;
+    width: 30px; height: 30px;
+    cursor: pointer;
+    align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .mobile-nav-drawer {
+    display: none;
+    position: fixed; inset: 0; z-index: 200;
+  }
+  .mobile-nav-drawer.open { display: block; }
+  .mob-overlay {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.5);
+  }
+  .mob-panel {
+    position: absolute; top: 0; right: 0;
+    width: 210px; height: 100%;
+    background: var(--bg-card);
+    border-left: 1px solid var(--border-mid);
+    padding: 1.25rem 1rem;
+    display: flex; flex-direction: column;
+  }
+  .mob-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 1.5rem;
+  }
+  .mob-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--text-tertiary);
+  }
+  .mob-close {
+    background: none; border: none; cursor: pointer;
+    color: var(--text-tertiary); font-size: 1rem;
+  }
+  .mob-link {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600; font-size: 0.8rem;
+    letter-spacing: 0.07em; text-transform: uppercase;
+    color: var(--text-secondary); text-decoration: none;
+    padding: 0.75rem 0.5rem;
+    border-bottom: 1px solid var(--border);
+    display: block; transition: color 0.15s;
+  }
+  .mob-link:hover { color: var(--text-primary); }
+  .mob-link.active { color: var(--text-primary); }
   @media (max-width: 640px) {
     .page-wrap { padding: 2rem 1.25rem 4rem; }
     .search-panel { grid-template-columns: 1fr; }
     .connector-label { display: none; }
-    .nav-links { gap: 0; }
-    .nav-link { padding: 0.3rem 0.4rem; font-size: 0.65rem; }
+    .nav-link { font-size: 0.62rem; letter-spacing: 0.04em; padding: 0.3rem 0.45rem; }
+  }
+  @media (max-width: 520px) {
+    .nav-links { display: none; }
+    .mobile-nav-btn { display: flex; }
   }
 </style>
 </head>
@@ -508,6 +566,7 @@
       <span class="logo-main">Reckoning Radar</span>
     </div>
   </a>
+  <button class="mobile-nav-btn" onclick="openMobNav()" aria-label="Menu">☰</button>
   <div class="nav-links">
     <a href="index.html" class="nav-link">Profiles</a>
     <a href="graph.html" class="nav-link">Network</a>
@@ -1057,6 +1116,24 @@ async function init() {
 }
 
 init();
+</script>
+
+<!-- MOBILE NAV DRAWER -->
+<div class="mobile-nav-drawer" id="mobDrawer">
+  <div class="mob-overlay" onclick="document.getElementById('mobDrawer').classList.remove('open')"></div>
+  <div class="mob-panel">
+    <div class="mob-header">
+      <span class="mob-label">Navigate</span>
+      <button class="mob-close" onclick="document.getElementById('mobDrawer').classList.remove('open')">✕</button>
+    </div>
+    <a href="index.html" class="mob-link">Profiles</a>
+    <a href="graph.html" class="mob-link">Network</a>
+    <a href="redacted.html" class="mob-link">Unidentified</a>
+    <a href="connections.html" class="mob-link active">Connections</a>
+  </div>
+</div>
+<script>
+function openMobNav() { document.getElementById('mobDrawer').classList.add('open'); }
 </script>
 </body>
 </html>
