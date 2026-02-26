@@ -4,18 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Reckoning Radar — Epstein Files Intelligence</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Montserrat:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://use.typekit.net/zzw7dfl.css">
 <style>
 
+/* ── THEME TOKENS ── */
 [data-theme="light"] {
   --bg:             #F7F4EF;
   --bg-secondary:   #EDE9E1;
+  --bg-card:        #FAFAF7;
   --surface:        #FFFFFF;
   --border:         rgba(0,0,0,0.08);
-  --border-strong:  rgba(0,0,0,0.14);
+  --border-mid:     rgba(0,0,0,0.12);
+  --border-strong:  rgba(0,0,0,0.18);
   --accent:         #1A1A1A;
   --accent-dim:     rgba(26,26,26,0.06);
+  --accent-bg:      rgba(26,26,26,0.06);
   --accent-btn:     #1A1A1A;
   --accent-btn-text:#FFFFFF;
   --text-primary:   #0D0D0D;
@@ -35,16 +39,29 @@
   --unverified-border:rgba(138,26,26,0.25);
   --shadow-sm:      0 1px 3px rgba(0,0,0,0.06);
   --topbar-bg:      rgba(247,244,239,0.97);
+  --header-bg:      #0D0D0D;
+  --header-text:    #F7F4EF;
+  --redact-color:   #1A1A1A;
+  --stamp-color:    rgba(180,40,40,0.18);
+  --stamp-border:   rgba(180,40,40,0.55);
+  --highlight:      #C8102E;
+  --highlight-dim:  rgba(200,16,46,0.08);
+  --highlight-mid:  rgba(200,16,46,0.2);
+  --node-bg:        #1A1A1A;
+  --node-text:      #F7F4EF;
 }
 
 [data-theme="dark"] {
   --bg:             #1a1a1a;
   --bg-secondary:   #141414;
+  --bg-card:        #161616;
   --surface:        rgba(255,255,255,0.03);
-  --border:         rgba(255,255,255,0.08);
-  --border-strong:  rgba(255,255,255,0.14);
+  --border:         rgba(255,255,255,0.07);
+  --border-mid:     rgba(255,255,255,0.11);
+  --border-strong:  rgba(255,255,255,0.18);
   --accent:         #FFED29;
   --accent-dim:     rgba(255,237,41,0.08);
+  --accent-bg:      rgba(255,237,41,0.06);
   --accent-btn:     #FFED29;
   --accent-btn-text:#2A2A2A;
   --text-primary:   #FFFFFF;
@@ -64,6 +81,16 @@
   --unverified-border:rgba(248,113,113,0.25);
   --shadow-sm:      0 1px 3px rgba(0,0,0,0.3);
   --topbar-bg:      rgba(26,26,26,0.97);
+  --header-bg:      #0A0A0A;
+  --header-text:    #F0EDE8;
+  --redact-color:   #F0EDE8;
+  --stamp-color:    rgba(220,60,60,0.12);
+  --stamp-border:   rgba(220,80,80,0.45);
+  --highlight:      #FF4060;
+  --highlight-dim:  rgba(255,64,96,0.08);
+  --highlight-mid:  rgba(255,64,96,0.2);
+  --node-bg:        #F0EDE8;
+  --node-text:      #111111;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -111,7 +138,8 @@ body {
   grid-column: 2;
   grid-row: 2;
   overflow-y: auto;
-  padding: 1.5rem 1.75rem;
+  padding: 0;
+  position: relative;
 }
 .sidebar-right {
   grid-column: 3;
@@ -122,7 +150,7 @@ body {
   background: var(--bg-secondary);
 }
 
-/* ── TOPBAR LOGO — #2: "THE" stacked above Reckoning Radar, larger ── */
+/* ── TOPBAR LOGO ── */
 .topbar-logo {
   flex-shrink: 0;
   display: flex;
@@ -160,8 +188,6 @@ body {
   padding: 0 0.75rem;
 }
 .search-icon { color: var(--text-tertiary); font-size: 1rem; flex-shrink: 0; }
-
-/* #4 — Search bar: Source Sans Pro Italic */
 .search-bar {
   flex: 1;
   border: none;
@@ -189,7 +215,6 @@ body {
   box-shadow: 0 0 6px rgba(26,107,60,0.6);
   flex-shrink: 0;
 }
-/* #9 — status text + toggle label: Montserrat Medium */
 .status-text {
   font-family: 'Montserrat', sans-serif;
   font-weight: 500;
@@ -230,8 +255,6 @@ body {
 
 /* ── SIDEBAR ── */
 .sidebar-section { margin-bottom: 1.6rem; }
-
-/* #7 — Section headers: Montserrat SemiBold, larger */
 .sidebar-label {
   font-family: 'Montserrat', sans-serif;
   font-weight: 600;
@@ -242,8 +265,6 @@ body {
   margin-bottom: 0.6rem;
   padding: 0 0.25rem;
 }
-
-/* #8 — Category names: slightly larger */
 .nav-item {
   display: flex;
   justify-content: space-between;
@@ -264,7 +285,7 @@ body {
 }
 .nav-item.coming-soon { opacity: 0.38; cursor: default; }
 .coming-soon-badge {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.55rem;
   color: var(--text-tertiary);
   letter-spacing: 0.06em;
@@ -273,11 +294,12 @@ body {
   padding: 0.05rem 0.3rem;
 }
 
-/* ── MAIN CONTENT ── */
+/* ── PROFILES TAB CONTENT ── */
+#tabProfiles { padding: 1.5rem 1.75rem; }
 .subject-name { font-size: 2.2rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 0.6rem; }
 .subject-meta { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; }
 .meta-pill {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Montserrat', sans-serif;
   font-size: 0.68rem;
   padding: 0.3rem 0.7rem;
   border-radius: 20px;
@@ -292,42 +314,33 @@ body {
 .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 0.75rem; margin: 1.25rem 0; }
 .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
 .stat-value { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; }
-.stat-label { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--text-tertiary); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.25rem; }
+.stat-label { font-family: 'Montserrat', sans-serif; font-size: 0.6rem; color: var(--text-tertiary); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.25rem; }
 
-.section-title { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--text-tertiary); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+.section-title { font-family: 'Montserrat', sans-serif; font-size: 0.68rem; color: var(--text-tertiary); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
 
 .profile-summary { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.25rem; margin-bottom: 1.5rem; font-size: 0.875rem; color: var(--text-secondary); line-height: 1.65; }
 
 .email-volume { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
-.email-volume-label { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--text-tertiary); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.6rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.25rem; }
+.email-volume-label { font-family: 'Montserrat', sans-serif; font-size: 0.62rem; color: var(--text-tertiary); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.6rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.25rem; }
 .email-volume-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
 .email-volume-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.6s ease; }
 .email-volume-count { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.02em; margin-top: 0.5rem; }
-.email-volume-sub { font-family: 'DM Mono', monospace; font-size: 0.62rem; color: var(--text-tertiary); }
+.email-volume-sub { font-family: 'Montserrat', sans-serif; font-size: 0.62rem; color: var(--text-tertiary); }
 
-.conf-badge { font-family: 'DM Mono', monospace; font-size: 0.65rem; padding: 0.25rem 0.65rem; border-radius: 20px; letter-spacing: 0.06em; white-space: nowrap; }
+.conf-badge { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; padding: 0.25rem 0.65rem; border-radius: 20px; letter-spacing: 0.06em; white-space: nowrap; }
 .conf-badge.confirmed { background: var(--confirmed-bg); color: var(--confirmed); border: 1px solid var(--confirmed-border); }
 .conf-badge.corroborated { background: var(--corroborated-bg); color: var(--corroborated); border: 1px solid var(--corroborated-border); }
 .conf-badge.indicated { background: var(--indicated-bg); color: var(--indicated); border: 1px solid var(--indicated-border); }
 .conf-badge.unverified { background: var(--unverified-bg); color: var(--unverified); border: 1px solid var(--unverified-border); }
 
 .results-grid { display: flex; flex-direction: column; gap: 0.6rem; }
-.result-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.25rem; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
-.result-card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
+.result-card-profile { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.25rem; cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+.result-card-profile:hover { border-color: var(--border-strong); box-shadow: var(--shadow-sm); }
 .result-name { font-size: 1rem; font-weight: 600; margin-bottom: 0.2rem; }
-.result-meta { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--text-tertiary); }
-.result-docs { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--text-secondary); text-align: right; white-space: nowrap; }
+.result-meta { font-family: 'Montserrat', sans-serif; font-size: 0.68rem; color: var(--text-tertiary); }
+.result-docs { font-family: 'Montserrat', sans-serif; font-size: 0.7rem; color: var(--text-secondary); text-align: right; white-space: nowrap; }
 
-/* ── RIGHT PANEL ── */
-.panel-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; margin-bottom: 0.75rem; }
-.panel-card-title { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--text-tertiary); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.75rem; }
-.power-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
-.power-label { font-size: 0.72rem; color: var(--text-secondary); width: 95px; flex-shrink: 0; }
-.power-track { flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
-.power-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.6s ease; }
-.power-val { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--text-secondary); width: 24px; text-align: right; }
-
-/* ── LANDING ── */
+/* LANDING */
 .landing {
   display: flex;
   flex-direction: column;
@@ -338,7 +351,6 @@ body {
   gap: 1rem;
   padding: 2rem 1rem;
 }
-/* #5 — Landing text: Montserrat Medium */
 .landing-title {
   font-family: 'Source Sans 3', 'Source Sans Pro', sans-serif;
   font-weight: 700;
@@ -356,8 +368,6 @@ body {
   line-height: 1.75;
 }
 .landing-suggestions { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-top: 0.5rem; }
-
-/* #6 — Name chips: Source Sans Pro Bold */
 .suggestion-chip {
   font-family: 'Source Sans 3', 'Source Sans Pro', sans-serif;
   font-weight: 700;
@@ -372,10 +382,378 @@ body {
 }
 .suggestion-chip:hover { border-color: var(--accent); color: var(--text-primary); }
 
-/* ── STATE MESSAGES ── */
+/* STATE MESSAGES */
 .state-msg { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px; gap: 0.75rem; }
-.state-label { font-family: 'DM Mono', monospace; font-size: 0.72rem; color: var(--text-tertiary); letter-spacing: 0.12em; }
+.state-label { font-family: 'Montserrat', sans-serif; font-size: 0.72rem; color: var(--text-tertiary); letter-spacing: 0.12em; }
 .state-sub { font-size: 0.85rem; color: var(--text-secondary); max-width: 340px; text-align: center; }
+
+/* ── RIGHT PANEL ── */
+.panel-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; margin-bottom: 0.75rem; }
+.panel-card-title { font-family: 'Montserrat', sans-serif; font-size: 0.6rem; color: var(--text-tertiary); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.75rem; }
+.power-row { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; }
+.power-label { font-size: 0.72rem; color: var(--text-secondary); width: 95px; flex-shrink: 0; }
+.power-track { flex: 1; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.power-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.6s ease; }
+.power-val { font-family: 'Montserrat', sans-serif; font-size: 0.68rem; color: var(--text-secondary); width: 24px; text-align: right; }
+
+/* ── TAB PANELS ── */
+.tab-panel { display: none; width: 100%; }
+.tab-panel.active { display: block; }
+
+/* ── UNIDENTIFIED TAB ── */
+#tabUnidentified {
+  font-family: 'Source Sans 3', sans-serif;
+}
+/* Page header (dark band) */
+#tabUnidentified .page-header {
+  background: var(--header-bg);
+  color: var(--header-text);
+  padding: 3rem 2rem 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+#tabUnidentified .page-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 39px,
+    rgba(255,255,255,0.025) 39px,
+    rgba(255,255,255,0.025) 40px
+  );
+  pointer-events: none;
+}
+#tabUnidentified .header-inner {
+  max-width: 760px;
+  margin: 0 auto;
+  position: relative;
+}
+#tabUnidentified .header-classification {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+#tabUnidentified .header-classification::before,
+#tabUnidentified .header-classification::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.1);
+}
+#tabUnidentified .header-title {
+  font-family: 'neue-haas-grotesk-display', sans-serif;
+  font-weight: 500;
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+  color: #F7F4EF;
+}
+#tabUnidentified .header-title em { font-style: normal; color: rgba(247,244,239,0.35); }
+#tabUnidentified .header-desc {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: rgba(247,244,239,0.6);
+  max-width: 520px;
+  margin-bottom: 1.75rem;
+}
+#tabUnidentified .header-stats { display: flex; gap: 2rem; flex-wrap: wrap; }
+#tabUnidentified .stat-item { display: flex; flex-direction: column; gap: 0.2rem; }
+#tabUnidentified .stat-num {
+  font-family: 'neue-haas-grotesk-display', sans-serif;
+  font-size: 1.75rem; font-weight: 600;
+  color: #F7F4EF; line-height: 1;
+}
+#tabUnidentified .stat-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgba(247,244,239,0.35);
+}
+#tabUnidentified .stat-divider { width: 1px; background: rgba(255,255,255,0.1); align-self: stretch; }
+
+#tabUnidentified .methodology {
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-mid);
+  padding: 1rem 2rem;
+}
+#tabUnidentified .methodology-inner {
+  max-width: 760px; margin: 0 auto;
+  display: flex; align-items: flex-start; gap: 1rem;
+}
+#tabUnidentified .method-icon { font-size: 0.8rem; color: var(--text-tertiary); margin-top: 0.15rem; flex-shrink: 0; }
+#tabUnidentified .method-text { font-size: 0.82rem; line-height: 1.6; color: var(--text-secondary); }
+#tabUnidentified .method-text strong { color: var(--text-primary); font-weight: 600; }
+
+#tabUnidentified .u-main { max-width: 760px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+
+#tabUnidentified .section-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--text-tertiary); margin-bottom: 1.5rem;
+  display: flex; align-items: center; gap: 0.75rem;
+}
+#tabUnidentified .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border-mid); }
+
+#tabUnidentified .featured-flight {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border-mid);
+  border-radius: 4px;
+  padding: 2rem;
+  margin-bottom: 1.25rem;
+  overflow: hidden;
+}
+#tabUnidentified .featured-flight::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  background: var(--text-primary);
+}
+#tabUnidentified .featured-stamp {
+  position: absolute; top: 1.25rem; right: 1.5rem;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--stamp-border);
+  border: 1.5px solid var(--stamp-border);
+  padding: 0.25rem 0.6rem; border-radius: 2px;
+  background: var(--stamp-color);
+  transform: rotate(1.5deg); white-space: nowrap;
+}
+#tabUnidentified .flight-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 0.75rem;
+  transition: border-color 0.2s;
+}
+#tabUnidentified .flight-card:hover { border-color: var(--border-strong); }
+#tabUnidentified .flight-meta {
+  display: flex; align-items: center; gap: 1rem;
+  margin-bottom: 1rem; flex-wrap: wrap;
+}
+#tabUnidentified .flight-date {
+  font-family: 'Montserrat', sans-serif; font-size: 0.72rem;
+  color: var(--text-tertiary); letter-spacing: 0.05em;
+}
+#tabUnidentified .flight-route {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-family: 'Montserrat', sans-serif; font-size: 0.8rem;
+  color: var(--text-primary); font-weight: 500;
+}
+#tabUnidentified .route-arrow { color: var(--text-tertiary); font-size: 0.7rem; }
+#tabUnidentified .flight-route-name { font-size: 0.78rem; color: var(--text-secondary); }
+#tabUnidentified .unknown-count-pill {
+  margin-left: auto;
+  font-family: 'Montserrat', sans-serif; font-size: 0.62rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+  padding: 0.18rem 0.5rem; border-radius: 2px; white-space: nowrap;
+  background: var(--bg-secondary);
+}
+#tabUnidentified .manifest-label {
+  font-family: 'Montserrat', sans-serif; font-size: 0.6rem;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--text-tertiary); margin-bottom: 0.65rem;
+}
+#tabUnidentified .passenger-list { display: flex; flex-direction: column; gap: 0.3rem; }
+#tabUnidentified .passenger-row { display: flex; align-items: center; gap: 0.75rem; font-size: 0.88rem; }
+#tabUnidentified .passenger-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--border-strong); flex-shrink: 0; }
+#tabUnidentified .passenger-name { color: var(--text-primary); }
+#tabUnidentified .passenger-name a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--border-mid); transition: border-color 0.15s; }
+#tabUnidentified .passenger-name a:hover { border-bottom-color: var(--text-primary); }
+#tabUnidentified .passenger-role { font-size: 0.72rem; color: var(--text-tertiary); font-family: 'Montserrat', sans-serif; }
+#tabUnidentified .passenger-row.redacted .passenger-dot { background: var(--redact-color); }
+#tabUnidentified .redacted-bar { display: inline-flex; align-items: center; gap: 0.5rem; }
+#tabUnidentified .redacted-label {
+  display: inline-block; background: var(--redact-color); color: var(--bg);
+  font-family: 'Montserrat', sans-serif; font-size: 0.7rem; letter-spacing: 0.06em;
+  padding: 0.16rem 0.6rem; border-radius: 2px; opacity: 0.85; user-select: none;
+}
+#tabUnidentified .redacted-count { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; color: var(--text-tertiary); }
+#tabUnidentified .flight-card:hover .redacted-label,
+#tabUnidentified .featured-flight:hover .redacted-label { animation: shimmer 1.8s ease infinite; }
+@keyframes shimmer { 0%,100%{opacity:.85} 50%{opacity:.5} }
+#tabUnidentified .manifest-divider { height: 1px; background: var(--border); margin: 0.75rem 0; }
+#tabUnidentified .context-note {
+  font-size: 0.82rem; line-height: 1.6; color: var(--text-secondary);
+  font-style: italic; padding-top: 0.75rem;
+  border-top: 1px solid var(--border); margin-top: 1rem;
+}
+#tabUnidentified .summary-section { margin-top: 3rem; }
+#tabUnidentified .summary-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1px; background: var(--border-mid);
+  border: 1px solid var(--border-mid); border-radius: 4px;
+  overflow: hidden; margin-top: 1.25rem;
+}
+#tabUnidentified .summary-cell { background: var(--bg-card); padding: 1.1rem 1.25rem; }
+#tabUnidentified .summary-cell-label {
+  font-family: 'Montserrat', sans-serif; font-size: 0.6rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--text-tertiary); margin-bottom: 0.4rem;
+}
+#tabUnidentified .summary-cell-value { font-size: 0.88rem; color: var(--text-primary); line-height: 1.5; }
+#tabUnidentified .pattern-block {
+  margin-top: 3rem; padding: 1.75rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-mid); border-radius: 4px;
+}
+#tabUnidentified .pattern-title {
+  font-family: 'neue-haas-grotesk-display', sans-serif;
+  font-size: 1rem; font-weight: 600; margin-bottom: 0.9rem;
+}
+#tabUnidentified .pattern-list { display: flex; flex-direction: column; gap: 0.6rem; }
+#tabUnidentified .pattern-item { display: flex; gap: 1rem; font-size: 0.88rem; line-height: 1.55; color: var(--text-secondary); }
+#tabUnidentified .pattern-num { font-family: 'Montserrat', sans-serif; font-size: 0.68rem; color: var(--text-tertiary); flex-shrink: 0; padding-top: 0.15rem; min-width: 1.5rem; }
+#tabUnidentified .pattern-item strong { color: var(--text-primary); font-weight: 600; }
+#tabUnidentified .loading-state { text-align: center; padding: 4rem 2rem; color: var(--text-tertiary); font-family: 'Montserrat', sans-serif; font-size: 0.75rem; letter-spacing: 0.1em; }
+
+/* ── CONNECTIONS TAB ── */
+#tabConnections {
+  font-family: 'Source Sans 3', sans-serif;
+}
+#tabConnections .page-wrap {
+  max-width: 760px; margin: 0 auto; padding: 2.5rem 2rem 4rem;
+}
+#tabConnections .page-title {
+  font-family: 'neue-haas-grotesk-display', sans-serif;
+  font-weight: 500; font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 0.65rem;
+}
+#tabConnections .page-subtitle {
+  font-size: 0.95rem; line-height: 1.6;
+  color: var(--text-secondary); max-width: 520px; margin-bottom: 2rem;
+}
+#tabConnections .search-panel {
+  display: grid; grid-template-columns: 1fr auto 1fr;
+  align-items: end; gap: 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-mid);
+  border-radius: 6px; padding: 1.25rem; margin-bottom: 1rem;
+}
+#tabConnections .search-field { display: flex; flex-direction: column; gap: 0.4rem; }
+#tabConnections .search-label {
+  font-family: 'Montserrat', sans-serif; font-size: 0.62rem;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-tertiary);
+}
+#tabConnections .search-input-wrap { position: relative; }
+#tabConnections .search-input {
+  width: 100%; font-family: 'Montserrat', sans-serif; font-weight: 500;
+  font-size: 0.9rem; color: var(--text-primary);
+  background: var(--bg); border: 1px solid var(--border-mid);
+  border-radius: 4px; padding: 0.55rem 0.75rem; outline: none; transition: border-color 0.15s;
+}
+#tabConnections .search-input:focus { border-color: var(--border-strong); }
+#tabConnections .search-input::placeholder { color: var(--text-tertiary); font-family: 'Source Sans 3', sans-serif; font-style: italic; font-weight: 300; }
+#tabConnections .autocomplete-list {
+  position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+  background: var(--bg-card); border: 1px solid var(--border-mid);
+  border-radius: 4px; z-index: 50;
+  max-height: 220px; overflow-y: auto;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  display: none;
+}
+#tabConnections .autocomplete-list.open { display: block; }
+#tabConnections .autocomplete-item {
+  padding: 0.5rem 0.75rem; font-size: 0.88rem; cursor: pointer;
+  display: flex; flex-direction: column; gap: 0.15rem;
+  border-bottom: 1px solid var(--border); transition: background 0.1s;
+}
+#tabConnections .autocomplete-item:last-child { border-bottom: none; }
+#tabConnections .autocomplete-item:hover,
+#tabConnections .autocomplete-item.active-item { background: var(--accent-bg); }
+#tabConnections .autocomplete-name { color: var(--text-primary); font-family: 'Montserrat', sans-serif; font-weight: 500; }
+#tabConnections .autocomplete-meta { font-family: 'Montserrat', sans-serif; font-size: 0.62rem; letter-spacing: 0.04em; color: var(--text-tertiary); text-transform: uppercase; }
+#tabConnections .connector-label {
+  font-family: 'neue-haas-grotesk-display', sans-serif;
+  font-size: 1.4rem; color: var(--text-tertiary);
+  text-align: center; padding-bottom: 0.5rem; align-self: end;
+}
+#tabConnections .search-btn {
+  width: 100%; font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+  background: var(--text-primary); color: var(--bg);
+  border: none; border-radius: 4px; padding: 0.6rem 1.25rem;
+  cursor: pointer; transition: opacity 0.15s;
+}
+#tabConnections .search-btn:hover { opacity: 0.8; }
+#tabConnections .search-btn:disabled { opacity: 0.3; cursor: default; }
+#tabConnections .quick-label {
+  font-family: 'Montserrat', sans-serif; font-size: 0.62rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--text-tertiary); margin-bottom: 0.5rem;
+}
+#tabConnections .quick-pairs { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
+#tabConnections .quick-pair {
+  font-family: 'Montserrat', sans-serif; font-size: 0.7rem; letter-spacing: 0.03em;
+  border: 1px solid var(--border-mid); border-radius: 3px; padding: 0.28rem 0.65rem;
+  cursor: pointer; color: var(--text-secondary); background: var(--bg-card);
+  transition: all 0.15s; white-space: nowrap;
+}
+#tabConnections .quick-pair:hover { background: var(--accent-bg); border-color: var(--border-strong); color: var(--text-primary); }
+#tabConnections .no-path { padding: 2rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; text-align: center; }
+#tabConnections .no-path-title { font-family: 'neue-haas-grotesk-display', sans-serif; font-size: 1.1rem; margin-bottom: 0.5rem; }
+#tabConnections .no-path-sub { font-size: 0.88rem; color: var(--text-secondary); }
+#tabConnections .result-card {
+  background: var(--bg-card); border: 1px solid var(--border-mid);
+  border-radius: 6px; overflow: hidden; animation: fadeUp 0.3s ease;
+}
+@keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+#tabConnections .result-header {
+  padding: 1.1rem 1.25rem; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+}
+#tabConnections .result-headline { font-family: 'neue-haas-grotesk-display', sans-serif; font-size: 1rem; font-weight: 500; letter-spacing: -0.01em; }
+#tabConnections .degree-badge { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.25rem 0.65rem; border-radius: 2px; white-space: nowrap; }
+#tabConnections .degree-badge.deg-1 { background: var(--highlight-dim); color: var(--highlight); border: 1px solid var(--highlight-mid); }
+#tabConnections .degree-badge.deg-2 { background: rgba(26,26,26,0.05); color: var(--text-secondary); border: 1px solid var(--border-mid); }
+#tabConnections .degree-badge.deg-3 { background: var(--bg-secondary); color: var(--text-tertiary); border: 1px solid var(--border); }
+#tabConnections .path-viz { padding: 1.75rem 1.25rem; display: flex; flex-direction: column; }
+#tabConnections .path-node { display: flex; align-items: flex-start; gap: 1rem; }
+#tabConnections .node-indicator { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 36px; }
+#tabConnections .node-dot { width: 36px; height: 36px; border-radius: 50%; background: var(--node-bg); color: var(--node-text); display: flex; align-items: center; justify-content: center; font-family: 'Montserrat', sans-serif; font-size: 0.65rem; letter-spacing: 0.05em; flex-shrink: 0; position: relative; z-index: 1; }
+#tabConnections .node-dot.endpoint { background: var(--text-primary); box-shadow: 0 0 0 3px var(--bg), 0 0 0 4px var(--text-primary); }
+#tabConnections .node-line { width: 1px; background: var(--border-mid); flex: 1; min-height: 0; }
+#tabConnections .node-content { padding-top: 0.4rem; padding-bottom: 1.25rem; flex: 1; }
+#tabConnections .node-name { font-family: 'neue-haas-grotesk-display', sans-serif; font-size: 1rem; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 0.2rem; }
+#tabConnections .node-name a { color: inherit; text-decoration: none; border-bottom: 1px solid transparent; transition: border-color 0.15s; }
+#tabConnections .node-name a:hover { border-bottom-color: var(--text-primary); }
+#tabConnections .node-meta { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-tertiary); }
+#tabConnections .path-edge { display: flex; align-items: flex-start; gap: 1rem; }
+#tabConnections .edge-indicator { width: 36px; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+#tabConnections .edge-line-top, #tabConnections .edge-line-bot { width: 1px; background: var(--border-mid); flex: 1; min-height: 10px; }
+#tabConnections .edge-icon { font-size: 0.55rem; color: var(--text-tertiary); flex-shrink: 0; padding: 2px 0; }
+#tabConnections .edge-content { padding: 0.5rem 0; flex: 1; }
+#tabConnections .edge-label { display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'Montserrat', sans-serif; font-size: 0.68rem; letter-spacing: 0.05em; color: var(--text-secondary); background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 3px; padding: 0.28rem 0.6rem; }
+#tabConnections .edge-label.flight-edge { background: var(--highlight-dim); border-color: var(--highlight-mid); color: var(--highlight); }
+#tabConnections .edge-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+#tabConnections .edge-detail { font-size: 0.8rem; color: var(--text-tertiary); margin-top: 0.3rem; line-height: 1.5; }
+#tabConnections .alt-paths { border-top: 1px solid var(--border); padding: 1.1rem 1.25rem; }
+#tabConnections .alt-title { font-family: 'Montserrat', sans-serif; font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 0.65rem; }
+#tabConnections .alt-list { display: flex; flex-direction: column; gap: 0.35rem; }
+#tabConnections .alt-item { font-size: 0.85rem; color: var(--text-secondary); display: flex; align-items: center; gap: 0.5rem; cursor: pointer; padding: 0.3rem 0.5rem; border-radius: 3px; transition: background 0.1s; }
+#tabConnections .alt-item:hover { background: var(--accent-bg); color: var(--text-primary); }
+#tabConnections .alt-arrow { color: var(--text-tertiary); font-size: 0.7rem; }
+.cat-finance     { color: #2E6F40; }
+.cat-politics    { color: #CC2222; }
+.cat-technology  { color: #000080; }
+.cat-legal       { color: #9A8000; }
+.cat-academia    { color: #6B4226; }
+.cat-entertainment { color: #CC4400; }
+.cat-royalty     { color: #C8909A; }
+.cat-media       { color: #008B87; }
+.cat-other       { color: #888888; }
+[data-theme="dark"] .cat-technology { color: #7777DD; }
+[data-theme="dark"] .cat-legal { color: #D4B800; }
 
 /* ── MOBILE HAMBURGER ── */
 .mobile-menu-btn {
@@ -411,27 +789,18 @@ body {
 }
 .drawer-close { display: flex; justify-content: flex-end; margin-bottom: 1rem; }
 .drawer-close button {
-  background: none;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 0.3rem 0.65rem;
-  cursor: pointer;
-  color: var(--text-secondary);
-  font-size: 0.8rem;
+  background: none; border: 1px solid var(--border);
+  border-radius: 6px; padding: 0.3rem 0.65rem;
+  cursor: pointer; color: var(--text-secondary); font-size: 0.8rem;
 }
 
-/* ── RESPONSIVE — MOBILE ── */
+/* ── RESPONSIVE ── */
 @media (max-width: 768px) {
-  .app {
-    grid-template-columns: 1fr;
-    grid-template-rows: 56px 1fr;
-    height: 100vh;
-    overflow: hidden;
-  }
+  .app { grid-template-columns: 1fr; grid-template-rows: 56px 1fr; height: 100vh; overflow: hidden; }
   .topbar { grid-column: 1; padding: 0 0.75rem; gap: 0.5rem; overflow: hidden; }
   .sidebar-left { display: none; }
   .sidebar-right { display: none; }
-  .main { grid-column: 1; grid-row: 2; padding: 1rem; }
+  .main { grid-column: 1; grid-row: 2; padding: 0; }
   .mobile-menu-btn { display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .topbar-center { max-width: none; min-width: 0; flex: 1; }
   .logo-main { font-size: 1rem; }
@@ -442,11 +811,18 @@ body {
   .status-dot { display: none; }
   .theme-toggle { display: none; }
   .topbar-right { display: none; }
+  #tabUnidentified .page-header { padding: 2rem 1.25rem 1.5rem; }
+  #tabUnidentified .u-main { padding: 1.5rem 1.25rem 3rem; }
+  #tabUnidentified .header-stats { gap: 1.25rem; }
+  #tabUnidentified .stat-divider { display: none; }
+  #tabUnidentified .summary-grid { grid-template-columns: 1fr; }
+  #tabConnections .page-wrap { padding: 1.5rem 1.25rem 3rem; }
+  #tabConnections .search-panel { grid-template-columns: 1fr; }
+  #tabConnections .connector-label { display: none; }
 }
-
 @media (max-width: 420px) {
   .suggestion-chip { font-size: 0.78rem; padding: 0.35rem 0.75rem; }
-  .landing-title { font-size: 0.9rem; }
+  .landing-title { font-size: 1.4rem; }
 }
 </style>
 </head>
@@ -456,18 +832,14 @@ body {
   <!-- TOPBAR -->
   <header class="topbar">
     <button class="mobile-menu-btn" onclick="openDrawer()" aria-label="Menu">☰</button>
-
-    <!-- #2: THE stacked above Reckoning Radar -->
     <div class="topbar-logo">
       <span class="logo-the">The</span>
       <span class="logo-main">Reckoning Radar</span>
     </div>
-
     <div class="topbar-center">
       <span class="search-icon">⌕</span>
       <input class="search-bar" id="searchInput" type="text" placeholder="Search — Ghislaine Maxwell, Bill Gates, Lesley Groff…">
     </div>
-
     <div class="topbar-right">
       <button class="theme-toggle" onclick="toggleTheme()">
         <span id="toggleLabel">LIGHT</span>
@@ -475,7 +847,7 @@ body {
       </button>
       <div style="display:flex;align-items:center;gap:0.4rem;">
         <div class="status-dot"></div>
-        <span class="status-text">97 profiles indexed</span>
+        <span class="status-text">141 profiles indexed</span>
       </div>
     </div>
   </header>
@@ -484,14 +856,14 @@ body {
   <aside class="sidebar-left">
     <div class="sidebar-section">
       <div class="sidebar-label">Query Type</div>
-      <div class="nav-item active"><span>Person Profile</span></div>
-      <div class="nav-item" onclick="showFlightBrowser()" style="cursor:pointer;"><span>Flight Manifests</span></div>
+      <div class="nav-item active" id="navProfiles" onclick="switchTab('profiles')"><span>Person Profile</span></div>
+      <div class="nav-item" id="navFlights" onclick="switchTab('flights')" style="cursor:pointer;"><span>Flight Manifests</span></div>
       <div class="nav-item" onclick="window.location.href='graph.html'" style="cursor:pointer;"><span>Network Graph</span><span class="coming-soon-badge" style="background:rgba(26,107,60,0.12);color:#1A6B3C;border-color:rgba(26,107,60,0.3);">LIVE</span></div>
-      <div class="nav-item" onclick="window.location.href='redacted.html'" style="cursor:pointer;"><span>Unidentified</span><span class="coming-soon-badge" style="background:rgba(180,40,40,0.1);color:#B42828;border-color:rgba(180,40,40,0.3);">NEW</span></div>
-      <div class="nav-item" onclick="window.location.href='connections.html'" style="cursor:pointer;"><span>Connections</span><span class="coming-soon-badge" style="background:rgba(26,26,26,0.08);color:#444;border-color:rgba(26,26,26,0.2);">NEW</span></div>
+      <div class="nav-item" id="navUnidentified" onclick="switchTab('unidentified')" style="cursor:pointer;"><span>Unidentified</span><span class="coming-soon-badge" style="background:rgba(180,40,40,0.1);color:#B42828;border-color:rgba(180,40,40,0.3);">NEW</span></div>
+      <div class="nav-item" id="navConnections" onclick="switchTab('connections')" style="cursor:pointer;"><span>Connections</span><span class="coming-soon-badge" style="background:rgba(26,26,26,0.08);color:#444;border-color:rgba(26,26,26,0.2);">NEW</span></div>
       <div class="nav-item coming-soon"><span>Location Map</span><span class="coming-soon-badge">SOON</span></div>
     </div>
-    <div class="sidebar-section">
+    <div class="sidebar-section" id="sidebarFilters">
       <div class="sidebar-label">Category</div>
       <div class="nav-item filter-item" data-filter="category" data-value="finance"><span>Finance</span></div>
       <div class="nav-item filter-item" data-filter="category" data-value="politics"><span>Politics</span></div>
@@ -502,7 +874,7 @@ body {
       <div class="nav-item filter-item" data-filter="category" data-value="royalty"><span>Royalty</span></div>
       <div class="nav-item filter-item" data-filter="category" data-value="media"><span>Media</span></div>
     </div>
-    <div class="sidebar-section">
+    <div class="sidebar-section" id="sidebarRelFilters">
       <div class="sidebar-label">Relationship</div>
       <div class="nav-item filter-item" data-filter="relationship" data-value="direct_contact"><span>Direct Contact</span></div>
       <div class="nav-item filter-item" data-filter="relationship" data-value="employee"><span>Employee / Staff</span></div>
@@ -512,29 +884,157 @@ body {
     </div>
   </aside>
 
-  <!-- MAIN -->
+  <!-- MAIN — hosts all tab panels -->
   <main class="main" id="main">
-    <div class="landing">
-      <div class="landing-title">Search the Epstein Intelligence Database</div>
-      <div class="landing-sub">97 individuals indexed from the Epstein archive and pilot logbooks. Search by name to view profiles, flight history, connection analysis, and power index.</div>
-      <div class="landing-suggestions">
-        <span class="suggestion-chip" onclick="doSearch('Ghislaine Maxwell')">Ghislaine Maxwell</span>
-        <span class="suggestion-chip" onclick="doSearch('Bill Gates')">Bill Gates</span>
-        <span class="suggestion-chip" onclick="doSearch('Lesley Groff')">Lesley Groff</span>
-        <span class="suggestion-chip" onclick="doSearch('Ehud Barak')">Ehud Barak</span>
-        <span class="suggestion-chip" onclick="doSearch('Jean-Luc Brunel')">Jean-Luc Brunel</span>
-        <span class="suggestion-chip" onclick="doSearch('Les Wexner')">Les Wexner</span>
-        <span class="suggestion-chip" onclick="doSearch('Prince Andrew')">Prince Andrew</span>
-        <span class="suggestion-chip" onclick="doSearch('Larry Summers')">Larry Summers</span>
-        <span class="suggestion-chip" onclick="doSearch('Richard Branson')">Richard Branson</span>
-        <span class="suggestion-chip" onclick="doSearch('Sarah Ferguson')">Sarah Ferguson</span>
-        <span class="suggestion-chip" onclick="doSearch('Dean Kamen')">Dean Kamen</span>
-        <span class="suggestion-chip" onclick="doSearch('Marvin Minsky')">Marvin Minsky</span>
-        <span class="suggestion-chip" onclick="doSearch('Kevin Spacey')">Kevin Spacey</span>
-        <span class="suggestion-chip" onclick="doSearch('Chris Tucker')">Chris Tucker</span>
-        <span class="suggestion-chip" onclick="doSearch('Steven Pinker')">Steven Pinker</span>
+
+    <!-- ── TAB: PROFILES ── -->
+    <div class="tab-panel active" id="tabProfiles">
+      <div class="landing">
+        <div class="landing-title">Search the Epstein Intelligence Database</div>
+        <div class="landing-sub">141 individuals indexed from the Epstein archive and pilot logbooks. Search by name to view profiles, flight history, connection analysis, and power index.</div>
+        <div class="landing-suggestions">
+          <span class="suggestion-chip" onclick="doSearch('Ghislaine Maxwell')">Ghislaine Maxwell</span>
+          <span class="suggestion-chip" onclick="doSearch('Bill Gates')">Bill Gates</span>
+          <span class="suggestion-chip" onclick="doSearch('Lesley Groff')">Lesley Groff</span>
+          <span class="suggestion-chip" onclick="doSearch('Ehud Barak')">Ehud Barak</span>
+          <span class="suggestion-chip" onclick="doSearch('Jean-Luc Brunel')">Jean-Luc Brunel</span>
+          <span class="suggestion-chip" onclick="doSearch('Les Wexner')">Les Wexner</span>
+          <span class="suggestion-chip" onclick="doSearch('Prince Andrew')">Prince Andrew</span>
+          <span class="suggestion-chip" onclick="doSearch('Larry Summers')">Larry Summers</span>
+          <span class="suggestion-chip" onclick="doSearch('Richard Branson')">Richard Branson</span>
+          <span class="suggestion-chip" onclick="doSearch('Sarah Ferguson')">Sarah Ferguson</span>
+          <span class="suggestion-chip" onclick="doSearch('Elon Musk')">Elon Musk</span>
+          <span class="suggestion-chip" onclick="doSearch('Steve Bannon')">Steve Bannon</span>
+          <span class="suggestion-chip" onclick="doSearch('Kevin Spacey')">Kevin Spacey</span>
+          <span class="suggestion-chip" onclick="doSearch('Alan Dershowitz')">Alan Dershowitz</span>
+          <span class="suggestion-chip" onclick="doSearch('Steven Pinker')">Steven Pinker</span>
+        </div>
       </div>
     </div>
+
+    <!-- ── TAB: UNIDENTIFIED ── -->
+    <div class="tab-panel" id="tabUnidentified">
+      <!-- Dark header band -->
+      <div class="page-header">
+        <div class="header-inner">
+          <div class="header-classification">Classified</div>
+          <h1 class="header-title">Unidentified <em>passengers</em></h1>
+          <p class="header-desc">Flight records from the Epstein archive contain entries logged only as "FEMALE" or "MALE" — no names, no identities. These are those entries.</p>
+          <div class="header-stats">
+            <div class="stat-item">
+              <span class="stat-num" id="statFlights">—</span>
+              <span class="stat-label">Flights with unnamed passengers</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+              <span class="stat-num" id="statPersons">—</span>
+              <span class="stat-label">Unidentified individuals</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Methodology band -->
+      <div class="methodology">
+        <div class="methodology-inner">
+          <span class="method-icon">◆</span>
+          <p class="method-text"><strong>Source and methodology:</strong> All entries are drawn directly from pilot logbooks entered as evidence in <em>United States v. Maxwell</em> (SDNY, 2021). Passenger names were logged by the pilot. Entries appearing only as "FEMALE" or "MALE" without further identification are displayed here exactly as recorded. No editorial judgment has been applied.</p>
+        </div>
+      </div>
+      <!-- Flight cards injected here -->
+      <div class="u-main">
+        <div id="uFlightContainer">
+          <div class="loading-state">Loading manifest records…</div>
+        </div>
+        <!-- Pattern analysis -->
+        <div class="pattern-block" id="uPatternBlock" style="display:none">
+          <div class="pattern-title">What the pattern shows</div>
+          <div class="pattern-list">
+            <div class="pattern-item">
+              <span class="pattern-num">01</span>
+              <span><strong>Ghislaine Maxwell and Sarah Kellen are present on the vast majority of flights with unnamed female passengers.</strong> Their role as the primary organizers of Epstein's social calendar — documented extensively in the archive — places them as the most likely individuals responsible for recruiting and managing these unnamed travelers.</span>
+            </div>
+            <div class="pattern-item">
+              <span class="pattern-num">02</span>
+              <span><strong>The Clinton flight (Feb 9, 2002) remains the most scrutinized single entry.</strong> Miami to Westchester with Bill Clinton, 4 Secret Service agents, Ghislaine Maxwell, Sarah Kellen — and one unnamed female. Clinton has stated he flew on Epstein's plane four times; his team has never addressed who the unnamed passenger was.</span>
+            </div>
+            <div class="pattern-item">
+              <span class="pattern-num">03</span>
+              <span><strong>The Columbus, Ohio flight (Feb 3, 2005) is among the most legally significant.</strong> Logged three months before the Palm Beach police investigation opened, it carries Jean-Luc Brunel — the French modeling agent who died in a Paris jail in 2022 while facing rape charges — alongside Nadia Marcinko, Sarah Kellen, and three unnamed women.</span>
+            </div>
+            <div class="pattern-item">
+              <span class="pattern-num">04</span>
+              <span><strong>Unnamed females appear even on the earliest documented trips, 1998–1999.</strong> The 1998 Van Nuys to Monterey flight, carrying three unnamed women alongside Epstein and associates, predates the criminal investigation by seven years.</span>
+            </div>
+          </div>
+        </div>
+        <!-- Summary -->
+        <div class="summary-section" id="uSummarySection" style="display:none">
+          <div class="section-label">By the numbers</div>
+          <div class="summary-grid">
+            <div class="summary-cell">
+              <div class="summary-cell-label">Most frequent co-travelers</div>
+              <div class="summary-cell-value"><strong>Ghislaine Maxwell</strong> — present on 9 of 13 flights<br><strong>Sarah Kellen</strong> — present on 8 of 13 flights</div>
+            </div>
+            <div class="summary-cell">
+              <div class="summary-cell-label">Routes to St. Thomas / Little Saint James</div>
+              <div class="summary-cell-value">4 flights carrying unnamed female passengers flew directly to St. Thomas — the island nearest Epstein's private island.</div>
+            </div>
+            <div class="summary-cell">
+              <div class="summary-cell-label">High-profile passengers on same flights</div>
+              <div class="summary-cell-value">Bill Clinton, Jean-Luc Brunel, Glen Dubin, and Paul Mellon all appear on flights that also carried unnamed females.</div>
+            </div>
+            <div class="summary-cell">
+              <div class="summary-cell-label">Earliest documented instance</div>
+              <div class="summary-cell-value"><strong>February 18, 1998</strong> — Van Nuys to Monterey, three unnamed females, seven years before the Palm Beach investigation.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: CONNECTIONS ── -->
+    <div class="tab-panel" id="tabConnections">
+      <div class="page-wrap">
+        <h1 class="page-title">How are they connected?</h1>
+        <p class="page-subtitle">Find the shortest documented path between any two people in the archive — through shared flights, direct relationships, and documented contacts.</p>
+        <!-- Search panel -->
+        <div class="search-panel">
+          <div class="search-field">
+            <span class="search-label">Person A</span>
+            <div class="search-input-wrap">
+              <input class="search-input" id="connInputA" placeholder="e.g. Bill Clinton" autocomplete="off" spellcheck="false">
+              <div class="autocomplete-list" id="connDropA"></div>
+            </div>
+          </div>
+          <div class="connector-label">→</div>
+          <div class="search-field">
+            <span class="search-label">Person B</span>
+            <div class="search-input-wrap">
+              <input class="search-input" id="connInputB" placeholder="e.g. Kevin Spacey" autocomplete="off" spellcheck="false">
+              <div class="autocomplete-list" id="connDropB"></div>
+            </div>
+          </div>
+        </div>
+        <button class="search-btn" id="connFindBtn" onclick="connFindPath()" disabled>Find Connection</button>
+        <!-- Quick pairs -->
+        <div style="margin-top:1.25rem;">
+          <div class="quick-label">Try these</div>
+          <div class="quick-pairs" id="connQuickPairs">
+            <div class="quick-pair" onclick="connSetQuick('Bill Clinton','Kevin Spacey')">Clinton → Spacey</div>
+            <div class="quick-pair" onclick="connSetQuick('Bill Gates','Ghislaine Maxwell')">Gates → Maxwell</div>
+            <div class="quick-pair" onclick="connSetQuick('Prince Andrew, Duke of York','Virginia Giuffre')">Prince Andrew → Giuffre</div>
+            <div class="quick-pair" onclick="connSetQuick('Larry Summers','Jean-Luc Brunel')">Summers → Brunel</div>
+            <div class="quick-pair" onclick="connSetQuick('Steven Pinker','Bill Clinton')">Pinker → Clinton</div>
+            <div class="quick-pair" onclick="connSetQuick('Alan Dershowitz','Sarah Kellen')">Dershowitz → Kellen</div>
+            <div class="quick-pair" onclick="connSetQuick('Chris Tucker','Ghislaine Maxwell')">Tucker → Maxwell</div>
+            <div class="quick-pair" onclick="connSetQuick('Elon Musk','Steve Bannon')">Musk → Bannon</div>
+          </div>
+        </div>
+        <!-- Result area -->
+        <div id="connResultArea"></div>
+      </div>
+    </div>
+
   </main>
 
   <!-- RIGHT PANEL -->
@@ -563,12 +1063,12 @@ body {
     <div class="drawer-close"><button onclick="closeDrawer()">✕ Close</button></div>
     <div class="sidebar-section">
       <div class="sidebar-label">Query Type</div>
-      <div class="nav-item active"><span>Person Profile</span></div>
-      <div class="nav-item" onclick="showFlightBrowser()" style="cursor:pointer;"><span>Flight Manifests</span></div>
-      <div class="nav-item" onclick="window.location.href='graph.html'" style="cursor:pointer;"><span>Network Graph</span><span class="coming-soon-badge" style="background:rgba(26,107,60,0.12);color:#1A6B3C;border-color:rgba(26,107,60,0.3);">LIVE</span></div>
-      <div class="nav-item" onclick="window.location.href='redacted.html'" style="cursor:pointer;"><span>Unidentified</span><span class="coming-soon-badge" style="background:rgba(180,40,40,0.1);color:#B42828;border-color:rgba(180,40,40,0.3);">NEW</span></div>
+      <div class="nav-item" onclick="switchTab('profiles');closeDrawer()"><span>Person Profile</span></div>
+      <div class="nav-item" onclick="switchTab('flights');closeDrawer()"><span>Flight Manifests</span></div>
+      <div class="nav-item" onclick="window.location.href='graph.html'"><span>Network Graph</span><span class="coming-soon-badge" style="background:rgba(26,107,60,0.12);color:#1A6B3C;border-color:rgba(26,107,60,0.3);">LIVE</span></div>
+      <div class="nav-item" onclick="switchTab('unidentified');closeDrawer()"><span>Unidentified</span><span class="coming-soon-badge" style="background:rgba(180,40,40,0.1);color:#B42828;border-color:rgba(180,40,40,0.3);">NEW</span></div>
+      <div class="nav-item" onclick="switchTab('connections');closeDrawer()"><span>Connections</span><span class="coming-soon-badge" style="background:rgba(26,26,26,0.08);color:#444;border-color:rgba(26,26,26,0.2);">NEW</span></div>
       <div class="nav-item coming-soon"><span>Location Map</span><span class="coming-soon-badge">SOON</span></div>
-      <div class="nav-item" onclick="window.location.href='connections.html'" style="cursor:pointer;"><span>Connections</span><span class="coming-soon-badge" style="background:rgba(26,26,26,0.08);color:#444;border-color:rgba(26,26,26,0.2);">NEW</span></div>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-label">Category</div>
@@ -599,6 +1099,7 @@ const SUPABASE_URL = 'https://gljuffkufkggynlaoyim.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdsanVmZmt1ZmtnZ3lubGFveWltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NDQxNzAsImV4cCI6MjA4NzUyMDE3MH0.TYRbhgiWOFp-Zc5LysfySLR8NeVQdZ9_zh6TpYyNQJE';
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// ── THEME ──
 function toggleTheme() {
   const html = document.documentElement;
   const isDark = html.getAttribute('data-theme') === 'dark';
@@ -606,13 +1107,66 @@ function toggleTheme() {
   document.getElementById('toggleLabel').textContent = isDark ? 'LIGHT' : 'DARK';
 }
 
+// ── MOBILE DRAWER ──
 function openDrawer() { document.getElementById('mobileDrawer').classList.add('open'); }
 function closeDrawer() { document.getElementById('mobileDrawer').classList.remove('open'); }
 
-// Mobile filter clicks
+// ── TAB SWITCHING ──
+let currentTab = 'profiles';
+let unidentifiedLoaded = false;
+let connectionsLoaded = false;
+
+function switchTab(tab) {
+  // Hide all panels
+  document.querySelectorAll('.tab-panel').forEach(el => el.classList.remove('active'));
+  // Remove active from all nav items (type)
+  ['navProfiles','navFlights','navUnidentified','navConnections'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('active');
+  });
+
+  const filterSections = document.getElementById('sidebarFilters');
+  const relFilterSections = document.getElementById('sidebarRelFilters');
+  const rightPanel = document.getElementById('rightPanel');
+
+  if (tab === 'profiles') {
+    document.getElementById('tabProfiles').classList.add('active');
+    document.getElementById('navProfiles').classList.add('active');
+    filterSections.style.display = '';
+    relFilterSections.style.display = '';
+    rightPanel.style.display = '';
+    // Also show search bar
+    document.getElementById('searchInput').style.display = '';
+  } else if (tab === 'flights') {
+    document.getElementById('tabProfiles').classList.add('active');
+    document.getElementById('navFlights').classList.add('active');
+    filterSections.style.display = '';
+    relFilterSections.style.display = '';
+    rightPanel.style.display = '';
+    showFlightBrowser();
+  } else if (tab === 'unidentified') {
+    document.getElementById('tabUnidentified').classList.add('active');
+    document.getElementById('navUnidentified').classList.add('active');
+    filterSections.style.display = 'none';
+    relFilterSections.style.display = 'none';
+    rightPanel.style.display = 'none';
+    if (!unidentifiedLoaded) { initUnidentified(); unidentifiedLoaded = true; }
+  } else if (tab === 'connections') {
+    document.getElementById('tabConnections').classList.add('active');
+    document.getElementById('navConnections').classList.add('active');
+    filterSections.style.display = 'none';
+    relFilterSections.style.display = 'none';
+    rightPanel.style.display = 'none';
+    if (!connectionsLoaded) { initConnections(); connectionsLoaded = true; }
+  }
+  currentTab = tab;
+}
+
+// ── FILTER ITEMS ──
 document.querySelectorAll('.filter-item-m').forEach(el => {
   el.addEventListener('click', () => {
     closeDrawer();
+    switchTab('profiles');
     document.querySelectorAll('.filter-item, .filter-item-m').forEach(x => x.classList.remove('active'));
     el.classList.add('active');
     searchInput.value = '';
@@ -625,6 +1179,9 @@ let searchTimeout;
 
 searchInput.addEventListener('input', e => {
   clearTimeout(searchTimeout);
+  if (currentTab !== 'profiles' && currentTab !== 'flights') {
+    switchTab('profiles');
+  }
   document.querySelectorAll('.filter-item, .filter-item-m').forEach(el => el.classList.remove('active'));
   const q = e.target.value.trim();
   if (q.length > 1) searchTimeout = setTimeout(() => searchPersons(q), 350);
@@ -654,12 +1211,14 @@ document.querySelectorAll('.filter-item').forEach(el => {
 });
 
 function doSearch(name) {
+  switchTab('profiles');
   searchInput.value = name;
   searchPersons(name);
 }
 
+// ── PROFILES JS ──
 async function searchPersons(query) {
-  showLoading();
+  showProfilesLoading();
   try {
     const { data, error } = await db
       .from('persons')
@@ -676,7 +1235,7 @@ async function searchPersons(query) {
 }
 
 async function browseByFilter(field, value) {
-  showLoading();
+  showProfilesLoading();
   const col = field === 'category' ? 'category' : 'relationship_to_epstein';
   try {
     const { data, error } = await db
@@ -693,7 +1252,7 @@ async function browseByFilter(field, value) {
 }
 
 function renderProfile(p) {
-  const main = document.getElementById('main');
+  const tabEl = document.getElementById('tabProfiles');
   const notes = p.notes || '';
   const summary = notes.replace(/\[jwiki:[^\]]+\]\s*/, '');
   const emailCount = p.total_document_count || 0;
@@ -702,69 +1261,46 @@ function renderProfile(p) {
   const conf = p.confidence || 'indicated';
   const slug = notes.match(/\[jwiki:([^\]]+)\]/)?.[1] || '';
 
-  main.innerHTML = `
-    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:1rem;">
-      <div>
-        <div class="subject-name">${p.full_name}</div>
-        <div class="subject-meta">
-          ${p.public_title ? `<span class="meta-pill">${p.public_title}</span>` : ''}
-          ${p.category ? `<span class="meta-pill">${cap(p.category)}</span>` : ''}
-          ${p.nationality && p.nationality[0] ? `<span class="meta-pill">${p.nationality[0]}</span>` : ''}
+  tabEl.innerHTML = `
+    <div style="padding:1.5rem 1.75rem;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:1rem;">
+        <div>
+          <div class="subject-name">${p.full_name}</div>
+          <div class="subject-meta">
+            ${p.public_title ? `<span class="meta-pill">${p.public_title}</span>` : ''}
+            ${p.category ? `<span class="meta-pill">${cap(p.category)}</span>` : ''}
+            ${p.nationality && p.nationality[0] ? `<span class="meta-pill">${p.nationality[0]}</span>` : ''}
+          </div>
+        </div>
+        <span class="conf-badge ${conf}" style="flex-shrink:0;margin-top:0.25rem;">● ${cap(conf)}</span>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-value">${emailCount.toLocaleString()}</div><div class="stat-label">Emails in Archive</div></div>
+        <div class="stat-card"><div class="stat-value" style="font-size:1rem;line-height:1.3;">${cap(rel.replace(/_/g,' '))}</div><div class="stat-label">Relationship</div></div>
+        <div class="stat-card"><div class="stat-value" style="font-size:1rem;line-height:1.3;">${cap(p.current_status || 'Unknown')}</div><div class="stat-label">Status</div></div>
+        <div class="stat-card"><div class="stat-value">${p.power_public_profile || '—'}</div><div class="stat-label">Profile Score</div></div>
+      </div>
+      ${summary ? `<div style="margin-bottom:1.5rem;"><div class="section-title">Intelligence Summary</div><div class="profile-summary">${summary}</div></div>` : ''}
+      <div style="margin-bottom:1.5rem;">
+        <div class="section-title">Email Volume — Archive Presence</div>
+        <div class="email-volume">
+          <div class="email-volume-label"><span>Emails documented in Epstein archive</span><span>${barPct}% of maximum</span></div>
+          <div class="email-volume-bar"><div class="email-volume-fill" style="width:${barPct}%"></div></div>
+          <div class="email-volume-count">${emailCount.toLocaleString()}</div>
+          <div class="email-volume-sub">source: jmail.world · house oversight committee release</div>
         </div>
       </div>
-      <span class="conf-badge ${conf}" style="flex-shrink:0;margin-top:0.25rem;">● ${cap(conf)}</span>
-    </div>
-
-    <div class="stats-row">
-      <div class="stat-card">
-        <div class="stat-value">${emailCount.toLocaleString()}</div>
-        <div class="stat-label">Emails in Archive</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" style="font-size:1rem;line-height:1.3;">${cap(rel.replace(/_/g,' '))}</div>
-        <div class="stat-label">Relationship</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value" style="font-size:1rem;line-height:1.3;">${cap(p.current_status || 'Unknown')}</div>
-        <div class="stat-label">Status</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value">${p.power_public_profile || '—'}</div>
-        <div class="stat-label">Profile Score</div>
-      </div>
-    </div>
-
-    ${summary ? `
-    <div style="margin-bottom:1.5rem;">
-      <div class="section-title">Intelligence Summary</div>
-      <div class="profile-summary">${summary}</div>
-    </div>` : ''}
-
-    <div style="margin-bottom:1.5rem;">
-      <div class="section-title">Email Volume — Archive Presence</div>
-      <div class="email-volume">
-        <div class="email-volume-label">
-          <span>Emails documented in Epstein archive</span>
-          <span>${barPct}% of maximum</span>
+      <div id="flightSection">
+        <div class="section-title">Flight Manifests</div>
+        <div id="flightContent" style="padding:1.5rem;text-align:center;background:var(--surface);border:1px dashed var(--border);border-radius:10px;">
+          <div style="font-family:'Montserrat', sans-serif;font-size:0.72rem;color:var(--text-tertiary);letter-spacing:0.1em;">LOADING MANIFEST DATA...</div>
         </div>
-        <div class="email-volume-bar"><div class="email-volume-fill" style="width:${barPct}%"></div></div>
-        <div class="email-volume-count">${emailCount.toLocaleString()}</div>
-        <div class="email-volume-sub">source: jmail.world · house oversight committee release</div>
-      </div>
-    </div>
-
-    <div id="flightSection">
-      <div class="section-title">Flight Manifests</div>
-      <div id="flightContent" style="padding:1.5rem;text-align:center;background:var(--surface);border:1px dashed var(--border);border-radius:10px;">
-        <div style="font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--text-tertiary);letter-spacing:0.1em;">LOADING MANIFEST DATA...</div>
       </div>
     </div>
   `;
 
   document.getElementById('pw0').style.width = (p.power_public_profile || 0) + '%';
   document.getElementById('pw1').style.width = (p.power_institutional || 0) + '%';
-
-  // Fetch flight data for this person
   fetchFlights(p.id, p.full_name);
   document.getElementById('pv0').textContent = p.power_public_profile || 0;
   document.getElementById('pv1').textContent = p.power_institutional || 0;
@@ -777,13 +1313,12 @@ function renderProfile(p) {
       <div><strong style="color:var(--text-primary);">Status:</strong> ${cap(p.current_status || 'Unknown')}</div>
     </div>
     ${slug ? `<div style="margin-top:0.75rem;padding-top:0.75rem;border-top:1px solid var(--border);">
-      <a href="https://jmail.world/wiki/${slug}" target="_blank" style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--text-tertiary);text-decoration:none;letter-spacing:0.06em;">VIEW SOURCE ON JMAIL.WORLD ↗</a>
+      <a href="https://jmail.world/wiki/${slug}" target="_blank" style="font-family:'Montserrat', sans-serif;font-size:0.65rem;color:var(--text-tertiary);text-decoration:none;letter-spacing:0.06em;">VIEW SOURCE ON JMAIL.WORLD ↗</a>
     </div>` : ''}
   `;
-
   document.getElementById('statusPanel').style.display = 'block';
   document.getElementById('statusContent').innerHTML = `
-    <div style="font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--text-secondary);line-height:2;">
+    <div style="font-family:'Montserrat', sans-serif;font-size:0.68rem;color:var(--text-secondary);line-height:2;">
       <div>Source: Epstein email archive</div>
       <div>Confidence: ${cap(conf)}</div>
       <div>Indexed: Feb 2026</div>
@@ -795,72 +1330,38 @@ function renderProfile(p) {
 async function fetchFlights(personId, personName) {
   const el = document.getElementById('flightContent');
   if (!el) return;
-
   try {
-    const { data: fps, error } = await db
-      .from('flight_passengers')
-      .select('flight_id, name_as_logged')
-      .eq('person_id', personId);
-
+    const { data: fps, error } = await db.from('flight_passengers').select('flight_id, name_as_logged').eq('person_id', personId);
     if (error) throw error;
-
     if (!fps || fps.length === 0) {
-      el.innerHTML = `<div style="font-size:0.82rem;color:var(--text-secondary);padding:1rem 0;">No documented flights found for this individual in the current manifest database. Flight data covers pilot logbook records 1997–2005.</div>`;
+      el.innerHTML = `<div style="font-size:0.82rem;color:var(--text-secondary);padding:1rem 0;">No documented flights found for this individual in the current manifest database.</div>`;
       return;
     }
-
     const flightIds = fps.map(fp => fp.flight_id);
-    const { data: flights, error: fe } = await db
-      .from('flights')
-      .select('id, flight_date, tail_number, aircraft_type, origin, destination, notes')
-      .in('id', flightIds)
-      .order('flight_date', { ascending: true });
-
+    const { data: flights, error: fe } = await db.from('flights').select('id, flight_date, tail_number, aircraft_type, origin, destination, notes').in('id', flightIds).order('flight_date', { ascending: true });
     if (fe) throw fe;
-
-    const airportLabels = {
-      'TEB': 'Teterboro, NJ', 'PBI': 'Palm Beach, FL', 'TIST': 'St. Thomas, USVI',
-      'JFK': 'New York JFK', 'EWR': 'Newark, NJ', 'LGA': 'New York LGA',
-      'HPN': 'White Plains, NY', 'MIA': 'Miami, FL', 'SAF': 'Santa Fe, NM',
-      'BOS': 'Boston, MA', 'LAX': 'Los Angeles, CA', 'VNY': 'Van Nuys, CA',
-      'MVY': "Martha's Vineyard", 'MRY': 'Monterey, CA', 'CMH': 'Columbus, OH',
-      'JAX': 'Jacksonville, FL', 'ABQ': 'Albuquerque, NM', 'BED': 'Bedford, MA',
-      'BGR': 'Bangor, ME', 'ABY': 'Albany, GA', 'MYEF': 'Great Exuma, Bahamas',
-      'LFPB': 'Paris, France', 'LFML': 'Marseille, France', 'LFMN': 'Nice, France',
-      'EGBB': 'Birmingham, UK', 'EGGW': 'London Luton', 'ESSA': 'Stockholm',
-      'EIDW': 'Dublin', 'GMTT': 'Tangier, Morocco', 'GMME': 'Rabat, Morocco',
-      'LPAZ': 'Azores, Portugal', 'MBPV': 'Turks & Caicos'
-    };
-
+    const airportLabels = {'TEB':'Teterboro, NJ','PBI':'Palm Beach, FL','TIST':'St. Thomas, USVI','JFK':'New York JFK','EWR':'Newark, NJ','LGA':'New York LGA','HPN':'White Plains, NY','MIA':'Miami, FL','SAF':'Santa Fe, NM','BOS':'Boston, MA','LAX':'Los Angeles, CA','VNY':'Van Nuys, CA','MVY':"Martha's Vineyard",'MRY':'Monterey, CA','CMH':'Columbus, OH','JAX':'Jacksonville, FL','ABQ':'Albuquerque, NM','BED':'Bedford, MA','BGR':'Bangor, ME','ABY':'Albany, GA','MYEF':'Great Exuma, Bahamas','LFPB':'Paris, France','LFML':'Marseille, France','LFMN':'Nice, France','EGBB':'Birmingham, UK','EGGW':'London Luton','ESSA':'Stockholm','EIDW':'Dublin','GMTT':'Tangier, Morocco','GMME':'Rabat, Morocco','LPAZ':'Azores, Portugal','MBPV':'Turks & Caicos'};
     const fmt = d => new Date(d + 'T12:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     const loc = code => airportLabels[code] || code;
     const isIsland = code => ['TIST','MYEF','MBPV'].includes(code);
-
     el.innerHTML = `
-      <div style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--text-tertiary);letter-spacing:0.08em;margin-bottom:1rem;">
+      <div style="font-family:'Montserrat', sans-serif;font-size:0.65rem;color:var(--text-tertiary);letter-spacing:0.08em;margin-bottom:1rem;">
         ${flights.length} DOCUMENTED FLIGHT${flights.length !== 1 ? 'S' : ''} · TAIL: ${[...new Set(flights.map(f=>f.tail_number))].join(', ')} · SOURCE: PILOT LOGBOOK
       </div>
       ${flights.map(f => {
-        const toIsland = isIsland(f.destination);
-        const fromIsland = isIsland(f.origin);
-        const highlight = toIsland || fromIsland;
-        return `
-        <div style="display:flex;gap:1rem;align-items:flex-start;padding:0.75rem 0;border-bottom:1px solid var(--border);${highlight ? 'background:rgba(var(--accent-rgb,220,38,38),0.04);margin:0 -0.5rem;padding:0.75rem 0.5rem;border-radius:4px;' : ''}">
-          <div style="font-family:'DM Mono',monospace;font-size:0.68rem;color:var(--text-tertiary);min-width:80px;padding-top:2px;">${fmt(f.flight_date)}</div>
+        const highlight = isIsland(f.destination) || isIsland(f.origin);
+        return `<div style="display:flex;gap:1rem;align-items:flex-start;padding:0.75rem 0;border-bottom:1px solid var(--border);">
+          <div style="font-family:'Montserrat', sans-serif;font-size:0.68rem;color:var(--text-tertiary);min-width:80px;padding-top:2px;">${fmt(f.flight_date)}</div>
           <div style="flex:1;">
             <div style="font-size:0.85rem;color:var(--text-primary);font-weight:500;display:flex;align-items:center;gap:0.5rem;">
-              <span>${loc(f.origin)}</span>
-              <span style="color:var(--text-tertiary);">→</span>
-              <span>${loc(f.destination)}</span>
-              ${highlight ? `<span style="font-family:'DM Mono',monospace;font-size:0.58rem;color:#dc2626;letter-spacing:0.06em;padding:1px 5px;border:1px solid #dc2626;border-radius:3px;">ISLAND</span>` : ''}
+              <span>${loc(f.origin)}</span><span style="color:var(--text-tertiary);">→</span><span>${loc(f.destination)}</span>
+              ${highlight ? `<span style="font-family:'Montserrat', sans-serif;font-size:0.58rem;color:#dc2626;letter-spacing:0.06em;padding:1px 5px;border:1px solid #dc2626;border-radius:3px;">ISLAND</span>` : ''}
             </div>
-            <div style="font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--text-tertiary);margin-top:3px;">${f.tail_number} · ${f.aircraft_type || 'PRIVATE JET'}</div>
+            <div style="font-family:'Montserrat', sans-serif;font-size:0.62rem;color:var(--text-tertiary);margin-top:3px;">${f.tail_number} · ${f.aircraft_type || 'PRIVATE JET'}</div>
           </div>
         </div>`;
       }).join('')}
-      <div style="margin-top:1rem;font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--text-tertiary);letter-spacing:0.06em;">
-        MANIFEST DATA: PILOT LOGBOOK 2002–2005 · ENTERED INTO EVIDENCE AT MAXWELL TRIAL
-      </div>
+      <div style="margin-top:1rem;font-family:'Montserrat', sans-serif;font-size:0.6rem;color:var(--text-tertiary);letter-spacing:0.06em;">MANIFEST DATA: PILOT LOGBOOK 1997–2005 · ENTERED INTO EVIDENCE AT MAXWELL TRIAL</div>
     `;
   } catch(err) {
     el.innerHTML = `<div style="font-size:0.8rem;color:var(--text-secondary);">Flight data unavailable.</div>`;
@@ -869,96 +1370,74 @@ async function fetchFlights(personId, personName) {
 
 function showResults(persons, query) {
   clearRightPanel();
-  document.getElementById('main').innerHTML = `
-    <div class="section-title">${persons.length} result${persons.length !== 1 ? 's' : ''} — "${query}"</div>
-    <div class="results-grid">
-      ${persons.map(p => `
-        <div class="result-card" onclick="loadById('${p.id}')">
-          <div>
-            <div class="result-name">${p.full_name}</div>
-            <div class="result-meta">${p.public_title || cap(p.category || 'Unknown')} · ${cap((p.relationship_to_epstein||'associate').replace(/_/g,' '))}</div>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.4rem;">
-            <span class="conf-badge ${p.confidence||'indicated'}">${cap(p.confidence||'indicated')}</span>
-            <div class="result-docs">${(p.total_document_count||0).toLocaleString()} emails</div>
-          </div>
-        </div>`).join('')}
+  const tabEl = document.getElementById('tabProfiles');
+  tabEl.innerHTML = `
+    <div style="padding:1.5rem 1.75rem;">
+      <div class="section-title">${persons.length} result${persons.length !== 1 ? 's' : ''} — "${query}"</div>
+      <div class="results-grid">
+        ${persons.map(p => `
+          <div class="result-card-profile" onclick="loadById('${p.id}')">
+            <div>
+              <div class="result-name">${p.full_name}</div>
+              <div class="result-meta">${p.public_title || cap(p.category || 'Unknown')} · ${cap((p.relationship_to_epstein||'associate').replace(/_/g,' '))}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.4rem;">
+              <span class="conf-badge ${p.confidence||'indicated'}">${cap(p.confidence||'indicated')}</span>
+              <div class="result-docs">${(p.total_document_count||0).toLocaleString()} emails</div>
+            </div>
+          </div>`).join('')}
+      </div>
     </div>`;
 }
 
 async function loadById(id) {
-  showLoading();
+  showProfilesLoading();
   const { data } = await db.from('persons').select('*').eq('id', id).single();
   if (data) renderProfile(data);
 }
 
 async function showFlightBrowser() {
   clearRightPanel();
-  showLoading();
+  showProfilesLoading();
   try {
-    const { data: flights } = await db
-      .from('flights')
-      .select('id, flight_date, tail_number, aircraft_type, origin, destination, notes')
-      .order('flight_date', { ascending: true });
-
-    const airportLabels = {
-      'TEB':'Teterboro, NJ','PBI':'Palm Beach, FL','TIST':'St. Thomas, USVI',
-      'JFK':'New York JFK','EWR':'Newark, NJ','LGA':'New York LGA',
-      'HPN':'White Plains, NY','MIA':'Miami, FL','SAF':'Santa Fe, NM',
-      'BOS':'Boston, MA','LAX':'Los Angeles, CA','VNY':'Van Nuys, CA',
-      'MVY':"Martha's Vineyard",'MRY':'Monterey, CA','CMH':'Columbus, OH',
-      'JAX':'Jacksonville, FL','ABQ':'Albuquerque, NM','BED':'Bedford, MA',
-      'BGR':'Bangor, ME','ABY':'Albany, GA','MYEF':'Great Exuma, Bahamas',
-      'LFPB':'Paris, France','LFML':'Marseille, France','LFMN':'Nice, France',
-      'EGBB':'Birmingham, UK','EGGW':'London Luton','ESSA':'Stockholm',
-      'EIDW':'Dublin','GMTT':'Tangier, Morocco','GMME':'Rabat, Morocco',
-      'LPAZ':'Azores, Portugal','MBPV':'Turks & Caicos'
-    };
-
+    const { data: flights } = await db.from('flights').select('id, flight_date, tail_number, aircraft_type, origin, destination, notes').order('flight_date', { ascending: true });
+    const airportLabels = {'TEB':'Teterboro, NJ','PBI':'Palm Beach, FL','TIST':'St. Thomas, USVI','JFK':'New York JFK','EWR':'Newark, NJ','LGA':'New York LGA','HPN':'White Plains, NY','MIA':'Miami, FL','SAF':'Santa Fe, NM','BOS':'Boston, MA','LAX':'Los Angeles, CA','VNY':'Van Nuys, CA','MVY':"Martha's Vineyard",'MRY':'Monterey, CA','CMH':'Columbus, OH','JAX':'Jacksonville, FL','ABQ':'Albuquerque, NM','BED':'Bedford, MA','BGR':'Bangor, ME','ABY':'Albany, GA','MYEF':'Great Exuma, Bahamas','LFPB':'Paris, France','LFML':'Marseille, France','LFMN':'Nice, France','EGBB':'Birmingham, UK','EGGW':'London Luton','ESSA':'Stockholm','EIDW':'Dublin','GMTT':'Tangier, Morocco','GMME':'Rabat, Morocco','LPAZ':'Azores, Portugal','MBPV':'Turks & Caicos'};
     const loc = code => airportLabels[code] || code;
     const isIsland = code => ['TIST','MYEF','MBPV'].includes(code);
     const fmt = d => new Date(d + 'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-
-    document.getElementById('main').innerHTML = `
-      <div style="margin-bottom:1.5rem;">
-        <div class="subject-name" style="font-size:1.6rem;">Flight Manifests</div>
-        <div style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--text-tertiary);margin-top:0.25rem;letter-spacing:0.08em;">
-          ${flights.length} DOCUMENTED FLIGHT LEGS · N908JE & N909JE · PILOT LOGBOOK 2002–2005
+    document.getElementById('tabProfiles').innerHTML = `
+      <div style="padding:1.5rem 1.75rem;">
+        <div style="margin-bottom:1.5rem;">
+          <div class="subject-name" style="font-size:1.6rem;">Flight Manifests</div>
+          <div style="font-family:'Montserrat', sans-serif;font-size:0.65rem;color:var(--text-tertiary);margin-top:0.25rem;letter-spacing:0.08em;">${flights.length} DOCUMENTED FLIGHT LEGS · N908JE & N909JE · PILOT LOGBOOK 1997–2005</div>
         </div>
-      </div>
-      <div style="margin-bottom:1rem;font-size:0.8rem;color:var(--text-secondary);">
-        Source: pilot logbooks entered into evidence at the Ghislaine Maxwell federal trial. Each row is a single flight leg. <span style="color:#dc2626;">Red badge</span> = island destination or origin.
-      </div>
-      ${flights.map(f => {
-        const highlight = isIsland(f.destination) || isIsland(f.origin);
-        return `
-        <div style="display:flex;gap:1rem;align-items:flex-start;padding:0.75rem 0;border-bottom:1px solid var(--border);">
-          <div style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--text-tertiary);min-width:88px;padding-top:2px;">${fmt(f.flight_date)}</div>
-          <div style="flex:1;">
-            <div style="font-size:0.85rem;color:var(--text-primary);font-weight:500;display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
-              <span>${loc(f.origin)}</span>
-              <span style="color:var(--text-tertiary);">→</span>
-              <span>${loc(f.destination)}</span>
-              ${highlight ? `<span style="font-family:'DM Mono',monospace;font-size:0.58rem;color:#dc2626;letter-spacing:0.06em;padding:1px 5px;border:1px solid #dc2626;border-radius:3px;">ISLAND</span>` : ''}
+        <div style="margin-bottom:1rem;font-size:0.8rem;color:var(--text-secondary);">Source: pilot logbooks entered into evidence at the Ghislaine Maxwell federal trial. <span style="color:#dc2626;">Red badge</span> = island destination or origin.</div>
+        ${flights.map(f => {
+          const highlight = isIsland(f.destination) || isIsland(f.origin);
+          return `<div style="display:flex;gap:1rem;align-items:flex-start;padding:0.75rem 0;border-bottom:1px solid var(--border);">
+            <div style="font-family:'Montserrat', sans-serif;font-size:0.65rem;color:var(--text-tertiary);min-width:88px;padding-top:2px;">${fmt(f.flight_date)}</div>
+            <div style="flex:1;">
+              <div style="font-size:0.85rem;color:var(--text-primary);font-weight:500;display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;">
+                <span>${loc(f.origin)}</span><span style="color:var(--text-tertiary);">→</span><span>${loc(f.destination)}</span>
+                ${highlight ? `<span style="font-family:'Montserrat', sans-serif;font-size:0.58rem;color:#dc2626;letter-spacing:0.06em;padding:1px 5px;border:1px solid #dc2626;border-radius:3px;">ISLAND</span>` : ''}
+              </div>
+              <div style="font-family:'Montserrat', sans-serif;font-size:0.62rem;color:var(--text-tertiary);margin-top:3px;">${f.tail_number} · ${f.notes ? f.notes.substring(0,80)+(f.notes.length>80?'…':'') : ''}</div>
             </div>
-            <div style="font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--text-tertiary);margin-top:3px;">${f.tail_number} · ${f.notes ? f.notes.substring(0,80) + (f.notes.length > 80 ? '…' : '') : ''}</div>
-          </div>
-        </div>`;
-      }).join('')}
-      <div style="margin-top:1.5rem;padding:1rem;background:var(--surface);border-radius:8px;font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--text-tertiary);line-height:1.8;letter-spacing:0.04em;">
-        SOURCE: PILOT LOGBOOKS (DAVID RODGERS) · ENTERED INTO EVIDENCE UNITED STATES V. MAXWELL · USDC SDNY 2021<br>
-        DATA COVERS DOCUMENTED LEGS 2002–2005 · ADDITIONAL YEARS PENDING INDEXING
-      </div>
-    `;
+          </div>`;
+        }).join('')}
+        <div style="margin-top:1.5rem;padding:1rem;background:var(--surface);border-radius:8px;font-family:'Montserrat', sans-serif;font-size:0.62rem;color:var(--text-tertiary);line-height:1.8;letter-spacing:0.04em;">
+          SOURCE: PILOT LOGBOOKS (DAVID RODGERS) · ENTERED INTO EVIDENCE UNITED STATES V. MAXWELL · USDC SDNY 2021
+        </div>
+      </div>`;
   } catch(err) { showError(err.message); }
 }
 
 function showLanding() {
   clearRightPanel();
-  document.getElementById('main').innerHTML = `
+  document.getElementById('tabProfiles').innerHTML = `
     <div class="landing">
       <div class="landing-title">Search the Epstein Intelligence Database</div>
-      <div class="landing-sub">97 individuals indexed from the Epstein archive and pilot logbooks. Search by name to view profiles, flight history, connection analysis, and power index.</div>
+      <div class="landing-sub">141 individuals indexed from the Epstein archive and pilot logbooks. Search by name to view profiles, flight history, connection analysis, and power index.</div>
       <div class="landing-suggestions">
         <span class="suggestion-chip" onclick="doSearch('Ghislaine Maxwell')">Ghislaine Maxwell</span>
         <span class="suggestion-chip" onclick="doSearch('Bill Gates')">Bill Gates</span>
@@ -970,32 +1449,25 @@ function showLanding() {
         <span class="suggestion-chip" onclick="doSearch('Larry Summers')">Larry Summers</span>
         <span class="suggestion-chip" onclick="doSearch('Richard Branson')">Richard Branson</span>
         <span class="suggestion-chip" onclick="doSearch('Sarah Ferguson')">Sarah Ferguson</span>
-        <span class="suggestion-chip" onclick="doSearch('Dean Kamen')">Dean Kamen</span>
-        <span class="suggestion-chip" onclick="doSearch('Marvin Minsky')">Marvin Minsky</span>
+        <span class="suggestion-chip" onclick="doSearch('Elon Musk')">Elon Musk</span>
+        <span class="suggestion-chip" onclick="doSearch('Steve Bannon')">Steve Bannon</span>
         <span class="suggestion-chip" onclick="doSearch('Kevin Spacey')">Kevin Spacey</span>
-        <span class="suggestion-chip" onclick="doSearch('Chris Tucker')">Chris Tucker</span>
+        <span class="suggestion-chip" onclick="doSearch('Alan Dershowitz')">Alan Dershowitz</span>
         <span class="suggestion-chip" onclick="doSearch('Steven Pinker')">Steven Pinker</span>
       </div>
     </div>`;
 }
 
-function showLoading() {
-  document.getElementById('main').innerHTML = `<div class="state-msg"><div class="state-label">QUERYING DATABASE...</div></div>`;
+function showProfilesLoading() {
+  document.getElementById('tabProfiles').innerHTML = `<div style="padding:1.5rem;"><div class="state-msg"><div class="state-label">QUERYING DATABASE...</div></div></div>`;
 }
-
 function showEmpty(query) {
   clearRightPanel();
-  document.getElementById('main').innerHTML = `
-    <div class="state-msg">
-      <div class="state-label">NO RESULTS FOR "${String(query).toUpperCase()}"</div>
-      <div class="state-sub">Try a different spelling, or browse by category using the filters.</div>
-    </div>`;
+  document.getElementById('tabProfiles').innerHTML = `<div style="padding:1.5rem;"><div class="state-msg"><div class="state-label">NO RESULTS FOR "${String(query).toUpperCase()}"</div><div class="state-sub">Try a different spelling, or browse by category using the filters.</div></div></div>`;
 }
-
 function showError(msg) {
-  document.getElementById('main').innerHTML = `<div class="state-msg"><div class="state-label" style="color:var(--unverified);">ERROR: ${msg}</div></div>`;
+  document.getElementById('tabProfiles').innerHTML = `<div style="padding:1.5rem;"><div class="state-msg"><div class="state-label" style="color:var(--unverified);">ERROR: ${msg}</div></div></div>`;
 }
-
 function clearRightPanel() {
   document.getElementById('pw0').style.width = '0%';
   document.getElementById('pw1').style.width = '0%';
@@ -1004,21 +1476,400 @@ function clearRightPanel() {
   document.getElementById('relPanel').style.display = 'none';
   document.getElementById('statusPanel').style.display = 'none';
 }
+function cap(str) { if (!str) return ''; return str.charAt(0).toUpperCase() + str.slice(1); }
 
-function cap(str) {
-  if (!str) return '';
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-// Handle ?search= param from graph.html deep-links
+// Handle ?search= param
 (function() {
   const params = new URLSearchParams(window.location.search);
   const s = params.get('search');
-  if (s) {
-    const inp = document.getElementById('searchInput');
-    if (inp) { inp.value = s; doSearch(s); }
-  }
+  if (s) { searchInput.value = s; doSearch(s); }
 })();
+
+// ════════════════════════════════════════
+// ── UNIDENTIFIED TAB JS ──
+// ════════════════════════════════════════
+
+const AIRPORT_NAMES_U = {
+  PBI:'Palm Beach', TEB:'Teterboro', JFK:'New York JFK', HPN:'Westchester',
+  EWR:'Newark', MIA:'Miami', TIST:'St. Thomas / Little Saint James', LAX:'Los Angeles',
+  VNY:'Van Nuys', MRY:'Monterey', CMH:'Columbus OH', ABY:'Albany GA',
+  SAF:'Santa Fe', BOS:'Boston', MVY:"Martha's Vineyard", BED:'Bedford MA',
+  ASE:'Aspen', IAD:'Washington Dulles', DCA:'Washington National',
+  MYNN:'Nassau', MTPP:'Port-au-Prince', TNCM:'St. Maarten',
+  RIC:'Richmond VA', HTO:'East Hampton', LAS:'Las Vegas',
+  MDW:'Chicago Midway', OXC:'Waterbury CT', JAX:'Jacksonville',
+};
+
+function airportDisplay(code) { return AIRPORT_NAMES_U[code] || code; }
+function nameSlug(name) { return encodeURIComponent(name); }
+
+function parseRedacted(notes) {
+  if (!notes) return [];
+  const results = [];
+  const matches = notes.matchAll(/(\d+)\s+(FEMALE|MALE)/gi);
+  for (const m of matches) { results.push({ count: parseInt(m[1]), gender: m[2].toLowerCase() }); }
+  if (notes.match(/\b1 FEMALE\b/i) && results.length === 0) { results.push({ count: 1, gender: 'female' }); }
+  return results;
+}
+
+function redactedLabel(entry) {
+  const word = entry.gender === 'female' ? 'FEMALE' : 'MALE';
+  if (entry.count === 1) return `UNNAMED ${word}`;
+  return `${entry.count} UNNAMED ${word}S`;
+}
+
+const PERSON_ROLES = {
+  'Ghislaine Maxwell': 'Epstein associate · convicted',
+  'Sarah Kellen': 'Epstein associate · charged',
+  'Bill Clinton': '42nd President of the United States',
+  'Jean-Luc Brunel': 'Model agent · died in custody 2022',
+  'Nadia Marcinko': 'Epstein associate',
+  'Johanna Sjoberg': 'Epstein accuser',
+  'Alan Dershowitz': 'Attorney · accused in Giuffre suit',
+  'Larry Summers': 'U.S. Treasury Secretary 1999–2001',
+  'Prince Andrew, Duke of York': 'Duke of York · settled Giuffre suit 2022',
+  'Sarah Ferguson': 'Duchess of York',
+  'Glen Dubin': 'Hedge fund manager',
+  'Eva Dubin': 'Physician · wife of Glen Dubin',
+  'Gary Kerney': 'Epstein pilot',
+};
+
+async function initUnidentified() {
+  const container = document.getElementById('uFlightContainer');
+  try {
+    const flightsRes = await db.from('flights').select('*').order('flight_date', { ascending: true });
+    const flights = flightsRes.data || [];
+    const fpRes = await db.from('flight_passengers').select('flight_id, person_id, name_as_logged, is_identified, is_redacted');
+    const fps = fpRes.data || [];
+    const personsRes = await db.from('persons').select('id, full_name, category');
+    const persons = personsRes.data || [];
+    const personMap = {};
+    persons.forEach(p => personMap[p.id] = p);
+    const fpByFlight = {};
+    fps.forEach(fp => { if (!fpByFlight[fp.flight_id]) fpByFlight[fp.flight_id] = []; fpByFlight[fp.flight_id].push(fp); });
+    const redactedFlights = flights.filter(f => {
+      const fp2 = fpByFlight[f.id] || [];
+      const hasRedacted = fp2.some(fp => fp.is_redacted);
+      const notesHas = f.notes && /\d+\s+(FEMALE|MALE)/i.test(f.notes);
+      return hasRedacted || notesHas;
+    });
+    if (redactedFlights.length === 0) { container.innerHTML = '<div class="loading-state">No records found.</div>'; return; }
+    const totalUnnamed = redactedFlights.reduce((sum, f) => { const e = parseRedacted(f.notes || ''); return sum + e.reduce((s,x) => s+x.count, 0); }, 0);
+    document.getElementById('statFlights').textContent = redactedFlights.length;
+    document.getElementById('statPersons').textContent = totalUnnamed + '+';
+    container.innerHTML = '';
+    const clintonFlight = redactedFlights.find(f => f.flight_date === '2002-02-09');
+    const otherFlights = redactedFlights.filter(f => f.flight_date !== '2002-02-09');
+    if (clintonFlight) {
+      const lbl = document.createElement('div'); lbl.className = 'section-label'; lbl.textContent = 'Most scrutinized entry'; container.appendChild(lbl);
+      container.appendChild(buildUCard(clintonFlight, fpByFlight, personMap, true));
+    }
+    const allLbl = document.createElement('div'); allLbl.className = 'section-label'; allLbl.style.marginTop = '2rem'; allLbl.textContent = 'All documented instances'; container.appendChild(allLbl);
+    otherFlights.forEach(f => container.appendChild(buildUCard(f, fpByFlight, personMap, false)));
+    document.getElementById('uPatternBlock').style.display = 'block';
+    document.getElementById('uSummarySection').style.display = 'block';
+  } catch(err) {
+    container.innerHTML = `<div class="loading-state">Error: ${err.message}</div>`;
+  }
+}
+
+function buildUCard(flight, fpByFlight, personMap, isFeatured) {
+  const fps = fpByFlight[flight.id] || [];
+  const namedPassengers = fps.filter(fp => fp.is_identified && !fp.is_redacted && fp.person_id).map(fp => personMap[fp.person_id]).filter(Boolean);
+  const unnamedEntries = parseRedacted(flight.notes || '');
+  const totalUnnamed = unnamedEntries.reduce((s, e) => s + e.count, 0);
+  const card = document.createElement('div');
+  card.className = isFeatured ? 'featured-flight' : 'flight-card';
+  const dateObj = new Date(flight.flight_date + 'T12:00:00');
+  const dateStr = dateObj.toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+  const originName = airportDisplay(flight.origin);
+  const destName = airportDisplay(flight.destination);
+  let html = `
+    ${isFeatured ? `<div class="featured-stamp">Notable flight</div>` : ''}
+    <div class="flight-meta">
+      <span class="flight-date">${dateStr}</span>
+      <span class="flight-route"><span>${flight.origin}</span><span class="route-arrow">→</span><span>${flight.destination}</span></span>
+      <span class="flight-route-name">${originName} → ${destName}</span>
+      <span class="unknown-count-pill">${totalUnnamed} unnamed</span>
+    </div>
+    <div class="manifest-label">Passenger manifest — as logged</div>
+    <div class="passenger-list">
+  `;
+  namedPassengers.forEach(p => {
+    const role = PERSON_ROLES[p.full_name] || '';
+    const link = `?search=${nameSlug(p.full_name)}`;
+    html += `<div class="passenger-row"><span class="passenger-dot"></span><span class="passenger-name"><a href="${link}" onclick="doSearch('${p.full_name.replace(/'/g,"\\'")}');return false;">${p.full_name}</a></span>${role ? `<span class="passenger-role">${role}</span>` : ''}</div>`;
+  });
+  if (flight.notes && /\bJE\b/.test(flight.notes)) {
+    const hasEpstein = namedPassengers.some(p => p.full_name.includes('Epstein'));
+    if (!hasEpstein) html += `<div class="passenger-row"><span class="passenger-dot"></span><span class="passenger-name">Jeffrey Epstein</span><span class="passenger-role">Convicted sex offender</span></div>`;
+  }
+  if (namedPassengers.length > 0 || /\bJE\b/.test(flight.notes || '')) html += `<div class="manifest-divider"></div>`;
+  unnamedEntries.forEach(entry => {
+    html += `<div class="passenger-row redacted"><span class="passenger-dot"></span><span class="redacted-bar"><span class="redacted-label">${redactedLabel(entry)}</span><span class="redacted-count">logged as "${entry.count > 1 ? entry.count+' ' : ''}${entry.gender.toUpperCase()}${entry.count > 1 ? 'S' : ''}"</span></span></div>`;
+  });
+  html += `</div>`;
+  const contextNotes = {
+    '2002-02-09': "Clinton has stated he took four flights on Epstein's plane in 2002–2003. His spokesperson has never identified who the unnamed female passenger on this flight was.",
+    '2005-02-03': 'This flight occurred three months before Palm Beach police opened their investigation into Epstein in May 2005. Jean-Luc Brunel died in a French prison in February 2022 while awaiting trial on rape charges.',
+    '2002-01-17': "One of six flights in a rapid cluster (Jan–Apr 2002) carrying unnamed female passengers to St. Thomas, the island closest to Epstein's private island Little Saint James.",
+    '1998-02-18': 'The earliest documented flight in this analysis carrying unnamed female passengers. Records from 1998 predate the criminal investigation by approximately seven years.',
+  };
+  if (contextNotes[flight.flight_date]) html += `<div class="context-note">${contextNotes[flight.flight_date]}</div>`;
+  card.innerHTML = html;
+  return card;
+}
+
+// ════════════════════════════════════════
+// ── CONNECTIONS TAB JS ──
+// ════════════════════════════════════════
+
+let connAllPersons = [];
+let connEdges = [];
+let connAdjacency = {};
+let connSelectedA = null;
+let connSelectedB = null;
+let connDataLoaded = false;
+
+const AIRPORT_NAMES_C = {
+  PBI:'Palm Beach', TEB:'Teterboro', JFK:'New York JFK', HPN:'Westchester',
+  EWR:'Newark', MIA:'Miami', TIST:'St. Thomas', LAX:'Los Angeles',
+  VNY:'Van Nuys', MRY:'Monterey', CMH:'Columbus OH', ABY:'Albany GA',
+  SAF:'Santa Fe', BOS:'Boston', MVY:"Martha's Vineyard", BED:'Bedford MA',
+  ASE:'Aspen', IAD:'Washington Dulles', DCA:'Washington National',
+  MYNN:'Nassau', MTPP:'Port-au-Prince', TNCM:'St. Maarten',
+  RIC:'Richmond VA', HTO:'East Hampton', LAS:'Las Vegas',
+  MDW:'Chicago Midway', LFPB:'Paris Le Bourget', MYEF:'Staniel Cay',
+  LPAZ:'Santa Cruz Bolivia', GMME:'Rabat Morocco', GMTT:'Tangier Morocco',
+  EGBB:'Birmingham UK', EGGW:'London Luton', ESSA:'Stockholm', EIDW:'Dublin',
+  LFML:'Marseille', LFMN:'Nice', BGR:'Bangor ME', MBPV:'Turks & Caicos',
+};
+
+function connRouteLabel(o, d) { return `${AIRPORT_NAMES_C[o]||o} → ${AIRPORT_NAMES_C[d]||d}`; }
+function connCatClass(cat) { return cat ? `cat-${cat}` : 'cat-other'; }
+
+async function initConnections() {
+  const pRes = await db.from('persons').select('id, full_name, category, relationship_to_epstein, power_public_profile');
+  connAllPersons = pRes.data || [];
+  const personMap = {};
+  connAllPersons.forEach(p => personMap[p.id] = p);
+
+  const fpRes = await db.from('flight_passengers').select('flight_id, person_id, is_identified');
+  const fps = fpRes.data || [];
+  const fRes = await db.from('flights').select('id, flight_date, origin, destination');
+  const flights = fRes.data || [];
+  const flightMap = {};
+  flights.forEach(f => flightMap[f.id] = f);
+
+  const byFlight = {};
+  fps.filter(fp => fp.is_identified).forEach(fp => { if (!byFlight[fp.flight_id]) byFlight[fp.flight_id] = []; byFlight[fp.flight_id].push(fp.person_id); });
+
+  const flightEdgeMap = {};
+  Object.entries(byFlight).forEach(([fid, pids]) => {
+    const f = flightMap[fid]; if (!f) return;
+    for (let i = 0; i < pids.length; i++) {
+      for (let j = i+1; j < pids.length; j++) {
+        const key = [pids[i],pids[j]].sort().join('|');
+        if (!flightEdgeMap[key]) flightEdgeMap[key] = { flights: [] };
+        flightEdgeMap[key].flights.push(f);
+      }
+    }
+  });
+
+  Object.entries(flightEdgeMap).forEach(([key, val]) => {
+    const [a, b] = key.split('|');
+    if (!personMap[a] || !personMap[b]) return;
+    const count = val.flights.length;
+    const sorted = val.flights.sort((x,y) => x.flight_date.localeCompare(y.flight_date));
+    const first = sorted[0];
+    const routes = [...new Set(sorted.map(f => connRouteLabel(f.origin, f.destination)))];
+    const routeStr = routes.slice(0,2).join('; ')+(routes.length>2?` +${routes.length-2} more`:'');
+    connEdges.push({ a, b, type:'flight', label: count===1?'1 documented flight together':`${count} documented flights together`, detail:`${first.flight_date} · ${routeStr}`, weight: count });
+  });
+
+  const epstein = { id:'__epstein__', full_name:'Jeffrey Epstein', category:'other', relationship_to_epstein:'subject' };
+  const relLabels = { direct_contact:'Direct contact — documented in archive', employee:'Employee — documented in archive', alleged_client:'Alleged client — documented in archive', victim:'Documented survivor', legal_counsel:'Legal counsel — documented in archive', associate:'Associate — documented in archive' };
+  connAllPersons.forEach(p => {
+    const rel = p.relationship_to_epstein;
+    if (!rel || rel === 'mentioned_only') return;
+    connEdges.push({ a: p.id, b:'__epstein__', type:'relationship', label: relLabels[rel]||'Documented connection', detail:'Source: Epstein email archive and court records', weight:1 });
+  });
+
+  connAllPersons.push(epstein);
+  personMap['__epstein__'] = epstein;
+
+  connAllPersons.forEach(p => connAdjacency[p.id] = []);
+  connEdges.forEach((e, i) => {
+    if (connAdjacency[e.a] && connAdjacency[e.b]) {
+      connAdjacency[e.a].push({ to: e.b, edgeIdx: i });
+      connAdjacency[e.b].push({ to: e.a, edgeIdx: i });
+    }
+  });
+  connDataLoaded = true;
+
+  connSetupAutocomplete('connInputA', 'connDropA', p => {
+    connSelectedA = p;
+    document.getElementById('connFindBtn').disabled = !(connSelectedA && connSelectedB);
+  });
+  connSetupAutocomplete('connInputB', 'connDropB', p => {
+    connSelectedB = p;
+    document.getElementById('connFindBtn').disabled = !(connSelectedA && connSelectedB);
+  });
+}
+
+function connBfs(startId, endId) {
+  if (startId === endId) return null;
+  const visited = new Set([startId]);
+  const queue = [{ id: startId, path: [startId], edgePath: [] }];
+  while (queue.length > 0) {
+    const { id, path, edgePath } = queue.shift();
+    for (const { to, edgeIdx } of (connAdjacency[id] || [])) {
+      if (visited.has(to)) continue;
+      const newPath = [...path, to];
+      const newEdgePath = [...edgePath, edgeIdx];
+      if (to === endId) return { nodePath: newPath, edgePath: newEdgePath };
+      visited.add(to);
+      queue.push({ id: to, path: newPath, edgePath: newEdgePath });
+    }
+  }
+  return null;
+}
+
+function connFindAllPaths(startId, endId, maxPaths = 3) {
+  if (startId === endId) return [];
+  const shortest = connBfs(startId, endId);
+  if (!shortest) return [];
+  const targetLen = shortest.nodePath.length;
+  const results = [shortest];
+  for (let i = 0; i < shortest.edgePath.length && results.length < maxPaths; i++) {
+    const blockedEdge = shortest.edgePath[i];
+    const edgeData = connEdges[blockedEdge];
+    const adjA = connAdjacency[edgeData.a];
+    const adjB = connAdjacency[edgeData.b];
+    const idxA = adjA.findIndex(x => x.edgeIdx === blockedEdge);
+    const idxB = adjB.findIndex(x => x.edgeIdx === blockedEdge);
+    if (idxA !== -1) adjA.splice(idxA, 1);
+    if (idxB !== -1) adjB.splice(idxB, 1);
+    const alt = connBfs(startId, endId);
+    if (alt && alt.nodePath.length === targetLen) {
+      const altKey = alt.nodePath.join('|');
+      if (!results.some(r => r.nodePath.join('|') === altKey)) results.push(alt);
+    }
+    if (idxA !== -1) adjA.splice(idxA, 0, { to: edgeData.b, edgeIdx: blockedEdge });
+    if (idxB !== -1) adjB.splice(idxB, 0, { to: edgeData.a, edgeIdx: blockedEdge });
+  }
+  return results;
+}
+
+function connGetPersonMap() { const m = {}; connAllPersons.forEach(p => m[p.id] = p); return m; }
+
+function connRenderPath(result, pMap, isAlt) {
+  const { nodePath, edgePath } = result;
+  const degrees = nodePath.length - 1;
+  const degClass = degrees === 1 ? 'deg-1' : degrees === 2 ? 'deg-2' : 'deg-3';
+  const degLabel = degrees === 1 ? '1 degree of separation' : `${degrees} degrees of separation`;
+  const aName = pMap[nodePath[0]]?.full_name || '?';
+  const bName = pMap[nodePath[nodePath.length-1]]?.full_name || '?';
+  const headline = degrees === 1 ? `${aName} and ${bName} are directly connected` : `${aName} → ${bName} in ${degrees} steps`;
+  let html = `<div class="result-card"><div class="result-header"><span class="result-headline">${headline}</span><span class="degree-badge ${degClass}">${degLabel}</span></div><div class="path-viz">`;
+  nodePath.forEach((pid, idx) => {
+    const person = pMap[pid]; if (!person) return;
+    const isFirst = idx === 0, isLast = idx === nodePath.length-1, isEndpoint = isFirst || isLast;
+    const profileLink = pid === '__epstein__' ? `?search=Jeffrey+Epstein` : `?search=${encodeURIComponent(person.full_name)}`;
+    html += `<div class="path-node"><div class="node-indicator"><div class="node-dot ${isEndpoint?'endpoint':''}">${isFirst?'A':isLast?'B':idx}</div>${!isLast?'<div class="node-line" style="min-height:40px;"></div>':''}</div><div class="node-content"><div class="node-name"><a href="${profileLink}" onclick="doSearch('${person.full_name.replace(/'/g,"\\'")}');return false;">${person.full_name}</a></div><div class="node-meta ${connCatClass(person.category)}">${person.category||'associate'}</div></div></div>`;
+    if (idx < edgePath.length) {
+      const edge = connEdges[edgePath[idx]];
+      if (edge) {
+        const isFlight = edge.type === 'flight';
+        html += `<div class="path-edge"><div class="edge-indicator"><div class="edge-line-top"></div><div class="edge-icon">◆</div><div class="edge-line-bot"></div></div><div class="edge-content"><div class="edge-label ${isFlight?'flight-edge':''}"><span class="edge-dot"></span>${edge.label}</div><div class="edge-detail">${edge.detail}</div></div></div>`;
+      }
+    }
+  });
+  html += `</div></div>`;
+  return html;
+}
+
+function connRenderResult(paths, pMap) {
+  const area = document.getElementById('connResultArea');
+  if (!paths || paths.length === 0) {
+    area.innerHTML = `<div class="no-path"><div class="no-path-title">No documented connection found</div><div class="no-path-sub">These individuals do not share a documented flight or archive relationship within the current dataset.</div></div>`;
+    return;
+  }
+  const primary = paths[0];
+  const alts = paths.slice(1);
+  let html = connRenderPath(primary, pMap, false);
+  if (alts.length > 0) {
+    const degrees = primary.nodePath.length - 1;
+    let altHtml = `<div class="alt-paths"><div class="alt-title">Alternative paths — also ${degrees} degree${degrees!==1?'s':''}</div><div class="alt-list">`;
+    alts.forEach(alt => {
+      const midNames = alt.nodePath.slice(1,-1).map(pid => pMap[pid]?.full_name||'?');
+      const label = midNames.length === 0 ? 'Direct connection' : `via ${midNames.join(' → ')}`;
+      altHtml += `<div class="alt-item"><span class="alt-arrow">↳</span>${label}</div>`;
+    });
+    altHtml += `</div></div>`;
+    html = html.replace('</div></div>', altHtml+'</div></div>');
+  }
+  area.innerHTML = html;
+  area.querySelector('.result-card').style.animation = 'fadeUp 0.3s ease';
+}
+
+function connSetupAutocomplete(inputId, dropId, onSelect) {
+  const input = document.getElementById(inputId);
+  const drop = document.getElementById(dropId);
+  let activeIdx = -1;
+  function filter(query) {
+    if (!query || query.length < 1) { drop.classList.remove('open'); return; }
+    const q = query.toLowerCase();
+    const matches = connAllPersons
+      .filter(p => p.id !== '__epstein__' && p.full_name.toLowerCase().includes(q))
+      .sort((a,b) => {
+        const aS = a.full_name.toLowerCase().startsWith(q)?0:1;
+        const bS = b.full_name.toLowerCase().startsWith(q)?0:1;
+        if (aS !== bS) return aS-bS;
+        return (b.power_public_profile||0)-(a.power_public_profile||0);
+      }).slice(0,8);
+    if (matches.length === 0) { drop.classList.remove('open'); return; }
+    drop.innerHTML = matches.map((p,i) => `<div class="autocomplete-item" data-id="${p.id}" data-name="${p.full_name}" data-idx="${i}"><span class="autocomplete-name">${p.full_name}</span><span class="autocomplete-meta ${connCatClass(p.category)}">${p.category||'associate'} · ${p.relationship_to_epstein||''}</span></div>`).join('');
+    drop.querySelectorAll('.autocomplete-item').forEach(el => {
+      el.addEventListener('mousedown', e => { e.preventDefault(); input.value = el.dataset.name; drop.classList.remove('open'); onSelect({ id: el.dataset.id, full_name: el.dataset.name }); });
+    });
+    activeIdx = -1; drop.classList.add('open');
+  }
+  input.addEventListener('input', () => filter(input.value));
+  input.addEventListener('focus', () => { if (input.value) filter(input.value); });
+  input.addEventListener('blur', () => setTimeout(() => drop.classList.remove('open'), 150));
+  input.addEventListener('keydown', e => {
+    const items = drop.querySelectorAll('.autocomplete-item');
+    if (e.key === 'ArrowDown') { e.preventDefault(); activeIdx = Math.min(activeIdx+1, items.length-1); items.forEach((el,i) => el.classList.toggle('active-item', i===activeIdx)); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); activeIdx = Math.max(activeIdx-1, 0); items.forEach((el,i) => el.classList.toggle('active-item', i===activeIdx)); }
+    else if (e.key === 'Enter' && activeIdx >= 0) { e.preventDefault(); const active = items[activeIdx]; if (active) { input.value = active.dataset.name; drop.classList.remove('open'); onSelect({ id: active.dataset.id, full_name: active.dataset.name }); } }
+    else if (e.key === 'Escape') drop.classList.remove('open');
+  });
+}
+
+function connFindPath() {
+  if (!connSelectedA || !connSelectedB) return;
+  if (connSelectedA.id === connSelectedB.id) {
+    document.getElementById('connResultArea').innerHTML = `<div class="no-path"><div class="no-path-title">Same person selected</div><div class="no-path-sub">Please select two different individuals.</div></div>`;
+    return;
+  }
+  const pMap = connGetPersonMap();
+  const paths = connFindAllPaths(connSelectedA.id, connSelectedB.id);
+  connRenderResult(paths, pMap);
+  document.getElementById('connResultArea').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function connSetQuick(nameA, nameB) {
+  if (!connDataLoaded) return;
+  const a = connAllPersons.find(p => p.full_name === nameA);
+  const b = connAllPersons.find(p => p.full_name === nameB);
+  if (!a || !b) return;
+  document.getElementById('connInputA').value = nameA;
+  document.getElementById('connInputB').value = nameB;
+  connSelectedA = a; connSelectedB = b;
+  document.getElementById('connFindBtn').disabled = false;
+  connFindPath();
+}
 
 </script>
 </body>
