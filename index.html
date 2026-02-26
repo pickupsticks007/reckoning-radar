@@ -1351,12 +1351,13 @@ function renderProfile(p) {
   const tabEl = document.getElementById('tabProfiles');
   const notes = p.notes || '';
   const summary = notes.replace(/\[jwiki:[^\]]+\]\s*/, '');
+  const safeSummary = summary.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const emailCount = p.total_document_count || 0;
   const rel = p.relationship_to_epstein || 'associate';
   const conf = p.confidence || 'indicated';
   const slug = notes.match(/\[jwiki:([^\]]+)\]/)?.[1] || '';
-  const activeStart = p.active_period_start ? p.active_period_start.substring(0,4) : null;
-  const activeEnd = p.active_period_end ? p.active_period_end.substring(0,4) : null;
+  const activeStart = p.active_period_start ? String(p.active_period_start).substring(0,4) : null;
+  const activeEnd = p.active_period_end ? String(p.active_period_end).substring(0,4) : null;
   const activePeriod = activeStart ? `Active ${activeStart}${activeEnd && activeEnd !== activeStart ? '–'+activeEnd : ''}` : null;
 
   tabEl.innerHTML = `
@@ -1384,7 +1385,7 @@ function renderProfile(p) {
       </div>
 
       <!-- Intelligence Summary -->
-      ${summary ? `<div style="margin-bottom:1.5rem;"><div class="section-title">Intelligence Summary</div><div class="profile-summary">${summary}</div></div>` : ''}
+      ${safeSummary ? `<div style="margin-bottom:1.5rem;"><div class="section-title">Intelligence Summary</div><div class="profile-summary">${safeSummary}</div></div>` : ''}
 
       <!-- Timeline (populated async) -->
       <div id="timelineSection">
@@ -2355,3 +2356,4 @@ function connSetQuick(nameA, nameB) {
 </script>
 </body>
 </html>
+
