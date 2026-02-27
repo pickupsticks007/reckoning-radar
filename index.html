@@ -260,7 +260,7 @@ body {
 
 .section-title { font-family: 'Montserrat', sans-serif; font-size: 0.68rem; color: var(--text-tertiary); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
 
-.profile-summary { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.25rem; margin-bottom: 1.5rem; font-family: 'Roboto', sans-serif; font-size: 0.875rem; color: var(--text-secondary); line-height: 1.65; }
+.profile-summary { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.1rem 1.25rem; margin-bottom: 1.5rem; font-family: 'Roboto', sans-serif; font-size: 1rem; color: var(--text-secondary); line-height: 1.65; }
 
 .email-volume { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
 .email-volume-label { font-family: 'Montserrat', sans-serif; font-size: 0.62rem; color: var(--text-tertiary); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.6rem; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.25rem; }
@@ -295,25 +295,32 @@ body {
 }
 .landing-title {
   font-family: 'Source Sans 3', 'Source Sans Pro', sans-serif;
-  font-weight: 700;
-  font-size: 2rem;
+  font-weight: 900;
+  font-size: 2.8rem;
   color: var(--text-primary);
   max-width: 600px;
   line-height: 1.3;
 }
+/* Hide right sidebar on landing state */
+.landing-active .sidebar-right {
+  display: none;
+}
+.landing-active .main {
+  grid-column: 2 / 4;
+}
 .landing-sub {
   font-family: 'Montserrat', sans-serif;
   font-weight: 500;
-  font-size: 0.78rem;
+  font-size: 0.95rem;
   color: var(--text-tertiary);
-  max-width: 380px;
+  max-width: 600px;
   line-height: 1.75;
 }
 .landing-suggestions { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; margin-top: 0.5rem; }
 .suggestion-chip {
-  font-family: 'Source Sans 3', 'Source Sans Pro', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   font-weight: 700;
-  font-size: 0.88rem;
+  font-size: 0.95rem;
   padding: 0.4rem 0.95rem;
   border: 1px solid var(--border);
   border-radius: 20px;
@@ -893,12 +900,12 @@ body {
 </style>
 </head>
 <body>
-<div class="app">
+<div class="app landing-active">
 
   <!-- TOPBAR -->
   <header class="topbar">
     <button class="mobile-menu-btn" onclick="openDrawer()" aria-label="Menu">☰</button>
-    <div class="topbar-logo">
+    <div class="topbar-logo" onclick="switchTab('profiles'); document.getElementById('searchInput').value=''; showLanding();" style="cursor:pointer;">
       <span class="logo-the">The</span>
       <span class="logo-main">Reckoning Radar</span>
     </div>
@@ -918,7 +925,7 @@ body {
   <aside class="sidebar-left">
     <div class="sidebar-section">
       <div class="sidebar-label">Query Type</div>
-      <div class="nav-item active" id="navProfiles" onclick="switchTab('profiles')"><span>Person Profile</span></div>
+      <div class="nav-item active" id="navProfiles" onclick="switchTab('profiles'); document.getElementById('searchInput').value=''; showLanding();"><span>Person Profile</span></div>
       <div class="nav-item" id="navFlights" onclick="switchTab('flights')" style="cursor:pointer;"><span>Flight Manifests</span></div>
       <div class="nav-item" onclick="window.location.href='graph.html'" style="cursor:pointer;"><span>Network Graph</span><span class="coming-soon-badge" style="background:rgba(26,107,60,0.12);color:#1A6B3C;border-color:rgba(26,107,60,0.3);">LIVE</span></div>
       <div class="nav-item" id="navUnidentified" onclick="switchTab('unidentified')" style="cursor:pointer;"><span>Unidentified</span><span class="coming-soon-badge" style="background:rgba(180,40,40,0.1);color:#B42828;border-color:rgba(180,40,40,0.3);">NEW</span></div>
@@ -952,24 +959,23 @@ body {
     <!-- ── TAB: PROFILES ── -->
     <div class="tab-panel active" id="tabProfiles">
       <div class="landing">
-        <div class="landing-title">Search the Epstein Intelligence Database</div>
+        <div class="landing-title">Search the<br>Epstein DOJ Database</div>
         <div class="landing-sub">141 individuals indexed from the Epstein archive and pilot logbooks. Search by name to view profiles, flight history, connection analysis, and power index.</div>
         <div class="landing-suggestions">
-          <span class="suggestion-chip" onclick="doSearch('Ghislaine Maxwell')">Ghislaine Maxwell</span>
-          <span class="suggestion-chip" onclick="doSearch('Bill Gates')">Bill Gates</span>
           <span class="suggestion-chip" onclick="doSearch('Lesley Groff')">Lesley Groff</span>
-          <span class="suggestion-chip" onclick="doSearch('Ehud Barak')">Ehud Barak</span>
+          <span class="suggestion-chip" onclick="doSearch('Ghislaine Maxwell')">Ghislaine Maxwell</span>
           <span class="suggestion-chip" onclick="doSearch('Jean-Luc Brunel')">Jean-Luc Brunel</span>
-          <span class="suggestion-chip" onclick="doSearch('Les Wexner')">Les Wexner</span>
-          <span class="suggestion-chip" onclick="doSearch('Prince Andrew')">Prince Andrew</span>
-          <span class="suggestion-chip" onclick="doSearch('Larry Summers')">Larry Summers</span>
-          <span class="suggestion-chip" onclick="doSearch('Richard Branson')">Richard Branson</span>
-          <span class="suggestion-chip" onclick="doSearch('Sarah Ferguson')">Sarah Ferguson</span>
-          <span class="suggestion-chip" onclick="doSearch('Elon Musk')">Elon Musk</span>
+          <span class="suggestion-chip" onclick="doSearch('Donald Trump')">Donald Trump</span>
+          <span class="suggestion-chip" onclick="doSearch('Prince Andrew, Duke of York')">Prince Andrew</span>
+          <span class="suggestion-chip" onclick="doSearch('Bill Gates')">Bill Gates</span>
           <span class="suggestion-chip" onclick="doSearch('Steve Bannon')">Steve Bannon</span>
-          <span class="suggestion-chip" onclick="doSearch('Kevin Spacey')">Kevin Spacey</span>
+          <span class="suggestion-chip" onclick="doSearch('Ehud Barak')">Ehud Barak</span>
+          <span class="suggestion-chip" onclick="doSearch('Les Wexner')">Les Wexner</span>
           <span class="suggestion-chip" onclick="doSearch('Alan Dershowitz')">Alan Dershowitz</span>
-          <span class="suggestion-chip" onclick="doSearch('Steven Pinker')">Steven Pinker</span>
+          <span class="suggestion-chip" onclick="doSearch('Richard Branson')">Richard Branson</span>
+          <span class="suggestion-chip" onclick="doSearch('Larry Summers')">Larry Summers</span>
+          <span class="suggestion-chip" onclick="doSearch('Elon Musk')">Elon Musk</span>
+          <span class="suggestion-chip" onclick="doSearch('Sarah Ferguson')">Sarah Ferguson</span>
         </div>
       </div>
     </div>
@@ -1162,7 +1168,7 @@ body {
     <div class="drawer-close"><button onclick="closeDrawer()">✕ Close</button></div>
     <div class="sidebar-section">
       <div class="sidebar-label">Query Type</div>
-      <div class="nav-item" onclick="switchTab('profiles');closeDrawer()"><span>Person Profile</span></div>
+      <div class="nav-item" onclick="switchTab('profiles'); document.getElementById('searchInput').value=''; showLanding(); closeDrawer()"><span>Person Profile</span></div>
       <div class="nav-item" onclick="switchTab('flights');closeDrawer()"><span>Flight Manifests</span></div>
       <div class="nav-item" onclick="window.location.href='graph.html'"><span>Network Graph</span><span class="coming-soon-badge" style="background:rgba(26,107,60,0.12);color:#1A6B3C;border-color:rgba(26,107,60,0.3);">LIVE</span></div>
       <div class="nav-item" onclick="switchTab('unidentified');closeDrawer()"><span>Unidentified</span><span class="coming-soon-badge" style="background:rgba(180,40,40,0.1);color:#B42828;border-color:rgba(180,40,40,0.3);">NEW</span></div>
@@ -1800,31 +1806,32 @@ function toggleFlight(id) {
 
 function showLanding() {
   clearRightPanel();
+  document.querySelector('.app').classList.add('landing-active');
   document.getElementById('tabProfiles').innerHTML = `
     <div class="landing">
-      <div class="landing-title">Search the Epstein Intelligence Database</div>
+      <div class="landing-title">Search the<br>Epstein DOJ Database</div>
       <div class="landing-sub">141 individuals indexed from the Epstein archive and pilot logbooks. Search by name to view profiles, flight history, connection analysis, and power index.</div>
       <div class="landing-suggestions">
-        <span class="suggestion-chip" onclick="doSearch('Ghislaine Maxwell')">Ghislaine Maxwell</span>
-        <span class="suggestion-chip" onclick="doSearch('Bill Gates')">Bill Gates</span>
         <span class="suggestion-chip" onclick="doSearch('Lesley Groff')">Lesley Groff</span>
-        <span class="suggestion-chip" onclick="doSearch('Ehud Barak')">Ehud Barak</span>
+        <span class="suggestion-chip" onclick="doSearch('Ghislaine Maxwell')">Ghislaine Maxwell</span>
         <span class="suggestion-chip" onclick="doSearch('Jean-Luc Brunel')">Jean-Luc Brunel</span>
-        <span class="suggestion-chip" onclick="doSearch('Les Wexner')">Les Wexner</span>
-        <span class="suggestion-chip" onclick="doSearch('Prince Andrew')">Prince Andrew</span>
-        <span class="suggestion-chip" onclick="doSearch('Larry Summers')">Larry Summers</span>
-        <span class="suggestion-chip" onclick="doSearch('Richard Branson')">Richard Branson</span>
-        <span class="suggestion-chip" onclick="doSearch('Sarah Ferguson')">Sarah Ferguson</span>
-        <span class="suggestion-chip" onclick="doSearch('Elon Musk')">Elon Musk</span>
+        <span class="suggestion-chip" onclick="doSearch('Donald Trump')">Donald Trump</span>
+        <span class="suggestion-chip" onclick="doSearch('Prince Andrew, Duke of York')">Prince Andrew</span>
+        <span class="suggestion-chip" onclick="doSearch('Bill Gates')">Bill Gates</span>
         <span class="suggestion-chip" onclick="doSearch('Steve Bannon')">Steve Bannon</span>
-        <span class="suggestion-chip" onclick="doSearch('Kevin Spacey')">Kevin Spacey</span>
+        <span class="suggestion-chip" onclick="doSearch('Ehud Barak')">Ehud Barak</span>
+        <span class="suggestion-chip" onclick="doSearch('Les Wexner')">Les Wexner</span>
         <span class="suggestion-chip" onclick="doSearch('Alan Dershowitz')">Alan Dershowitz</span>
-        <span class="suggestion-chip" onclick="doSearch('Steven Pinker')">Steven Pinker</span>
+        <span class="suggestion-chip" onclick="doSearch('Richard Branson')">Richard Branson</span>
+        <span class="suggestion-chip" onclick="doSearch('Larry Summers')">Larry Summers</span>
+        <span class="suggestion-chip" onclick="doSearch('Elon Musk')">Elon Musk</span>
+        <span class="suggestion-chip" onclick="doSearch('Sarah Ferguson')">Sarah Ferguson</span>
       </div>
     </div>`;
 }
 
 function showProfilesLoading() {
+  document.querySelector('.app').classList.remove('landing-active');
   document.getElementById('tabProfiles').innerHTML = `<div style="padding:1.5rem;"><div class="state-msg"><div class="state-label">QUERYING DATABASE...</div></div></div>`;
 }
 function showEmpty(query) {
@@ -1954,10 +1961,12 @@ function connUpdateSidebar(personA, personB, pathResult) {
 }
 function cap(str) { if (!str) return ''; return str.charAt(0).toUpperCase() + str.slice(1); }
 
-// Handle ?search= param
+// Handle ?search= and ?tab= params
 (function() {
   const params = new URLSearchParams(window.location.search);
   const s = params.get('search');
+  const t = params.get('tab');
+  if (t) switchTab(t);
   if (s) { searchInput.value = s; doSearch(s); }
 })();
 
