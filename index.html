@@ -119,11 +119,11 @@ body {
 }
 .logo-the {
   font-family: 'neue-haas-grotesk-display', sans-serif;
-  font-weight: 300;
+  font-weight: 700;
   font-size: 0.58rem;
   letter-spacing: 0.25em;
   text-transform: uppercase;
-  color: var(--text-tertiary);
+  color: var(--text-primary);
 }
 .logo-main {
   font-family: 'neue-haas-grotesk-display', sans-serif;
@@ -135,9 +135,11 @@ body {
 }
 
 .topbar-center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+.topbar-search-inner {
   width: 480px;
   display: flex;
   align-items: center;
@@ -897,6 +899,604 @@ body {
   .suggestion-chip { font-size: 0.78rem; padding: 0.35rem 0.75rem; }
   .landing-title { font-size: 1.4rem; }
 }
+
+/* ═══════════════════════════════════════════════════════
+   SHARED: INTEL PAGE HEADER  (Documents / Timeline / Legal)
+═══════════════════════════════════════════════════════ */
+.intel-page-header {
+  background: var(--header-bg);
+  color: var(--header-text);
+  padding: 2.5rem 0 0;
+}
+.intel-header-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem 2rem;
+}
+.intel-header-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: rgba(247,244,239,0.45);
+  margin-bottom: 0.5rem;
+}
+.intel-header-title {
+  font-family: 'neue-haas-grotesk-display', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--header-text);
+  margin-bottom: 0.75rem;
+}
+.intel-header-desc {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.92rem;
+  color: rgba(247,244,239,0.65);
+  line-height: 1.6;
+  max-width: 640px;
+  margin-bottom: 1.5rem;
+}
+.intel-header-stats {
+  display: flex;
+  gap: 1.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.intel-stat { display: flex; flex-direction: column; gap: 0.15rem; }
+.intel-stat-num {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--header-text);
+  letter-spacing: -0.01em;
+}
+.intel-stat-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(247,244,239,0.4);
+}
+.intel-stat-div { width: 1px; height: 2.5rem; background: rgba(247,244,239,0.12); align-self: center; }
+
+.intel-main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+.intel-loading {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem;
+  color: var(--text-tertiary);
+  padding: 3rem 0;
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
+/* ── FILTER BAR (shared Documents + Legal) ── */
+.doc-filter-bar {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.75rem;
+}
+.doc-filter-btn {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 0.4rem 0.85rem;
+  border-radius: 20px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.doc-filter-btn:hover { background: var(--accent-dim); color: var(--text-primary); }
+.doc-filter-btn.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* ═══════════════════════════════════════════════════════
+   DOCUMENT LIBRARY
+═══════════════════════════════════════════════════════ */
+.doc-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.doc-card {
+  border-bottom: 1px solid var(--border);
+  padding: 1.25rem 0;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1rem;
+  align-items: start;
+  transition: background 0.12s;
+  cursor: pointer;
+}
+.doc-card:first-child { border-top: 1px solid var(--border); }
+.doc-card:hover { background: var(--accent-dim); margin: 0 -2rem; padding: 1.25rem 2rem; }
+.doc-card-left {}
+.doc-card-type-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.4rem;
+  flex-wrap: wrap;
+}
+.doc-type-badge {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  border: 1px solid;
+}
+.doc-type-court_filing   { background: rgba(26,92,138,0.08); color: var(--corroborated); border-color: var(--corroborated-border); }
+.doc-type-fbi_report     { background: rgba(138,90,26,0.08); color: var(--indicated); border-color: var(--indicated-border); }
+.doc-type-financial_record { background: rgba(26,107,60,0.08); color: var(--confirmed); border-color: var(--confirmed-border); }
+.doc-type-email          { background: rgba(26,26,26,0.06); color: var(--text-secondary); border-color: var(--border-strong); }
+.doc-type-text_message   { background: rgba(26,26,26,0.06); color: var(--text-secondary); border-color: var(--border-strong); }
+.doc-type-witness_statement { background: rgba(138,26,26,0.07); color: var(--unverified); border-color: var(--unverified-border); }
+.doc-type-flight_manifest { background: rgba(26,26,26,0.06); color: var(--text-secondary); border-color: var(--border-strong); }
+.doc-type-contact_book_entry { background: rgba(26,26,26,0.06); color: var(--text-secondary); border-color: var(--border-strong); }
+.doc-type-other          { background: rgba(26,26,26,0.06); color: var(--text-secondary); border-color: var(--border-strong); }
+
+.doc-redact-badge {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.45rem;
+  border-radius: 3px;
+}
+.doc-redact-none     { background: var(--confirmed-bg); color: var(--confirmed); }
+.doc-redact-partial  { background: var(--indicated-bg); color: var(--indicated); }
+.doc-redact-heavy    { background: var(--unverified-bg); color: var(--unverified); }
+.doc-redact-full     { background: rgba(0,0,0,0.08); color: var(--text-tertiary); }
+
+.doc-card-title {
+  font-family: 'neue-haas-grotesk-display', sans-serif;
+  font-size: 0.97rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+  margin-bottom: 0.35rem;
+}
+.doc-card-meta {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  letter-spacing: 0.04em;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.55rem;
+}
+.doc-card-notes {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  max-width: 660px;
+}
+.doc-card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+  min-width: 90px;
+  flex-shrink: 0;
+}
+.doc-pages {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.doc-citation-count {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+}
+.doc-link-btn {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.65rem;
+  border-radius: 4px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.12s;
+  white-space: nowrap;
+}
+.doc-link-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* doc expand */
+.doc-card-expand {
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--border);
+  display: none;
+}
+.doc-card-expand.open { display: block; }
+.doc-expand-persons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+.doc-expand-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+.doc-person-chip {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 500;
+  padding: 0.25rem 0.6rem;
+  border-radius: 20px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.doc-person-chip:hover { background: var(--accent-dim); color: var(--text-primary); }
+
+/* ═══════════════════════════════════════════════════════
+   EVIDENCE TIMELINE
+═══════════════════════════════════════════════════════ */
+.tl-search-wrap {
+  margin-bottom: 2rem;
+}
+.tl-search-inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  padding: 0 0.75rem;
+  margin-bottom: 0.85rem;
+}
+.tl-search-icon { color: var(--text-tertiary); font-size: 1rem; flex-shrink: 0; }
+.tl-search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.92rem;
+  outline: none;
+  padding: 0.65rem 0;
+}
+.tl-search-input::placeholder { color: var(--text-tertiary); }
+.tl-autocomplete { top: 100%; z-index: 200; }
+
+.tl-quick-picks {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.tl-quick-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+.tl-quick-btn {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 0.28rem 0.65rem;
+  border-radius: 20px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.tl-quick-btn:hover { background: var(--accent-dim); color: var(--text-primary); }
+
+.tl-empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+.tl-empty-icon {
+  font-size: 2rem;
+  color: var(--border-strong);
+  margin-bottom: 0.75rem;
+}
+.tl-empty-text {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-tertiary);
+}
+
+.tl-person-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+.tl-person-name {
+  font-family: 'neue-haas-grotesk-display', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+.tl-person-count {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  letter-spacing: 0.04em;
+}
+.tl-person-desc {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  margin-bottom: 2rem;
+  max-width: 600px;
+}
+
+/* Timeline year groups */
+.tl-year-group { margin-bottom: 2.5rem; }
+.tl-year-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.tl-year-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+.tl-entry {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 0;
+  position: relative;
+}
+.tl-entry + .tl-entry { border-top: 1px solid var(--border); }
+.tl-entry:hover { background: var(--accent-dim); margin: 0 -2rem; padding: 0 2rem; }
+
+.tl-entry-date {
+  padding: 1rem 0.75rem 1rem 0;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  border-right: 1px solid var(--border);
+  min-width: 110px;
+}
+.tl-entry-body {
+  padding: 1rem 0 1rem 1.25rem;
+}
+.tl-entry-type-row {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  margin-bottom: 0.3rem;
+}
+.tl-event-type {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.12rem 0.45rem;
+  border-radius: 3px;
+}
+.tl-type-flight  { background: rgba(26,92,138,0.08); color: var(--corroborated); border: 1px solid var(--corroborated-border); }
+.tl-type-meeting { background: rgba(138,90,26,0.08); color: var(--indicated); border: 1px solid var(--indicated-border); }
+.tl-type-legal   { background: rgba(138,26,26,0.08); color: var(--unverified); border: 1px solid var(--unverified-border); }
+.tl-type-financial { background: rgba(26,107,60,0.08); color: var(--confirmed); border: 1px solid var(--confirmed-border); }
+.tl-type-arrest  { background: rgba(138,26,26,0.14); color: var(--unverified); border: 1px solid var(--unverified-border); }
+.tl-type-death   { background: rgba(26,26,26,0.1); color: var(--text-secondary); border: 1px solid var(--border-strong); }
+.tl-type-other   { background: rgba(26,26,26,0.06); color: var(--text-secondary); border: 1px solid var(--border); }
+
+.tl-entry-title {
+  font-family: 'neue-haas-grotesk-display', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+  margin-bottom: 0.2rem;
+}
+.tl-entry-detail {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+.tl-entry-role {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  margin-top: 0.3rem;
+  letter-spacing: 0.03em;
+}
+
+/* ═══════════════════════════════════════════════════════
+   LEGAL TRACKER
+═══════════════════════════════════════════════════════ */
+.legal-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.legal-card {
+  border-bottom: 1px solid var(--border);
+  padding: 1.4rem 0;
+  transition: background 0.12s;
+}
+.legal-card:first-child { border-top: 1px solid var(--border); }
+.legal-card:hover { background: var(--accent-dim); margin: 0 -2rem; padding: 1.4rem 2rem; }
+
+.legal-card-top {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+.legal-status-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 68px;
+  flex-shrink: 0;
+  padding-top: 0.1rem;
+}
+.legal-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.legal-status-dot.active   { background: #1A6B3C; box-shadow: 0 0 7px rgba(26,107,60,0.5); }
+.legal-status-dot.resolved { background: var(--text-tertiary); }
+.legal-status-dot.immunity { background: var(--indicated); }
+.legal-status-dot.deceased { background: var(--text-tertiary); }
+
+.legal-status-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--text-tertiary);
+}
+.legal-status-label.active { color: var(--confirmed); }
+
+.legal-card-body { flex: 1; }
+.legal-card-type-row {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  margin-bottom: 0.35rem;
+  flex-wrap: wrap;
+}
+.legal-proc-badge {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  border: 1px solid;
+}
+.legal-proc-conviction   { background: rgba(138,26,26,0.08); color: var(--unverified); border-color: var(--unverified-border); }
+.legal-proc-settlement   { background: rgba(26,92,138,0.08); color: var(--corroborated); border-color: var(--corroborated-border); }
+.legal-proc-immunity     { background: rgba(138,90,26,0.08); color: var(--indicated); border-color: var(--indicated-border); }
+.legal-proc-investigation { background: rgba(26,107,60,0.08); color: var(--confirmed); border-color: var(--confirmed-border); }
+.legal-proc-civil        { background: rgba(26,92,138,0.08); color: var(--corroborated); border-color: var(--corroborated-border); }
+.legal-proc-regulatory   { background: rgba(26,26,26,0.06); color: var(--text-secondary); border-color: var(--border-strong); }
+.legal-proc-arrest       { background: rgba(138,26,26,0.12); color: var(--unverified); border-color: var(--unverified-border); }
+.legal-proc-other        { background: rgba(26,26,26,0.06); color: var(--text-secondary); border-color: var(--border-strong); }
+
+.legal-card-title {
+  font-family: 'neue-haas-grotesk-display', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+  line-height: 1.25;
+}
+.legal-card-subtitle {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  letter-spacing: 0.03em;
+  margin-bottom: 0.55rem;
+}
+.legal-card-notes {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+.legal-card-meta-row {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+}
+.legal-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+.legal-meta-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+.legal-meta-val {
+  font-family: 'neue-haas-grotesk-display', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.legal-person-chips {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+}
+
 </style>
 </head>
 <body>
@@ -910,8 +1510,10 @@ body {
       <span class="logo-main">Reckoning Radar</span>
     </div>
     <div class="topbar-center">
-      <span class="search-icon">⌕</span>
-      <input class="search-bar" id="searchInput" type="text" placeholder="Search — Ghislaine Maxwell, Bill Gates, Lesley Groff…">
+      <div class="topbar-search-inner">
+        <span class="search-icon">⌕</span>
+        <input class="search-bar" id="searchInput" type="text" placeholder="Search — Ghislaine Maxwell, Bill Gates, Lesley Groff…">
+      </div>
     </div>
     <div class="topbar-right">
       <div style="display:flex;align-items:center;gap:0.4rem;">
@@ -927,10 +1529,13 @@ body {
       <div class="sidebar-label">Query Type</div>
       <div class="nav-item active" id="navProfiles" onclick="switchTab('profiles'); document.getElementById('searchInput').value=''; showLanding();"><span>Person Profile</span></div>
       <div class="nav-item" id="navFlights" onclick="switchTab('flights')" style="cursor:pointer;"><span>Flight Manifests</span></div>
-      <div class="nav-item" onclick="window.location.href='graph.html'" style="cursor:pointer;"><span>Network Graph</span><span class="coming-soon-badge" style="background:rgba(26,107,60,0.12);color:#1A6B3C;border-color:rgba(26,107,60,0.3);">LIVE</span></div>
-      <div class="nav-item" id="navUnidentified" onclick="switchTab('unidentified')" style="cursor:pointer;"><span>Unidentified</span><span class="coming-soon-badge" style="background:rgba(180,40,40,0.1);color:#B42828;border-color:rgba(180,40,40,0.3);">NEW</span></div>
-      <div class="nav-item" id="navConnections" onclick="switchTab('connections')" style="cursor:pointer;"><span>Connections</span><span class="coming-soon-badge" style="background:rgba(26,26,26,0.08);color:#444;border-color:rgba(26,26,26,0.2);">NEW</span></div>
+      <div class="nav-item" onclick="window.location.href='graph.html'" style="cursor:pointer;"><span>Network Graph</span></div>
+      <div class="nav-item" id="navUnidentified" onclick="switchTab('unidentified')" style="cursor:pointer;"><span>Unidentified</span></div>
+      <div class="nav-item" id="navConnections" onclick="switchTab('connections')" style="cursor:pointer;"><span>Connections</span></div>
       <div class="nav-item coming-soon"><span>Location Map</span><span class="coming-soon-badge">SOON</span></div>
+      <div class="nav-item" id="navDocuments" onclick="switchTab('documents')" style="cursor:pointer;"><span>Document Library</span></div>
+      <div class="nav-item" id="navTimeline" onclick="switchTab('timeline')" style="cursor:pointer;"><span>Evidence Timeline</span></div>
+      <div class="nav-item" id="navLegal" onclick="switchTab('legal')" style="cursor:pointer;"><span>Legal Tracker</span></div>
     </div>
     <div class="sidebar-section" id="sidebarFilters">
       <div class="sidebar-label">Category</div>
@@ -1103,6 +1708,115 @@ body {
       </div>
     </div>
 
+    <!-- ── TAB: DOCUMENT LIBRARY ── -->
+    <div class="tab-panel" id="tabDocuments">
+      <div class="intel-page-header">
+        <div class="intel-header-inner">
+          <div class="intel-header-label">SOURCE ARCHIVE</div>
+          <h1 class="intel-header-title">Document Library</h1>
+          <p class="intel-header-desc">24 primary source documents from the DOJ Epstein files — court filings, FBI reports, financial records, and email correspondence. Every claim in this platform traces back to these sources.</p>
+          <div class="intel-header-stats">
+            <div class="intel-stat"><span class="intel-stat-num">24</span><span class="intel-stat-label">Documents</span></div>
+            <div class="intel-stat-div"></div>
+            <div class="intel-stat"><span class="intel-stat-num">1,584</span><span class="intel-stat-label">Pages</span></div>
+            <div class="intel-stat-div"></div>
+            <div class="intel-stat"><span class="intel-stat-num">202</span><span class="intel-stat-label">Person Citations</span></div>
+            <div class="intel-stat-div"></div>
+            <div class="intel-stat"><span class="intel-stat-num">5</span><span class="intel-stat-label">Source Types</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="intel-main">
+        <div class="doc-filter-bar">
+          <button class="doc-filter-btn active" data-dtype="all" onclick="docFilter(this,'all')">All Documents</button>
+          <button class="doc-filter-btn" data-dtype="court_filing" onclick="docFilter(this,'court_filing')">Court Filings</button>
+          <button class="doc-filter-btn" data-dtype="fbi_report" onclick="docFilter(this,'fbi_report')">FBI / DOJ Reports</button>
+          <button class="doc-filter-btn" data-dtype="financial_record" onclick="docFilter(this,'financial_record')">Financial Records</button>
+          <button class="doc-filter-btn" data-dtype="email" onclick="docFilter(this,'email')">Emails / Texts</button>
+          <button class="doc-filter-btn" data-dtype="other" onclick="docFilter(this,'other')">Other</button>
+        </div>
+        <div id="docLibGrid" class="doc-grid">
+          <div class="intel-loading">Loading documents…</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: EVIDENCE TIMELINE ── -->
+    <div class="tab-panel" id="tabTimeline">
+      <div class="intel-page-header">
+        <div class="intel-header-inner">
+          <div class="intel-header-label">CHRONOLOGICAL RECORD</div>
+          <h1 class="intel-header-title">Evidence Timeline</h1>
+          <p class="intel-header-desc">Select any person to see their full documented chronology — every flight, event, and verified contact drawn from primary source records.</p>
+          <div class="intel-header-stats">
+            <div class="intel-stat"><span class="intel-stat-num">156</span><span class="intel-stat-label">Timeline Entries</span></div>
+            <div class="intel-stat-div"></div>
+            <div class="intel-stat"><span class="intel-stat-num">116</span><span class="intel-stat-label">Documented Events</span></div>
+            <div class="intel-stat-div"></div>
+            <div class="intel-stat"><span class="intel-stat-num">139</span><span class="intel-stat-label">Persons Tracked</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="intel-main">
+        <div class="tl-search-wrap">
+          <div class="tl-search-inner">
+            <span class="tl-search-icon">⌕</span>
+            <input class="tl-search-input" id="tlPersonInput" placeholder="Search a person — e.g. Ghislaine Maxwell, Bill Clinton…" autocomplete="off" spellcheck="false">
+            <div class="autocomplete-list tl-autocomplete" id="tlDropdown"></div>
+          </div>
+          <div class="tl-quick-picks">
+            <span class="tl-quick-label">Quick select:</span>
+            <button class="tl-quick-btn" onclick="tlLoadPerson('Ghislaine Maxwell')">Ghislaine Maxwell</button>
+            <button class="tl-quick-btn" onclick="tlLoadPerson('Bill Clinton')">Bill Clinton</button>
+            <button class="tl-quick-btn" onclick="tlLoadPerson('Sarah Kellen')">Sarah Kellen</button>
+            <button class="tl-quick-btn" onclick="tlLoadPerson('Alan Dershowitz')">Alan Dershowitz</button>
+            <button class="tl-quick-btn" onclick="tlLoadPerson('Prince Andrew, Duke of York')">Prince Andrew</button>
+            <button class="tl-quick-btn" onclick="tlLoadPerson('Peter Mandelson')">Peter Mandelson</button>
+          </div>
+        </div>
+        <div id="tlContent">
+          <div class="tl-empty-state">
+            <div class="tl-empty-icon">◎</div>
+            <div class="tl-empty-text">Select a person to load their evidence timeline</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: LEGAL TRACKER ── -->
+    <div class="tab-panel" id="tabLegal">
+      <div class="intel-page-header">
+        <div class="intel-header-inner">
+          <div class="intel-header-label">LEGAL RECORD</div>
+          <h1 class="intel-header-title">Legal Proceedings Tracker</h1>
+          <p class="intel-header-desc">Every conviction, settlement, immunity grant, and ongoing investigation connected to the Epstein network — sourced from court records and DOJ filings.</p>
+          <div class="intel-header-stats">
+            <div class="intel-stat"><span class="intel-stat-num" id="lsTotalProc">24</span><span class="intel-stat-label">Proceedings</span></div>
+            <div class="intel-stat-div"></div>
+            <div class="intel-stat"><span class="intel-stat-num">$565M+</span><span class="intel-stat-label">Financial Penalties</span></div>
+            <div class="intel-stat-div"></div>
+            <div class="intel-stat"><span class="intel-stat-num" id="lsActiveProc">—</span><span class="intel-stat-label">Active / Ongoing</span></div>
+            <div class="intel-stat-div"></div>
+            <div class="intel-stat"><span class="intel-stat-num">4</span><span class="intel-stat-label">Immunity Grants</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="intel-main">
+        <div class="doc-filter-bar">
+          <button class="doc-filter-btn active" data-ltype="all" onclick="legalFilter(this,'all')">All</button>
+          <button class="doc-filter-btn" data-ltype="active" onclick="legalFilter(this,'active')">Active / Ongoing</button>
+          <button class="doc-filter-btn" data-ltype="conviction" onclick="legalFilter(this,'conviction')">Convictions</button>
+          <button class="doc-filter-btn" data-ltype="settlement" onclick="legalFilter(this,'settlement')">Settlements</button>
+          <button class="doc-filter-btn" data-ltype="immunity" onclick="legalFilter(this,'immunity')">Immunity Grants</button>
+          <button class="doc-filter-btn" data-ltype="investigation" onclick="legalFilter(this,'investigation')">Investigations</button>
+        </div>
+        <div id="legalGrid" class="legal-grid">
+          <div class="intel-loading">Loading proceedings…</div>
+        </div>
+      </div>
+    </div>
+
+
   </main>
 
   <!-- RIGHT PANEL -->
@@ -1170,10 +1884,13 @@ body {
       <div class="sidebar-label">Query Type</div>
       <div class="nav-item" onclick="switchTab('profiles'); document.getElementById('searchInput').value=''; showLanding(); closeDrawer()"><span>Person Profile</span></div>
       <div class="nav-item" onclick="switchTab('flights');closeDrawer()"><span>Flight Manifests</span></div>
-      <div class="nav-item" onclick="window.location.href='graph.html'"><span>Network Graph</span><span class="coming-soon-badge" style="background:rgba(26,107,60,0.12);color:#1A6B3C;border-color:rgba(26,107,60,0.3);">LIVE</span></div>
-      <div class="nav-item" onclick="switchTab('unidentified');closeDrawer()"><span>Unidentified</span><span class="coming-soon-badge" style="background:rgba(180,40,40,0.1);color:#B42828;border-color:rgba(180,40,40,0.3);">NEW</span></div>
-      <div class="nav-item" onclick="switchTab('connections');closeDrawer()"><span>Connections</span><span class="coming-soon-badge" style="background:rgba(26,26,26,0.08);color:#444;border-color:rgba(26,26,26,0.2);">NEW</span></div>
+      <div class="nav-item" onclick="window.location.href='graph.html'"><span>Network Graph</span></div>
+      <div class="nav-item" onclick="switchTab('unidentified');closeDrawer()"><span>Unidentified</span></div>
+      <div class="nav-item" onclick="switchTab('connections');closeDrawer()"><span>Connections</span></div>
       <div class="nav-item coming-soon"><span>Location Map</span><span class="coming-soon-badge">SOON</span></div>
+      <div class="nav-item" onclick="switchTab('documents');closeDrawer()"><span>Document Library</span></div>
+      <div class="nav-item" onclick="switchTab('timeline');closeDrawer()"><span>Evidence Timeline</span></div>
+      <div class="nav-item" onclick="switchTab('legal');closeDrawer()"><span>Legal Tracker</span></div>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-label">Category</div>
@@ -1213,10 +1930,15 @@ function closeDrawer() { document.getElementById('mobileDrawer').classList.remov
 let currentTab = 'profiles';
 let unidentifiedLoaded = false;
 let connectionsLoaded = false;
+let documentsLoaded = false;
+let timelineLoaded = false;
+let legalLoaded = false;
+let allDocuments = [];
+let allLegalProceedings = [];
 
 function switchTab(tab) {
   document.querySelectorAll('.tab-panel').forEach(el => el.classList.remove('active'));
-  ['navProfiles','navFlights','navUnidentified','navConnections'].forEach(id => {
+  ['navProfiles','navFlights','navUnidentified','navConnections','navDocuments','navTimeline','navLegal'].forEach(id => {
     const el = document.getElementById(id); if (el) el.classList.remove('active');
   });
 
@@ -1259,7 +1981,27 @@ function switchTab(tab) {
     relFilterSections.style.display = 'none';
     rightPanel.style.display = '';
     if (!connectionsLoaded) { initConnections(); connectionsLoaded = true; }
-    // Show connection panels (A and B appear once people are selected)
+  } else if (tab === 'documents') {
+    document.getElementById('tabDocuments').classList.add('active');
+    document.getElementById('navDocuments').classList.add('active');
+    filterSections.style.display = 'none';
+    relFilterSections.style.display = 'none';
+    rightPanel.style.display = 'none';
+    if (!documentsLoaded) { initDocumentLibrary(); documentsLoaded = true; }
+  } else if (tab === 'timeline') {
+    document.getElementById('tabTimeline').classList.add('active');
+    document.getElementById('navTimeline').classList.add('active');
+    filterSections.style.display = 'none';
+    relFilterSections.style.display = 'none';
+    rightPanel.style.display = 'none';
+    if (!timelineLoaded) { initTimeline(); timelineLoaded = true; }
+  } else if (tab === 'legal') {
+    document.getElementById('tabLegal').classList.add('active');
+    document.getElementById('navLegal').classList.add('active');
+    filterSections.style.display = 'none';
+    relFilterSections.style.display = 'none';
+    rightPanel.style.display = 'none';
+    if (!legalLoaded) { initLegalTracker(); legalLoaded = true; }
   }
   currentTab = tab;
 }
@@ -2361,6 +3103,338 @@ function connSetQuick(nameA, nameB) {
   connFindPath();
   connUpdateSidebar(connSelectedA, connSelectedB, null);
 }
+
+
+// ══════════════════════════════════════════════════════════
+// DOCUMENT LIBRARY
+// ══════════════════════════════════════════════════════════
+
+const DOC_TYPE_LABELS = {
+  court_filing: 'Court Filing',
+  fbi_report: 'FBI / DOJ Report',
+  financial_record: 'Financial Record',
+  email: 'Email Correspondence',
+  text_message: 'Text Messages',
+  witness_statement: 'Witness Statement',
+  flight_manifest: 'Flight Manifest',
+  contact_book_entry: 'Contact Book',
+  other: 'Other'
+};
+const REDACT_LABELS = { none: 'Unredacted', partial: 'Partial Redaction', heavy: 'Heavy Redaction', full: 'Fully Redacted', recovered: 'Redactions Recovered' };
+const SOURCE_LABELS = { doj_release: 'DOJ Release', court_unsealing: 'Court Unsealing', foia: 'FOIA', epstein_estate: 'Epstein Estate', house_oversight: 'House Oversight', other: 'Other' };
+
+async function initDocumentLibrary() {
+  const grid = document.getElementById('docLibGrid');
+  try {
+    const { data: docs, error } = await db.from('documents')
+      .select('*, person_documents(count)')
+      .order('release_date', { ascending: false });
+    if (error) throw error;
+
+    allDocuments = docs;
+    renderDocLibrary(docs);
+  } catch(e) {
+    grid.innerHTML = '<div class="intel-loading">Error loading documents.</div>';
+    console.error(e);
+  }
+}
+
+let docCurrentFilter = 'all';
+function docFilter(btn, dtype) {
+  document.querySelectorAll('.doc-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  docCurrentFilter = dtype;
+  const filtered = dtype === 'all' ? allDocuments :
+    allDocuments.filter(d => {
+      if (dtype === 'email') return d.document_type === 'email' || d.document_type === 'text_message';
+      if (dtype === 'other') return !['court_filing','fbi_report','financial_record','email','text_message'].includes(d.document_type);
+      return d.document_type === dtype;
+    });
+  renderDocLibrary(filtered);
+}
+
+function renderDocLibrary(docs) {
+  const grid = document.getElementById('docLibGrid');
+  if (!docs || docs.length === 0) {
+    grid.innerHTML = '<div class="intel-loading">No documents match this filter.</div>';
+    return;
+  }
+
+  grid.innerHTML = docs.map(doc => {
+    const citCount = doc.person_documents?.[0]?.count || 0;
+    const typeLabel = DOC_TYPE_LABELS[doc.document_type] || doc.document_type;
+    const redactLabel = REDACT_LABELS[doc.redaction_status] || '';
+    const sourceLabel = SOURCE_LABELS[doc.source] || doc.source;
+    const dateStr = doc.document_date ? doc.document_date.slice(0,7).replace('-','/') : '—';
+    const releaseStr = doc.release_date ? doc.release_date.slice(0,7).replace('-','/') : '—';
+
+    const redactClass = 'doc-redact-' + (doc.redaction_status || 'none');
+    const typeClass = 'doc-type-' + (doc.document_type || 'other');
+
+    const link = doc.doj_url ? `<a class="doc-link-btn" href="${doc.doj_url}" target="_blank" rel="noopener">↗ Source</a>` : '';
+
+    return `<div class="doc-card" onclick="docToggleExpand(this,'${doc.id}')">
+      <div class="doc-card-left">
+        <div class="doc-card-type-row">
+          <span class="doc-type-badge ${typeClass}">${typeLabel}</span>
+          <span class="doc-redact-badge ${redactClass}">${redactLabel}</span>
+          <span class="doc-redact-badge" style="background:rgba(26,26,26,0.06);color:var(--text-tertiary)">${sourceLabel}</span>
+        </div>
+        <div class="doc-card-title">${doc.title}</div>
+        <div class="doc-card-meta">
+          <span>Dated ${dateStr}</span>
+          <span>Released ${releaseStr}</span>
+          ${doc.release_batch ? `<span>${doc.release_batch}</span>` : ''}
+        </div>
+        <div class="doc-card-notes">${(doc.notes || '').slice(0,280)}${doc.notes && doc.notes.length > 280 ? '…' : ''}</div>
+        <div class="doc-card-expand" id="docExpand_${doc.id}">
+          ${doc.notes && doc.notes.length > 280 ? `<p style="font-family:'Source Sans 3',sans-serif;font-size:0.85rem;color:var(--text-secondary);line-height:1.55;margin-bottom:0.75rem;">${doc.notes}</p>` : ''}
+          ${doc.redaction_notes ? `<p style="font-family:'Source Sans 3',sans-serif;font-size:0.82rem;color:var(--text-tertiary);font-style:italic;margin-bottom:0.75rem;">Redaction notes: ${doc.redaction_notes}</p>` : ''}
+          <div class="doc-expand-label">People Cited in This Document</div>
+          <div class="doc-expand-persons" id="docPersons_${doc.id}">
+            <span style="font-family:'Montserrat',sans-serif;font-size:0.65rem;color:var(--text-tertiary);">Loading…</span>
+          </div>
+        </div>
+      </div>
+      <div class="doc-card-right">
+        ${doc.page_count ? `<span class="doc-pages">${doc.page_count} pages</span>` : ''}
+        ${citCount > 0 ? `<span class="doc-citation-count">${citCount} citation${citCount!==1?'s':''}</span>` : ''}
+        ${link}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function docToggleExpand(card, docId) {
+  const expand = card.querySelector('.doc-card-expand');
+  if (!expand) return;
+  const isOpen = expand.classList.contains('open');
+  // Close all first
+  document.querySelectorAll('.doc-card-expand.open').forEach(e => e.classList.remove('open'));
+  if (!isOpen) {
+    expand.classList.add('open');
+    const personsDiv = document.getElementById('docPersons_' + docId);
+    if (personsDiv && personsDiv.textContent.trim() === 'Loading…') {
+      const { data } = await db.from('person_documents')
+        .select('mention_type, mention_count, confidence, context_note, persons(full_name)')
+        .eq('document_id', docId)
+        .order('mention_count', { ascending: false })
+        .limit(20);
+      if (data && data.length > 0) {
+        personsDiv.innerHTML = data.map(pd => {
+          const name = pd.persons?.full_name || '—';
+          const conf = pd.confidence || '';
+          const confColor = conf === 'confirmed' ? 'var(--confirmed)' : conf === 'corroborated' ? 'var(--corroborated)' : 'var(--text-tertiary)';
+          return `<span class="doc-person-chip" onclick="event.stopPropagation();doSearch('${name.replace(/'/g,"\\'")}');switchTab('profiles')" title="${(pd.context_note||'').replace(/"/g,'&quot;')}" style="border-color:${confColor};color:${confColor}">${name}</span>`;
+        }).join('');
+      } else {
+        personsDiv.innerHTML = '<span style="font-family:Montserrat,sans-serif;font-size:0.65rem;color:var(--text-tertiary);">No citations indexed</span>';
+      }
+    }
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// EVIDENCE TIMELINE
+// ══════════════════════════════════════════════════════════
+
+async function initTimeline() {
+  // Set up autocomplete for the timeline person search
+  const input = document.getElementById('tlPersonInput');
+  const dropdown = document.getElementById('tlDropdown');
+
+  input.addEventListener('input', async () => {
+    const q = input.value.trim();
+    if (q.length < 2) { dropdown.innerHTML = ''; dropdown.style.display = 'none'; return; }
+    const { data } = await db.from('persons').select('full_name').ilike('full_name','%' + q + '%').limit(8);
+    if (!data || data.length === 0) { dropdown.style.display = 'none'; return; }
+    dropdown.innerHTML = data.map(p =>
+      `<div class="autocomplete-item" onclick="tlLoadPerson('${p.full_name.replace(/'/g,"\\'")}');document.getElementById('tlPersonInput').value='${p.full_name.replace(/'/g,"\\'")}';document.getElementById('tlDropdown').style.display='none'">${p.full_name}</div>`
+    ).join('');
+    dropdown.style.display = 'block';
+  });
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.tl-search-inner')) { dropdown.style.display = 'none'; }
+  });
+}
+
+// timelineLoaded already declared above
+async function tlLoadPerson(name) {
+  document.getElementById('tlPersonInput').value = name;
+  document.getElementById('tlDropdown').style.display = 'none';
+  const content = document.getElementById('tlContent');
+  content.innerHTML = '<div class="intel-loading">Loading timeline…</div>';
+
+  try {
+    // Get person record
+    const { data: persons } = await db.from('persons')
+      .select('id, full_name, relationship_to_epstein, notes, total_document_count')
+      .ilike('full_name', name).limit(1);
+    if (!persons || persons.length === 0) {
+      content.innerHTML = '<div class="tl-empty-state"><div class="tl-empty-text">Person not found.</div></div>'; return;
+    }
+    const person = persons[0];
+
+    // Get timeline events
+    const { data: tlEntries } = await db.from('event_persons')
+      .select('role, events(id, title, event_date, event_type, location, description, significance)')
+      .eq('person_id', person.id)
+      .order('events(event_date)', { ascending: true });
+
+    if (!tlEntries || tlEntries.length === 0) {
+      content.innerHTML = `<div class="tl-person-header"><div class="tl-person-name">${person.full_name}</div></div><div class="tl-empty-state"><div class="tl-empty-text">No timeline entries found for this person.</div></div>`;
+      return;
+    }
+
+    // Group by year
+    const byYear = {};
+    tlEntries.forEach(entry => {
+      const ev = entry.events;
+      if (!ev || !ev.event_date) return;
+      const yr = ev.event_date.slice(0,4);
+      if (!byYear[yr]) byYear[yr] = [];
+      byYear[yr].push({ ...ev, role: entry.role });
+    });
+
+    const relLabel = person.relationship_to_epstein ? person.relationship_to_epstein.replace(/_/g,' ') : '';
+
+    let html = `<div class="tl-person-header">
+      <div class="tl-person-name">${person.full_name}</div>
+      <div class="tl-person-count">${tlEntries.length} documented entries</div>
+    </div>
+    ${relLabel ? `<div class="tl-person-desc">${relLabel.charAt(0).toUpperCase()+relLabel.slice(1)}${person.total_document_count ? ` · ${person.total_document_count.toLocaleString()} documents in archive` : ''}</div>` : ''}`;
+
+    const years = Object.keys(byYear).sort();
+    years.forEach(yr => {
+      const entries = byYear[yr];
+      html += `<div class="tl-year-group">
+        <div class="tl-year-label">${yr} <span style="font-weight:400;opacity:0.5">${entries.length} entr${entries.length===1?'y':'ies'}</span></div>`;
+      entries.forEach(ev => {
+        const evType = ev.event_type || 'other';
+        const typeClass = 'tl-type-' + (evType === 'flight' ? 'flight' : evType === 'meeting' || evType === 'social' ? 'meeting' : evType === 'legal' ? 'legal' : evType === 'financial' ? 'financial' : evType === 'arrest' ? 'arrest' : evType === 'death' ? 'death' : 'other');
+        const typeLabel = evType === 'flight' ? 'Flight' : evType.charAt(0).toUpperCase()+evType.slice(1).replace(/_/g,' ');
+        const dateDisplay = ev.event_date ? ev.event_date.slice(0,10).replace(/(\d{4})-(\d{2})-(\d{2})/,'$3/$2/$1') : '—';
+        const detail = ev.description || ev.location || '';
+        const roleStr = ev.role ? ev.role.replace(/_/g,' ') : '';
+        html += `<div class="tl-entry">
+          <div class="tl-entry-date">${dateDisplay}</div>
+          <div class="tl-entry-body">
+            <div class="tl-entry-type-row"><span class="tl-event-type ${typeClass}">${typeLabel}</span></div>
+            <div class="tl-entry-title">${ev.title || 'Untitled Event'}</div>
+            ${detail ? `<div class="tl-entry-detail">${detail}</div>` : ''}
+            ${roleStr ? `<div class="tl-entry-role">Role: ${roleStr}</div>` : ''}
+          </div>
+        </div>`;
+      });
+      html += '</div>';
+    });
+
+    content.innerHTML = html;
+  } catch(e) {
+    content.innerHTML = '<div class="intel-loading">Error loading timeline.</div>';
+    console.error(e);
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// LEGAL TRACKER
+// ══════════════════════════════════════════════════════════
+
+const PROC_TYPE_LABELS = {
+  conviction: 'Conviction', settlement: 'Settlement', immunity: 'Immunity Grant',
+  investigation: 'Investigation', civil: 'Civil Action', regulatory: 'Regulatory Action',
+  arrest: 'Arrest', other: 'Other'
+};
+
+const STATUS_COLORS = {
+  active: 'active', ongoing: 'active', open: 'active',
+  resolved: 'resolved', closed: 'resolved', convicted: 'resolved',
+  settled: 'resolved', granted: 'immunity', deceased: 'deceased'
+};
+
+async function initLegalTracker() {
+  const grid = document.getElementById('legalGrid');
+  try {
+    const { data: procs, error } = await db.from('legal_proceedings')
+      .select('*, persons(full_name, relationship_to_epstein)')
+      .order('initiated_date', { ascending: false });
+    if (error) throw error;
+    allLegalProceedings = procs;
+
+    // Update active count stat
+    const active = procs.filter(p => ['active','ongoing','open'].includes((p.status||'').toLowerCase())).length;
+    const el = document.getElementById('lsActiveProc');
+    if (el) el.textContent = active;
+
+    renderLegalGrid(procs);
+  } catch(e) {
+    grid.innerHTML = '<div class="intel-loading">Error loading proceedings.</div>';
+    console.error(e);
+  }
+}
+
+let legalCurrentFilter = 'all';
+function legalFilter(btn, ltype) {
+  document.querySelectorAll('#tabLegal .doc-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  legalCurrentFilter = ltype;
+  const filtered = ltype === 'all' ? allLegalProceedings :
+    ltype === 'active' ? allLegalProceedings.filter(p => ['active','ongoing','open'].includes((p.status||'').toLowerCase())) :
+    ltype === 'conviction' ? allLegalProceedings.filter(p => p.proceeding_type === 'conviction') :
+    ltype === 'settlement' ? allLegalProceedings.filter(p => ['settlement','civil'].includes(p.proceeding_type)) :
+    ltype === 'immunity' ? allLegalProceedings.filter(p => p.proceeding_type === 'immunity') :
+    ltype === 'investigation' ? allLegalProceedings.filter(p => ['investigation','regulatory'].includes(p.proceeding_type)) :
+    allLegalProceedings;
+  renderLegalGrid(filtered);
+}
+
+function renderLegalGrid(procs) {
+  const grid = document.getElementById('legalGrid');
+  if (!procs || procs.length === 0) {
+    grid.innerHTML = '<div class="intel-loading">No proceedings match this filter.</div>';
+    return;
+  }
+
+  grid.innerHTML = procs.map(proc => {
+    const statusRaw = (proc.status || 'resolved').toLowerCase();
+    const dotClass = STATUS_COLORS[statusRaw] || 'resolved';
+    const isActive = dotClass === 'active';
+    const procType = proc.proceeding_type || 'other';
+    const typeLabel = PROC_TYPE_LABELS[procType] || procType;
+    const rawDate = proc.initiated_date || proc.resolved_date;
+    const dateStr = rawDate ? new Date(rawDate).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}) : '—';
+    const personName = proc.persons?.full_name || 'Unknown';
+    const personRel = proc.persons?.relationship_to_epstein ? proc.persons.relationship_to_epstein.replace(/_/g,' ') : '';
+    const penalty = proc.financial_penalty ? '$' + Number(proc.financial_penalty).toLocaleString() : '';
+
+    return `<div class="legal-card">
+      <div class="legal-card-top">
+        <div class="legal-status-col">
+          <div class="legal-status-dot ${dotClass}"></div>
+          <div class="legal-status-label ${isActive?'active':''}">${proc.status || 'Resolved'}</div>
+        </div>
+        <div class="legal-card-body">
+          <div class="legal-card-type-row">
+            <span class="legal-proc-badge legal-proc-${procType}">${typeLabel}</span>
+            ${proc.jurisdiction ? `<span style="font-family:Montserrat,sans-serif;font-size:0.62rem;color:var(--text-tertiary)">${proc.jurisdiction}</span>` : ''}
+          </div>
+          <div class="legal-card-title">${proc.title || 'Untitled Proceeding'}</div>
+          <div class="legal-card-subtitle">${personName}${personRel ? ' · ' + personRel.charAt(0).toUpperCase()+personRel.slice(1) : ''}</div>
+          ${proc.epstein_nexus ? `<div class="legal-card-notes">${proc.epstein_nexus}</div>` : ''}
+          ${proc.outcome ? `<div class="legal-card-notes" style="margin-top:0.4rem;font-style:italic"><strong>Outcome:</strong> ${proc.outcome}</div>` : ''}
+          ${proc.charges ? `<div class="legal-card-notes" style="margin-top:0.3rem"><strong>Charges:</strong> ${proc.charges}</div>` : ''}
+          <div class="legal-card-meta-row">
+            <div class="legal-meta-item"><div class="legal-meta-label">Date Filed</div><div class="legal-meta-val">${dateStr}</div></div>
+            ${penalty ? `<div class="legal-meta-item"><div class="legal-meta-label">Financial Penalty</div><div class="legal-meta-val">${penalty}</div></div>` : ''}
+            ${proc.sentence_months ? `<div class="legal-meta-item"><div class="legal-meta-label">Sentence</div><div class="legal-meta-val">${proc.sentence_months} months</div></div>` : ''}
+            ${proc.case_number ? `<div class="legal-meta-item"><div class="legal-meta-label">Case Number</div><div class="legal-meta-val" style="font-size:0.78rem;font-family:'Source Sans 3',sans-serif">${proc.case_number}</div></div>` : ''}
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 
 </script>
 </body>
