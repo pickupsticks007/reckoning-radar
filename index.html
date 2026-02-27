@@ -3127,12 +3127,17 @@ async function initDocumentLibrary() {
   const grid = document.getElementById('docLibGrid');
   try {
     const { data: docs, error } = await db.from('documents')
-      .select('*, person_documents(count)')
+      .select('*')
       .order('release_date', { ascending: false });
     if (error) throw error;
 
-    allDocuments = docs;
-    renderDocLibrary(docs);
+    // Get citation counts separately
+    const { data: citCounts } = await db.from('person_documents')
+      .select('document_id');
+    const countMap = {};
+    (citCounts || []).forEach(r => { countMap[r.document_id] = (countMap[r.document_id] || 0) + 1; });
+    allDocuments = (docs || []).map(d => ({ ...d, _citCount: countMap[d.id] || 0 }));
+    renderDocLibrary(allDocuments);
   } catch(e) {
     grid.innerHTML = '<div class="intel-loading">Error loading documents.</div>';
     console.error(e);
@@ -3161,7 +3166,7 @@ function renderDocLibrary(docs) {
   }
 
   grid.innerHTML = docs.map(doc => {
-    const citCount = doc.person_documents?.[0]?.count || 0;
+    const citCount = doc._citCount || 0;
     const typeLabel = DOC_TYPE_LABELS[doc.document_type] || doc.document_type;
     const redactLabel = REDACT_LABELS[doc.redaction_status] || '';
     const sourceLabel = SOURCE_LABELS[doc.source] || doc.source;
@@ -3277,18 +3282,22 @@ async function tlLoadPerson(name) {
 
     // Get timeline events
     const { data: tlEntries } = await db.from('event_persons')
-      .select('role, events(id, title, event_date, event_type, location, description, significance)')
-      .eq('person_id', person.id)
-      .order('events(event_date)', { ascending: true });
+      .select('role, events(id, title, event_date, event_type, location_notes, notes, confidence)')
+      .eq('person_id', person.id);
 
     if (!tlEntries || tlEntries.length === 0) {
       content.innerHTML = `<div class="tl-person-header"><div class="tl-person-name">${person.full_name}</div></div><div class="tl-empty-state"><div class="tl-empty-text">No timeline entries found for this person.</div></div>`;
       return;
     }
 
-    // Group by year
+    // Sort by date client-side, then group by year
+    const sorted = [...tlEntries].sort((a,b) => {
+      const da = a.events?.event_date || '';
+      const db2 = b.events?.event_date || '';
+      return da < db2 ? -1 : da > db2 ? 1 : 0;
+    });
     const byYear = {};
-    tlEntries.forEach(entry => {
+    sorted.forEach(entry => {
       const ev = entry.events;
       if (!ev || !ev.event_date) return;
       const yr = ev.event_date.slice(0,4);
@@ -3314,7 +3323,7 @@ async function tlLoadPerson(name) {
         const typeClass = 'tl-type-' + (evType === 'flight' ? 'flight' : evType === 'meeting' || evType === 'social' ? 'meeting' : evType === 'legal' ? 'legal' : evType === 'financial' ? 'financial' : evType === 'arrest' ? 'arrest' : evType === 'death' ? 'death' : 'other');
         const typeLabel = evType === 'flight' ? 'Flight' : evType.charAt(0).toUpperCase()+evType.slice(1).replace(/_/g,' ');
         const dateDisplay = ev.event_date ? ev.event_date.slice(0,10).replace(/(\d{4})-(\d{2})-(\d{2})/,'$3/$2/$1') : '—';
-        const detail = ev.description || ev.location || '';
+        const detail = ev.location_notes || ev.notes || '';
         const roleStr = ev.role ? ev.role.replace(/_/g,' ') : '';
         html += `<div class="tl-entry">
           <div class="tl-entry-date">${dateDisplay}</div>
