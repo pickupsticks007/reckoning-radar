@@ -140,7 +140,7 @@ body { font-family:'Montserrat',sans-serif; background:var(--bg); color:var(--te
 .tt-sub { opacity:0.65; font-size:0.62rem; letter-spacing:0.04em; }
 
 /* ZOOM */
-.zoom-controls { position:absolute; bottom:1.25rem; right:1.25rem; display:flex; flex-direction:column; gap:0.35rem; }
+.zoom-controls { position:absolute; top:1.25rem; left:1.25rem; display:flex; flex-direction:column; gap:0.35rem; z-index:50; }
 .zoom-btn { width:32px; height:32px; background:var(--surface); border:1px solid var(--border-strong); border-radius:4px; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--text-primary); transition:background 0.12s; }
 .zoom-btn:hover { background:var(--accent-dim); }
 </style>
@@ -259,7 +259,7 @@ body { font-family:'Montserrat',sans-serif; background:var(--bg); color:var(--te
 
 <script>
 const SUPABASE_URL = 'https://gljuffkufkggynlaoyim.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdsanVmZmt1ZmtnZ3lubGFveWltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA2NjMwMjYsImV4cCI6MjA1NjIzOTAyNn0.SdOmMjPxCuqaqt2XMzJnJJvpC1hG5fQHxbMONMJXX2I';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdsanVmZmt1ZmtnZ3lubGFveWltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NDQxNzAsImV4cCI6MjA4NzUyMDE3MH0.TYRbhgiWOFp-Zc5LysfySLR8NeVQdZ9_zh6TpYyNQJE';
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const FIN_TYPES = ['financial_advisor','banker_client','funder_recipient','business_partner','legal_counsel'];
