@@ -115,23 +115,24 @@ body {
 
 /* CONTROLS SIDEBAR */
 .controls {
-  width: 220px;
+  width: 268px;
   background: var(--bg);
   border-right: 1px solid var(--border);
-  padding: 1.1rem 0.75rem;
   overflow-y: auto;
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
 }
 .ctrl-title {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 600;
-  font-size: 0.72rem;
-  letter-spacing: 0.1em;
-  color: var(--text-tertiary);
-  text-transform: uppercase;
-  margin-bottom: 0.75rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 0.68rem !important;
+  color: var(--text-tertiary) !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  margin-bottom: 0.6rem;
+  text-align: center;
+  padding: 0 0.25rem;
 }
 .legend-item {
   display: flex;
@@ -158,36 +159,46 @@ body {
 }
 .ctrl-sep { height: 1px; background: var(--border); margin: 1rem 0; }
 .ctrl-label {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.82rem;
-  color: var(--text-tertiary);
-  letter-spacing: 0.06em;
-  margin-bottom: 0.4rem;
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 0.68rem !important;
+  color: var(--text-tertiary) !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  margin-bottom: 0.6rem;
+  text-align: center;
+  padding: 0 0.25rem;
 }
 .filter-btn {
-  display: block;
+  display: flex;
+  align-items: center;
   width: 100%;
-  text-align: left;
-  padding: 5px 8px;
-  margin-bottom: 4px;
-  font-size: 0.75rem;
-  color: var(--text-secondary);
+  padding: 0.55rem 0.5rem;
+  border-radius: 6px;
+  border: none;
   background: none;
-  border: 1px solid var(--border);
-  border-radius: 4px;
   cursor: pointer;
-  transition: all 0.15s;
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 0.82rem !important;
+  letter-spacing: 0.01em !important;
+  color: var(--text-secondary);
+  text-align: left;
+  transition: background 0.12s;
+  margin-bottom: 0.3rem;
 }
-.filter-btn:hover, .filter-btn.active {
-  background: var(--accent);
-  color: var(--bg);
-  border-color: var(--accent);
+.filter-btn:hover { background: var(--accent-dim); color: var(--text-primary); }
+.filter-btn.active {
+  background: rgba(26,26,26,0.09);
+  color: var(--text-primary);
+  border-left: 2px solid var(--text-primary);
+  padding-left: calc(0.5rem - 2px);
 }
 .stat-row {
   font-family: 'Montserrat', sans-serif;
   font-size: 0.82rem;
-  color: var(--text-tertiary);
+  font-weight: 600;
+  color: var(--text-secondary);
   line-height: 2;
 }
 
@@ -451,24 +462,28 @@ body {
 <div class="layout">
   <!-- CONTROLS -->
   <div class="controls">
-    <div class="ctrl-title">Node Color</div>
-    <div id="legend"></div>
+    <div style="padding:1.6rem 1.1rem 0.8rem;border-bottom:1px solid var(--border);">
+      <div class="ctrl-title">Category</div>
+      <div id="legend"></div>
+    </div>
 
-    <div class="ctrl-sep"></div>
-    <div class="ctrl-title">Filter</div>
-    <div class="ctrl-label">Show connections</div>
-    <button class="filter-btn active" id="filter-all" onclick="setFilter('all')">All relationships</button>
-    <button class="filter-btn" id="filter-flights" onclick="setFilter('flights')">Flight co-travelers only</button>
-    <button class="filter-btn" id="filter-direct" onclick="setFilter('direct')">Direct contacts only</button>
+    <div style="padding:1.6rem 1.1rem 0.8rem;border-bottom:1px solid var(--border);">
+      <div class="ctrl-title">Filter</div>
+      <button class="filter-btn active" id="filter-all" onclick="setFilter('all')">All Relationships</button>
+      <button class="filter-btn" id="filter-flights" onclick="setFilter('flights')">Flight Co-Travelers</button>
+      <button class="filter-btn" id="filter-direct" onclick="setFilter('direct')">Direct Contacts</button>
+    </div>
 
-    <div class="ctrl-sep"></div>
-    <div class="ctrl-title">Stats</div>
-    <div class="stat-row" id="stats"></div>
+    <div style="padding:1.6rem 1.1rem 0.8rem;border-bottom:1px solid var(--border);">
+      <div class="ctrl-title">Stats</div>
+      <div class="stat-row" id="stats"></div>
+    </div>
 
-    <div class="ctrl-sep"></div>
-    <div class="ctrl-label">INSTRUCTIONS</div>
-    <div style="font-family:'Montserrat',sans-serif;font-size:0.82rem;color:var(--text-tertiary);line-height:1.9;">
-      <strong>Drag</strong> to pan · <strong>Scroll</strong> to zoom · <strong>Click</strong> node to inspect · <strong>Drag</strong> node to reposition
+    <div style="padding:1.25rem 1.1rem;">
+      <div class="ctrl-label">Instructions</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:0.75rem;font-weight:600;color:var(--text-tertiary);line-height:2;">
+        <strong>Drag</strong> to pan · <strong>Scroll</strong> to zoom<br><strong>Click</strong> node to inspect · <strong>Drag</strong> node to reposition
+      </div>
     </div>
   </div>
 
@@ -689,7 +704,7 @@ function buildGraph(nodes, edges) {
     .force('link', d3.forceLink(edges).id(d => d.id)
       .distance(d => d.type === 'flight' ? 80 + (3 - d.weight) * 20 : 140)
       .strength(d => d.type === 'flight' ? 0.5 : 0.15))
-    .force('charge', d3.forceManyBody().strength(-220))
+    .force('charge', d3.forceManyBody().strength(-320))
     .force('center', d3.forceCenter(W / 2, H / 2))
     .force('collision', d3.forceCollide().radius(d => getR(d) + 4));
 
@@ -755,26 +770,37 @@ function buildGraph(nodes, edges) {
     .style('pointer-events', 'none');
 
   // Node labels
+  // Background halo for legibility
   node.append('text')
     .attr('text-anchor', 'middle')
-    .attr('dy', d => getR(d) + 12)
+    .attr('dy', d => getR(d) + 16)
     .attr('font-family', 'Montserrat, sans-serif')
-    .attr('font-size', d => {
-      const r = getR(d);
-      return r > 18 ? '13px' : r > 12 ? '12px' : '11px';
-    })
-    .attr('font-weight', d => d.power_public_profile > 70 ? '600' : '400')
-    .attr('fill', 'var(--text-primary)')
-    .attr('fill-opacity', 0.85)
+    .attr('font-size', '13px')
+    .attr('font-weight', '700')
+    .attr('fill', 'white')
+    .attr('stroke', 'white')
+    .attr('stroke-width', '4px')
+    .attr('stroke-linejoin', 'round')
+    .attr('paint-order', 'stroke')
     .style('pointer-events', 'none')
     .text(d => {
-      const name = d.full_name;
-      // Shorten long names
-      if (name.length > 16) {
-        const parts = name.split(' ');
-        if (parts.length >= 2) return parts[0][0] + '. ' + parts[parts.length - 1];
-      }
-      return name;
+      const parts = d.full_name.split(' ');
+      return parts.length > 2 ? parts[0] + ' ' + parts[parts.length - 1] : d.full_name;
+    });
+
+  // Foreground label
+  node.append('text')
+    .attr('text-anchor', 'middle')
+    .attr('dy', d => getR(d) + 16)
+    .attr('font-family', 'Montserrat, sans-serif')
+    .attr('font-size', '13px')
+    .attr('font-weight', '700')
+    .attr('fill', '#1B1B1B')
+    .attr('fill-opacity', 1)
+    .style('pointer-events', 'none')
+    .text(d => {
+      const parts = d.full_name.split(' ');
+      return parts.length > 2 ? parts[0] + ' ' + parts[parts.length - 1] : d.full_name;
     });
 
   // Simulation tick
@@ -1055,6 +1081,7 @@ window.addEventListener('resize', () => {
     <div class="drawer-section-label">Query Type</div>
     <a href="https://www.thereckoningradar.com" class="drawer-nav-link">Person Profile</a>
     <a href="graph.html" class="drawer-nav-link active">Network Graph</a>
+    <a href="money.html" class="drawer-nav-link">Money Map</a>
     <a href="https://www.thereckoningradar.com?tab=flights" class="drawer-nav-link">Flight Manifests</a>
     <a href="https://www.thereckoningradar.com?tab=unidentified" class="drawer-nav-link">Unidentified</a>
     <a href="https://www.thereckoningradar.com?tab=connections" class="drawer-nav-link">Connections</a>
