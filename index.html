@@ -1061,6 +1061,241 @@ kbd {
   .suggestion-chip { font-size: 0.78rem; padding: 0.35rem 0.75rem; }
   .landing-title { font-size: 1.4rem; }
 }
+
+/* ── LOCATION INTELLIGENCE ── */
+#tabLocations {
+  display: none;
+  height: 100%;
+  overflow: hidden;
+}
+#tabLocations.active {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  height: 100%;
+}
+.loc-sidebar {
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  background: var(--bg-secondary);
+  padding: 1rem 0;
+}
+.loc-group-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  padding: 0.75rem 1rem 0.3rem;
+}
+.loc-group-label:first-child { padding-top: 0.3rem; }
+.loc-card {
+  padding: 0.7rem 1rem;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: background 0.12s, border-color 0.12s;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.loc-card:hover { background: var(--accent-bg); border-left-color: rgba(26,26,26,0.3); }
+.loc-card.active { background: var(--accent-bg); border-left-color: var(--accent); }
+.loc-card-name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+.loc-card-sub {
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+  font-family: 'Source Sans 3', sans-serif;
+}
+.loc-card-stats {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.15rem;
+}
+.loc-stat-pill {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.12rem 0.4rem;
+  border-radius: 3px;
+  background: var(--accent-dim);
+  color: var(--text-secondary);
+}
+.loc-owned-badge {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  background: rgba(180,40,40,0.1);
+  color: #B42828;
+  border: 1px solid rgba(180,40,40,0.25);
+}
+.loc-detail {
+  overflow-y: auto;
+  padding: 2rem 2.25rem;
+  background: var(--bg);
+}
+.loc-detail-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 0.75rem;
+  color: var(--text-tertiary);
+}
+.loc-detail-empty-icon {
+  font-size: 2.5rem;
+  opacity: 0.25;
+}
+.loc-detail-empty-text {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.loc-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+.loc-title-block { flex: 1; }
+.loc-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  line-height: 1.2;
+  margin-bottom: 0.4rem;
+}
+.loc-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  align-items: center;
+}
+.loc-type-badge {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.18rem 0.55rem;
+  border-radius: 4px;
+  background: var(--accent-dim);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-mid);
+}
+.loc-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+}
+.loc-stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+}
+.loc-stat-val {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1;
+  margin-bottom: 0.3rem;
+}
+.loc-stat-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+.loc-intel-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 1.1rem 1.25rem;
+  margin-bottom: 1.75rem;
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 0.88rem;
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+.loc-section-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+.loc-persons-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.5rem;
+  margin-bottom: 1.75rem;
+}
+.loc-person-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.7rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.1s, border-color 0.1s;
+}
+.loc-person-chip:hover {
+  background: var(--accent-bg);
+  border-color: var(--border-strong);
+}
+.loc-person-name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+.loc-person-cat {
+  font-size: 0.65rem;
+  color: var(--text-tertiary);
+  font-family: 'Source Sans 3', sans-serif;
+}
+.loc-map-pin {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+@media (max-width: 768px) {
+  #tabLocations.active { grid-template-columns: 1fr; }
+  .loc-sidebar { border-right: none; border-bottom: 1px solid var(--border); max-height: 240px; }
+  .loc-stats-grid { grid-template-columns: repeat(3, 1fr); }
+  .loc-detail { padding: 1.25rem; }
+}
 </style>
 </head>
 <body>
@@ -1097,10 +1332,10 @@ kbd {
       <div class="sidebar-label">Query Type</div>
       <div class="nav-item active" id="navProfiles" onclick="switchTab('profiles'); document.getElementById('searchInput').value=''; document.getElementById('globalSearchClear').style.display='none'; if(typeof closeGSD==='function')closeGSD(); showLanding();"><span>Person Profile</span></div>
       <div class="nav-item" id="navFlights" onclick="switchTab('flights')" style="cursor:pointer;"><span>Flight Manifests</span></div>
-      <div class="nav-item" onclick="window.location.href='graph.html'" style="cursor:pointer;"><span>Network Graph</span><span class="coming-soon-badge" style="background:rgba(26,107,60,0.12);color:#1A6B3C;border-color:rgba(26,107,60,0.3);">LIVE</span></div>
-      <div class="nav-item" id="navUnidentified" onclick="switchTab('unidentified')" style="cursor:pointer;"><span>Unidentified</span><span class="coming-soon-badge" style="background:rgba(180,40,40,0.1);color:#B42828;border-color:rgba(180,40,40,0.3);">NEW</span></div>
-      <div class="nav-item" id="navConnections" onclick="switchTab('connections')" style="cursor:pointer;"><span>Connections</span><span class="coming-soon-badge" style="background:rgba(26,26,26,0.08);color:#444;border-color:rgba(26,26,26,0.2);">NEW</span></div>
-      <div class="nav-item coming-soon"><span>Location Map</span><span class="coming-soon-badge">SOON</span></div>
+      <div class="nav-item" onclick="window.location.href='graph.html'" style="cursor:pointer;"><span>Network Graph</span></div>
+      <div class="nav-item" id="navUnidentified" onclick="switchTab('unidentified')" style="cursor:pointer;"><span>Unidentified</span></div>
+      <div class="nav-item" id="navConnections" onclick="switchTab('connections')" style="cursor:pointer;"><span>Connections</span></div>
+      <div class="nav-item" id="navLocations" onclick="switchTab('locations')" style="cursor:pointer;"><span>Location Intel</span></div>
     </div>
     <div class="sidebar-section" id="sidebarFilters">
       <div class="sidebar-label">Category</div>
@@ -1273,6 +1508,19 @@ kbd {
       </div>
     </div>
 
+    <!-- ── TAB: LOCATION INTELLIGENCE ── -->
+    <div class="tab-panel" id="tabLocations">
+      <div class="loc-sidebar" id="locSidebar">
+        <div class="loc-group-label">Loading locations…</div>
+      </div>
+      <div class="loc-detail" id="locDetail">
+        <div class="loc-detail-empty">
+          <div class="loc-detail-empty-icon">⊙</div>
+          <div class="loc-detail-empty-text">Select a location to investigate</div>
+        </div>
+      </div>
+    </div>
+
   </main>
 
   <!-- RIGHT PANEL -->
@@ -1340,10 +1588,10 @@ kbd {
       <div class="sidebar-label">Query Type</div>
       <div class="nav-item" onclick="switchTab('profiles'); document.getElementById('searchInput').value=''; document.getElementById('globalSearchClear').style.display='none'; if(typeof closeGSD==='function')closeGSD(); showLanding(); closeDrawer()"><span>Person Profile</span></div>
       <div class="nav-item" onclick="switchTab('flights');closeDrawer()"><span>Flight Manifests</span></div>
-      <div class="nav-item" onclick="window.location.href='graph.html'"><span>Network Graph</span><span class="coming-soon-badge" style="background:rgba(26,107,60,0.12);color:#1A6B3C;border-color:rgba(26,107,60,0.3);">LIVE</span></div>
-      <div class="nav-item" onclick="switchTab('unidentified');closeDrawer()"><span>Unidentified</span><span class="coming-soon-badge" style="background:rgba(180,40,40,0.1);color:#B42828;border-color:rgba(180,40,40,0.3);">NEW</span></div>
-      <div class="nav-item" onclick="switchTab('connections');closeDrawer()"><span>Connections</span><span class="coming-soon-badge" style="background:rgba(26,26,26,0.08);color:#444;border-color:rgba(26,26,26,0.2);">NEW</span></div>
-      <div class="nav-item coming-soon"><span>Location Map</span><span class="coming-soon-badge">SOON</span></div>
+      <div class="nav-item" onclick="window.location.href='graph.html'"><span>Network Graph</span></div>
+      <div class="nav-item" onclick="switchTab('unidentified');closeDrawer()"><span>Unidentified</span></div>
+      <div class="nav-item" onclick="switchTab('connections');closeDrawer()"><span>Connections</span></div>
+      <div class="nav-item" onclick="switchTab('locations');closeDrawer()"><span>Location Intel</span></div>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-label">Category</div>
@@ -1383,6 +1631,7 @@ function closeDrawer() { document.getElementById('mobileDrawer').classList.remov
 let currentTab = 'profiles';
 let unidentifiedLoaded = false;
 let connectionsLoaded = false;
+let locationsLoaded = false;
 
 function switchTab(tab) {
   document.querySelectorAll('.tab-panel').forEach(el => el.classList.remove('active'));
@@ -1430,6 +1679,13 @@ function switchTab(tab) {
     rightPanel.style.display = '';
     if (!connectionsLoaded) { initConnections(); connectionsLoaded = true; }
     // Show connection panels (A and B appear once people are selected)
+  } else if (tab === 'locations') {
+    document.getElementById('tabLocations').classList.add('active');
+    document.getElementById('navLocations').classList.add('active');
+    filterSections.style.display = 'none';
+    relFilterSections.style.display = 'none';
+    rightPanel.style.display = 'none';
+    if (!locationsLoaded) { initLocations(); locationsLoaded = true; }
   }
   currentTab = tab;
 }
@@ -2792,6 +3048,221 @@ function connSetQuick(nameA, nameB) {
   document.getElementById('connFindBtn').disabled = false;
   connFindPath();
   connUpdateSidebar(connSelectedA, connSelectedB, null);
+}
+
+// ── LOCATION INTELLIGENCE ──
+const LOC_GROUPS = {
+  'Epstein Properties': loc => loc.epstein_owned,
+  'Financial Institutions': loc => loc.location_type === 'financial_institution',
+  'Academic Institutions': loc => loc.location_type === 'academic_institution',
+  'Other Sites': loc => !loc.epstein_owned && loc.location_type !== 'financial_institution' && loc.location_type !== 'academic_institution'
+};
+
+const LOC_TYPE_LABELS = {
+  private_residence: 'Private Residence',
+  island: 'Private Island',
+  financial_institution: 'Financial Institution',
+  academic_institution: 'Academic Institution',
+  other: 'Other Site'
+};
+
+let allLocations = [];
+let activeLocId = null;
+
+async function initLocations() {
+  const sidebar = document.getElementById('locSidebar');
+  sidebar.innerHTML = '<div class="loc-group-label">Loading…</div>';
+
+  const { data, error } = await db
+    .from('locations')
+    .select('*')
+    .order('total_visit_count', { ascending: false });
+
+  if (error || !data) {
+    sidebar.innerHTML = '<div class="loc-group-label">Error loading locations</div>';
+    return;
+  }
+
+  allLocations = data;
+  renderLocSidebar(data);
+}
+
+function renderLocSidebar(locs) {
+  const sidebar = document.getElementById('locSidebar');
+  let html = '';
+
+  for (const [groupName, filterFn] of Object.entries(LOC_GROUPS)) {
+    const group = locs.filter(filterFn);
+    if (group.length === 0) continue;
+
+    html += `<div class="loc-group-label">${groupName}</div>`;
+    group.forEach(loc => {
+      const typeLabel = LOC_TYPE_LABELS[loc.location_type] || cap(loc.location_type || '');
+      const city = [loc.city, loc.country].filter(Boolean).join(', ');
+      html += `
+        <div class="loc-card" id="loccard-${loc.id}" onclick="selectLocation('${loc.id}')">
+          <div class="loc-card-name">${loc.name}</div>
+          <div class="loc-card-sub">${city}</div>
+          <div class="loc-card-stats">
+            ${loc.total_visit_count ? `<span class="loc-stat-pill">${loc.total_visit_count.toLocaleString()} visits</span>` : ''}
+            ${loc.unique_persons_count ? `<span class="loc-stat-pill">${loc.unique_persons_count} persons</span>` : ''}
+            ${loc.epstein_owned ? `<span class="loc-owned-badge">Epstein-Owned</span>` : ''}
+          </div>
+        </div>`;
+    });
+  }
+
+  sidebar.innerHTML = html;
+}
+
+async function selectLocation(locId) {
+  // Update active state in sidebar
+  document.querySelectorAll('.loc-card').forEach(el => el.classList.remove('active'));
+  const card = document.getElementById(`loccard-${locId}`);
+  if (card) card.classList.add('active');
+  activeLocId = locId;
+
+  const detail = document.getElementById('locDetail');
+  detail.innerHTML = `<div class="loc-detail-empty"><div class="loc-detail-empty-icon">⊙</div><div class="loc-detail-empty-text">Loading intelligence…</div></div>`;
+
+  const loc = allLocations.find(l => l.id === locId);
+  if (!loc) return;
+
+  // Fetch persons documented at this location via events
+  const { data: eventData } = await db
+    .from('events')
+    .select('id, title, event_date, event_type, notes, confidence')
+    .eq('primary_location_id', locId)
+    .order('event_date', { ascending: true })
+    .limit(50);
+
+  const eventIds = (eventData || []).map(e => e.id);
+  let personsAtLocation = [];
+
+  if (eventIds.length > 0) {
+    const { data: epData } = await db
+      .from('event_persons')
+      .select('person_id, role, persons(id, full_name, category, relationship_to_epstein)')
+      .in('event_id', eventIds)
+      .limit(200);
+
+    if (epData) {
+      const seen = new Set();
+      personsAtLocation = epData
+        .filter(ep => ep.persons && !seen.has(ep.person_id) && seen.add(ep.person_id))
+        .map(ep => ep.persons);
+    }
+  }
+
+  // Also check flight passengers by destination matching
+  const { data: flightData } = await db
+    .from('flights')
+    .select('id, flight_date, origin, destination')
+    .or(`destination.ilike.%${loc.city || loc.name}%,origin.ilike.%${loc.city || loc.name}%`)
+    .order('flight_date', { ascending: false })
+    .limit(20);
+
+  // Build detail view
+  const typeLabel = LOC_TYPE_LABELS[loc.location_type] || cap(loc.location_type || '');
+  const city = [loc.city, loc.state_region, loc.country].filter(Boolean).join(', ');
+  const coords = loc.coordinates ? loc.coordinates.replace(/[()]/g, '').split(',') : null;
+  const mapsUrl = coords ? `https://www.google.com/maps?q=${coords[1]},${coords[0]}` : null;
+
+  let html = `
+    <div class="loc-header">
+      <div class="loc-title-block">
+        <div class="loc-title">${loc.name}</div>
+        <div class="loc-meta">
+          <span class="loc-type-badge">${typeLabel}</span>
+          ${loc.epstein_owned ? '<span class="loc-owned-badge">Epstein-Owned</span>' : ''}
+          <span class="loc-type-badge" style="background:transparent;border-color:transparent;color:var(--text-tertiary);">${city}</span>
+          ${mapsUrl ? `<a href="${mapsUrl}" target="_blank" style="font-family:'Montserrat',sans-serif;font-size:0.62rem;color:var(--text-tertiary);text-decoration:none;border-bottom:1px solid var(--border);">↗ Map</a>` : ''}
+        </div>
+      </div>
+    </div>
+
+    <div class="loc-stats-grid">
+      <div class="loc-stat-card">
+        <div class="loc-stat-val">${(loc.total_visit_count || 0).toLocaleString()}</div>
+        <div class="loc-stat-label">Documented Visits</div>
+      </div>
+      <div class="loc-stat-card">
+        <div class="loc-stat-val">${(loc.unique_persons_count || personsAtLocation.length || 0).toLocaleString()}</div>
+        <div class="loc-stat-label">Unique Persons</div>
+      </div>
+      <div class="loc-stat-card">
+        <div class="loc-stat-val">${(eventData || []).length}</div>
+        <div class="loc-stat-label">Documented Events</div>
+      </div>
+    </div>`;
+
+  // Intelligence summary
+  if (loc.notes) {
+    html += `
+    <div style="margin-bottom:1.75rem;">
+      <div class="loc-section-title">Intelligence Summary</div>
+      <div class="loc-intel-box">${loc.notes}</div>
+    </div>`;
+  }
+
+  // Persons documented here
+  if (personsAtLocation.length > 0) {
+    html += `<div class="loc-section-title">Persons Documented at This Location</div>
+    <div class="loc-persons-grid">`;
+    personsAtLocation.forEach(p => {
+      const catLabel = p.category ? cap(p.category) : '';
+      html += `
+        <div class="loc-person-chip" onclick="doSearch('${p.full_name.replace(/'/g, "\\'")}'); switchTab('profiles');">
+          <div>
+            <div class="loc-person-name">${p.full_name}</div>
+            ${catLabel ? `<div class="loc-person-cat">${catLabel}</div>` : ''}
+          </div>
+        </div>`;
+    });
+    html += `</div>`;
+  }
+
+  // Documented events
+  if (eventData && eventData.length > 0) {
+    html += `<div class="loc-section-title" style="margin-top:0.5rem;">Documented Events</div>
+    <div style="display:flex;flex-direction:column;gap:0.5rem;margin-bottom:1.75rem;">`;
+    eventData.forEach(ev => {
+      const date = ev.event_date ? ev.event_date.substring(0, 10) : 'Date unknown';
+      const evType = ev.event_type ? cap(ev.event_type.replace(/_/g, ' ')) : '';
+      html += `
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0.8rem 1rem;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:0.5rem;margin-bottom:${ev.notes ? '0.4rem' : '0'};">
+            <div style="font-family:'Montserrat',sans-serif;font-size:0.78rem;font-weight:600;color:var(--text-primary);">${ev.title || 'Undocumented Event'}</div>
+            <div style="font-family:'Montserrat',sans-serif;font-size:0.65rem;color:var(--text-tertiary);white-space:nowrap;">${date}</div>
+          </div>
+          ${evType ? `<div style="font-family:'Montserrat',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-tertiary);margin-bottom:${ev.notes ? '0.3rem' : '0'};">${evType}</div>` : ''}
+          ${ev.notes ? `<div style="font-family:'Source Sans 3',sans-serif;font-size:0.82rem;color:var(--text-secondary);line-height:1.6;">${ev.notes}</div>` : ''}
+        </div>`;
+    });
+    html += `</div>`;
+  }
+
+  // Nearby flight connections
+  if (flightData && flightData.length > 0) {
+    html += `<div class="loc-section-title" style="margin-top:0.5rem;">Flight Connections</div>
+    <div style="display:flex;flex-direction:column;gap:0.4rem;margin-bottom:1.75rem;">`;
+    flightData.slice(0, 8).forEach(f => {
+      const date = f.flight_date ? f.flight_date.substring(0, 10) : '';
+      const route = [f.origin, f.destination].filter(Boolean).join(' → ');
+      html += `
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:0.55rem 0.75rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;">
+          <span style="font-family:'Montserrat',sans-serif;font-size:0.75rem;font-weight:600;">✈ ${route}</span>
+          <span style="font-family:'Montserrat',sans-serif;font-size:0.65rem;color:var(--text-tertiary);">${date}</span>
+        </div>`;
+    });
+    html += `</div>`;
+  }
+
+  if (!loc.notes && personsAtLocation.length === 0 && (!eventData || eventData.length === 0)) {
+    html += `<div style="padding:2rem;text-align:center;color:var(--text-tertiary);font-family:'Montserrat',sans-serif;font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;">No detailed records indexed for this location yet</div>`;
+  }
+
+  detail.innerHTML = html;
 }
 
 </script>
