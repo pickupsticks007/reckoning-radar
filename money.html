@@ -202,7 +202,7 @@ body { font-family:'Montserrat',sans-serif; background:var(--bg); color:var(--te
         <span class="filter-dot" style="background:#3333ff"></span>Business Partners
       </button>
       <button class="filter-btn" onclick="setFilter('legal_counsel',this)">
-        <span class="filter-dot" style="background:#ffff33;border:1px solid rgba(0,0,0,0.15)"></span>Legal Counsel
+        <span class="filter-dot" style="background:#FFEF00;border:1px solid rgba(0,0,0,0.15)"></span>Legal Counsel
       </button>
     </div>
 
@@ -245,7 +245,7 @@ body { font-family:'Montserrat',sans-serif; background:var(--bg); color:var(--te
       <div class="legend-row"><div class="legend-swatch" style="background:#ff9933"></div>Banker / Client</div>
       <div class="legend-row"><div class="legend-swatch" style="background:#ff0033"></div>Funder / Recipient</div>
       <div class="legend-row"><div class="legend-swatch" style="background:#3333ff"></div>Business partner</div>
-      <div class="legend-row"><div class="legend-swatch" style="background:#ffff33;border:1px solid rgba(0,0,0,0.12);height:2.5px"></div>Legal Counsel</div>
+      <div class="legend-row"><div class="legend-swatch" style="background:#FFEF00;border:1px solid rgba(0,0,0,0.12);height:2.5px"></div>Legal Counsel</div>
       <div class="legend-note" style="margin-top:0.5rem;">Dashed edge = corroborated (not confirmed). Red ring = financial penalty on record. Node size = power index.</div>
     </div>
     <div class="zoom-controls">
@@ -263,9 +263,19 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const FIN_TYPES = ['financial_advisor','banker_client','funder_recipient','business_partner','legal_counsel'];
-const EDGE_HEX = { financial_advisor:'#660099', banker_client:'#ff9933', funder_recipient:'#ff0033', business_partner:'#3333ff', legal_counsel:'#ffff33' };
+const EDGE_HEX = { financial_advisor:'#660099', banker_client:'#ff9933', funder_recipient:'#ff0033', business_partner:'#3333ff', legal_counsel:'#FFEF00' };
 const EDGE_LABELS = { financial_advisor:'Financial Advisor', banker_client:'Banker / Client', funder_recipient:'Funder / Recipient', business_partner:'Business Partner', legal_counsel:'Legal Counsel' };
-const CAT_COLORS = { finance:'#660099', politics:'#ff9933', technology:'#009966', legal:'#ff0033', academia:'#3333ff', entertainment:'#6b3a1a', royalty:'#2b1700', media:'#1a4a4a', other:'#555' };
+const CAT_COLORS = {
+  finance:       '#2E6F40',
+  politics:      '#FF2C2C',
+  technology:    '#000080',
+  legal:         '#FFEF00',
+  academia:      '#2B1700',
+  entertainment: '#FF5C00',
+  royalty:       '#FFC8D3',
+  media:         '#00B9B3',
+  other:         '#FFA21F'
+};
 
 let allNodes=[], allEdges=[], legalByPerson={}, activeFilter='all';
 let svg, g, zoomBehavior, simulation;
@@ -409,14 +419,31 @@ function updateGraph(){
     .attr('stroke','#fff')
     .attr('stroke-width',1.5);
 
+  // White halo for legibility behind label
   node.append('text')
     .attr('text-anchor','middle')
-    .attr('dy', d=>d.radius+11)
+    .attr('dy', d=>d.radius+16)
     .attr('font-family','Montserrat,sans-serif')
-    .attr('font-size', d=>d.radius>14?'9px':'8px')
-    .attr('font-weight','600')
+    .attr('font-size','13px')
+    .attr('font-weight','700')
+    .attr('fill','white')
+    .attr('stroke','white')
+    .attr('stroke-width','4px')
+    .attr('stroke-linejoin','round')
+    .attr('paint-order','stroke')
+    .style('pointer-events','none')
+    .text(d=>shortName(d.full_name));
+
+  // Foreground label
+  node.append('text')
+    .attr('text-anchor','middle')
+    .attr('dy', d=>d.radius+16)
+    .attr('font-family','Montserrat,sans-serif')
+    .attr('font-size','13px')
+    .attr('font-weight','700')
     .attr('fill','#1B1B1B')
-    .attr('fill-opacity',0.82)
+    .attr('fill-opacity',1)
+    .style('pointer-events','none')
     .text(d=>shortName(d.full_name));
 
   svg.on('click', ()=>{ clearDetail(); g.selectAll('circle').attr('stroke','#fff').attr('stroke-width',1.5); });
