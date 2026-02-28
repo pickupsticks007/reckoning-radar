@@ -3,17 +3,65 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Reckoning Radar — Epstein Files Intelligence</title>
+<title>The Reckoning Radar — Epstein Files Intelligence Platform</title>
+
+<!-- Primary SEO -->
+<meta name="description" content="Reckoning Radar is an investigative intelligence platform indexing 123 individuals connected to Jeffrey Epstein's network. Search flight records, financial ties, legal proceedings, and primary source documents from the DOJ Epstein Files.">
+<meta name="keywords" content="Epstein files, Jeffrey Epstein, Epstein network, DOJ Epstein documents, Ghislaine Maxwell, Epstein flight logs, Epstein investigation, Epstein associates">
+<meta name="robots" content="index, follow">
+<meta name="author" content="The Reckoning Radar">
+<link rel="canonical" href="https://www.thereckoningradar.com/">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.thereckoningradar.com/">
+<meta property="og:title" content="The Reckoning Radar — Epstein Files Intelligence Platform">
+<meta property="og:description" content="An investigative intelligence platform indexing 123 individuals connected to Jeffrey Epstein's network. Search flight records, financial ties, legal proceedings, and primary DOJ source documents.">
+<meta property="og:site_name" content="The Reckoning Radar">
+<meta property="og:image" content="https://www.thereckoningradar.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="The Reckoning Radar — Epstein Files Intelligence Platform">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://www.thereckoningradar.com/">
+<meta name="twitter:title" content="The Reckoning Radar — Epstein Files Intelligence">
+<meta name="twitter:description" content="Investigative intelligence platform indexing 123 individuals connected to Jeffrey Epstein's network. Flight records, financial ties, DOJ source documents.">
+<meta name="twitter:image" content="https://www.thereckoningradar.com/og-image.png">
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "The Reckoning Radar",
+  "url": "https://www.thereckoningradar.com",
+  "description": "An investigative intelligence platform indexing individuals connected to Jeffrey Epstein's network using primary source documents from the DOJ Epstein Files.",
+  "applicationCategory": "InvestigativeJournalism",
+  "operatingSystem": "Web",
+  "creator": {
+    "@type": "Organization",
+    "name": "The Reckoning Radar",
+    "url": "https://www.thereckoningradar.com"
+  },
+  "about": {
+    "@type": "Thing",
+    "name": "Jeffrey Epstein Investigation",
+    "description": "Primary source intelligence platform covering the Jeffrey Epstein network based on DOJ-released documents"
+  }
+}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Source+Sans+3:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://use.typekit.net/zzw7dfl.css">
 <style>
 
 /* ── THEME TOKENS ── */
 :root {
-  --bg:             #f4f1ed;
-  --bg-secondary:   #f0ede7;
-  --bg-card:        #f4f1ed;
-  --surface:        #f4f1ed;
+  --bg:             #f9f9f6;
+  --bg-secondary:   #f9f9f6;
+  --bg-card:        #f9f9f6;
+  --surface:        #f9f9f6;
   --border:         rgba(0,0,0,0.08);
   --border-mid:     rgba(0,0,0,0.12);
   --border-strong:  rgba(0,0,0,0.18);
@@ -22,9 +70,9 @@
   --accent-bg:      rgba(26,26,26,0.08);
   --accent-btn:     #1A1A1A;
   --accent-btn-text:#FFFFFF;
-  --text-primary:   #474543;
-  --text-secondary: #474543;
-  --text-tertiary:  #474543;
+  --text-primary:   #1B1B1B;
+  --text-secondary: #3a3a3a;
+  --text-tertiary:  #6a6a6a;
   --confirmed:      #1A6B3C;
   --confirmed-bg:   rgba(26,107,60,0.08);
   --confirmed-border:rgba(26,107,60,0.25);
@@ -38,7 +86,7 @@
   --unverified-bg:  rgba(138,26,26,0.08);
   --unverified-border:rgba(138,26,26,0.25);
   --shadow-sm:      0 1px 3px rgba(0,0,0,0.06);
-  --topbar-bg:      #f0ede7;
+  --topbar-bg:      #f9f9f6;
   --header-bg:      #0D0D0D;
   --header-text:    #F7F4EF;
   --redact-color:   #1A1A1A;
@@ -1336,6 +1384,7 @@ kbd {
       <div class="nav-item" id="navUnidentified" onclick="switchTab('unidentified')" style="cursor:pointer;"><span>Unidentified</span></div>
       <div class="nav-item" id="navConnections" onclick="switchTab('connections')" style="cursor:pointer;"><span>Connections</span></div>
       <div class="nav-item" id="navLocations" onclick="switchTab('locations')" style="cursor:pointer;"><span>Location Intel</span></div>
+      <div class="nav-item" onclick="window.location.href='about.html'" style="cursor:pointer;"><span>About</span></div>
     </div>
     <div class="sidebar-section" id="sidebarFilters">
       <div class="sidebar-label">Category</div>
@@ -1592,6 +1641,7 @@ kbd {
       <div class="nav-item" onclick="switchTab('unidentified');closeDrawer()"><span>Unidentified</span></div>
       <div class="nav-item" onclick="switchTab('connections');closeDrawer()"><span>Connections</span></div>
       <div class="nav-item" onclick="switchTab('locations');closeDrawer()"><span>Location Intel</span></div>
+      <div class="nav-item" onclick="window.location.href='about.html';closeDrawer()"><span>About</span></div>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-label">Category</div>
