@@ -10,21 +10,21 @@
 
 /* ── THEME TOKENS ── */
 :root {
-  --bg:             #f4f1ed;
-  --bg-secondary:   #f0ede7;
-  --bg-card:        #f4f1ed;
-  --surface:        #f4f1ed;
+  --bg:             #f9f9f6;
+  --bg-secondary:   #f9f9f6;
+  --bg-card:        #f9f9f6;
+  --surface:        #f9f9f6;
   --border:         rgba(0,0,0,0.08);
   --border-mid:     rgba(0,0,0,0.12);
   --border-strong:  rgba(0,0,0,0.18);
   --accent:         #1A1A1A;
-  --accent-dim:     rgba(26,26,26,0.10);
+  --accent-dim:     #e0e0dd;
   --accent-bg:      rgba(26,26,26,0.08);
   --accent-btn:     #1A1A1A;
   --accent-btn-text:#FFFFFF;
-  --text-primary:   #474543;
-  --text-secondary: #474543;
-  --text-tertiary:  #474543;
+  --text-primary:   #1B1B1B;
+  --text-secondary: #1B1B1B;
+  --text-tertiary:  #1B1B1B;
   --confirmed:      #1A6B3C;
   --confirmed-bg:   rgba(26,107,60,0.08);
   --confirmed-border:rgba(26,107,60,0.25);
@@ -38,9 +38,9 @@
   --unverified-bg:  rgba(138,26,26,0.08);
   --unverified-border:rgba(138,26,26,0.25);
   --shadow-sm:      0 1px 3px rgba(0,0,0,0.06);
-  --topbar-bg:      #f0ede7;
-  --header-bg:      #0D0D0D;
-  --header-text:    #F7F4EF;
+  --topbar-bg:      #f9f9f6;
+  --header-bg:      #f9f9f6;
+  --header-text:    #1B1B1B;
   --redact-color:   #1A1A1A;
   --stamp-color:    rgba(180,40,40,0.18);
   --stamp-border:   rgba(180,40,40,0.55);
@@ -180,7 +180,7 @@ body {
 .status-text {
   font-family: 'Montserrat', sans-serif;
   font-weight: 500;
-  font-size: 0.72rem;
+  font-size: 0.88rem;
   color: var(--text-secondary);
   white-space: nowrap;
 }
@@ -907,6 +907,7 @@ body {
   background: var(--header-bg);
   color: var(--header-text);
   padding: 2.5rem 0 0;
+  border-bottom: 1px solid var(--border-mid);
 }
 .intel-header-inner {
   max-width: 900px;
@@ -918,7 +919,7 @@ body {
   font-size: 0.62rem;
   font-weight: 600;
   letter-spacing: 0.18em;
-  color: rgba(247,244,239,0.45);
+  color: rgba(27,27,27,0.45);
   margin-bottom: 0.5rem;
 }
 .intel-header-title {
@@ -933,7 +934,7 @@ body {
 .intel-header-desc {
   font-family: 'Source Sans 3', sans-serif;
   font-size: 0.92rem;
-  color: rgba(247,244,239,0.65);
+  color: rgba(27,27,27,0.65);
   line-height: 1.6;
   max-width: 640px;
   margin-bottom: 1.5rem;
@@ -958,9 +959,9 @@ body {
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(247,244,239,0.4);
+  color: rgba(27,27,27,0.4);
 }
-.intel-stat-div { width: 1px; height: 2.5rem; background: rgba(247,244,239,0.12); align-self: center; }
+.intel-stat-div { width: 1px; height: 2.5rem; background: rgba(27,27,27,0.12); align-self: center; }
 
 .intel-main {
   max-width: 900px;
@@ -1432,14 +1433,15 @@ body {
   border-radius: 3px;
   border: 1px solid;
 }
-.legal-proc-conviction   { background: rgba(138,26,26,0.08); color: var(--unverified); border-color: var(--unverified-border); }
-.legal-proc-settlement   { background: rgba(26,92,138,0.08); color: var(--corroborated); border-color: var(--corroborated-border); }
-.legal-proc-immunity     { background: rgba(138,90,26,0.08); color: var(--indicated); border-color: var(--indicated-border); }
-.legal-proc-investigation { background: rgba(26,107,60,0.08); color: var(--confirmed); border-color: var(--confirmed-border); }
-.legal-proc-civil        { background: rgba(26,92,138,0.08); color: var(--corroborated); border-color: var(--corroborated-border); }
-.legal-proc-regulatory   { background: rgba(26,26,26,0.06); color: var(--text-secondary); border-color: var(--border-strong); }
-.legal-proc-arrest       { background: rgba(138,26,26,0.12); color: var(--unverified); border-color: var(--unverified-border); }
-.legal-proc-other        { background: rgba(26,26,26,0.06); color: var(--text-secondary); border-color: var(--border-strong); }
+.legal-proc-criminal_conviction { background: rgba(138,26,26,0.08); color: var(--unverified); border-color: var(--unverified-border); }
+.legal-proc-criminal_charge     { background: rgba(138,26,26,0.12); color: var(--unverified); border-color: var(--unverified-border); }
+.legal-proc-civil_lawsuit       { background: rgba(26,92,138,0.08); color: var(--corroborated); border-color: var(--corroborated-border); }
+.legal-proc-civil_settlement    { background: rgba(26,92,138,0.08); color: var(--corroborated); border-color: var(--corroborated-border); }
+.legal-proc-named_co_conspirator { background: rgba(138,90,26,0.08); color: var(--indicated); border-color: var(--indicated-border); }
+.legal-proc-investigation       { background: rgba(26,107,60,0.08); color: var(--confirmed); border-color: var(--confirmed-border); }
+.legal-proc-regulatory_action   { background: rgba(26,26,26,0.06); color: var(--text-secondary); border-color: var(--border-strong); }
+.legal-proc-congressional_inquiry { background: rgba(26,92,138,0.06); color: var(--corroborated); border-color: var(--corroborated-border); }
+.legal-proc-other               { background: rgba(26,26,26,0.06); color: var(--text-secondary); border-color: var(--border-strong); }
 
 .legal-card-title {
   font-family: 'neue-haas-grotesk-display', sans-serif;
@@ -1518,7 +1520,7 @@ body {
     <div class="topbar-right">
       <div style="display:flex;align-items:center;gap:0.4rem;">
         <div class="status-dot"></div>
-        <span class="status-text">141 profiles indexed</span>
+        <span class="status-text" id="profileCount">139 profiles indexed</span>
       </div>
     </div>
   </header>
@@ -1565,7 +1567,7 @@ body {
     <div class="tab-panel active" id="tabProfiles">
       <div class="landing">
         <div class="landing-title">Search the<br>Epstein DOJ Database</div>
-        <div class="landing-sub">141 individuals indexed from the Epstein archive and pilot logbooks. Search by name to view profiles, flight history, connection analysis, and power index.</div>
+        <div class="landing-sub">139 individuals indexed from the Epstein archive and pilot logbooks. Search by name to view profiles, flight history, connection analysis, and power index.</div>
         <div class="landing-suggestions">
           <span class="suggestion-chip" onclick="doSearch('Lesley Groff')">Lesley Groff</span>
           <span class="suggestion-chip" onclick="doSearch('Ghislaine Maxwell')">Ghislaine Maxwell</span>
@@ -1805,9 +1807,9 @@ body {
         <div class="doc-filter-bar">
           <button class="doc-filter-btn active" data-ltype="all" onclick="legalFilter(this,'all')">All</button>
           <button class="doc-filter-btn" data-ltype="active" onclick="legalFilter(this,'active')">Active / Ongoing</button>
-          <button class="doc-filter-btn" data-ltype="conviction" onclick="legalFilter(this,'conviction')">Convictions</button>
-          <button class="doc-filter-btn" data-ltype="settlement" onclick="legalFilter(this,'settlement')">Settlements</button>
-          <button class="doc-filter-btn" data-ltype="immunity" onclick="legalFilter(this,'immunity')">Immunity Grants</button>
+          <button class="doc-filter-btn" data-ltype="conviction" onclick="legalFilter(this,'conviction')">Criminal</button>
+          <button class="doc-filter-btn" data-ltype="settlement" onclick="legalFilter(this,'settlement')">Civil / Settlement</button>
+          <button class="doc-filter-btn" data-ltype="immunity" onclick="legalFilter(this,'immunity')">Co-Conspirators</button>
           <button class="doc-filter-btn" data-ltype="investigation" onclick="legalFilter(this,'investigation')">Investigations</button>
         </div>
         <div id="legalGrid" class="legal-grid">
@@ -1920,6 +1922,12 @@ body {
 const SUPABASE_URL = 'https://gljuffkufkggynlaoyim.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdsanVmZmt1ZmtnZ3lubGFveWltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE5NDQxNzAsImV4cCI6MjA4NzUyMDE3MH0.TYRbhgiWOFp-Zc5LysfySLR8NeVQdZ9_zh6TpYyNQJE';
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Live profile count
+(async () => {
+  const { count } = await db.from('persons').select('*', { count: 'exact', head: true });
+  if (count) document.getElementById('profileCount').textContent = count.toLocaleString() + ' profiles indexed';
+})();
 
 // ── THEME ──
 // ── MOBILE DRAWER ──
@@ -2194,11 +2202,12 @@ async function fetchFlights(personId, personName, conf, upgradeGapNote, emailCou
     const flightIds = fps.map(fp => fp.flight_id);
 
     // Fetch flights + all co-passengers in parallel
-    const [{ data: flights }, { data: allFPs }, { data: allPersons }] = await Promise.all([
-      db.from('flights').select('id,flight_date,tail_number,origin,destination,notes').in('id', flightIds).order('flight_date',{ascending:true}),
-      db.from('flight_passengers').select('flight_id,person_id,name_as_logged,is_identified,is_redacted').in('flight_id', flightIds),
-      db.from('persons').select('id,full_name,category,relationship_to_epstein').not('id','eq',personId),
-    ]);
+    const _fR = await db.from('flights').select('id,flight_date,tail_number,origin,destination,notes').in('id', flightIds).order('flight_date',{ascending:true});
+    const flights = _fR.data || [];
+    const _fpR = await db.from('flight_passengers').select('flight_id,person_id,name_as_logged,is_identified,is_redacted').in('flight_id', flightIds);
+    const allFPs = _fpR.data || [];
+    const _pR = await db.from('persons').select('id,full_name,category,relationship_to_epstein').not('id','eq',personId);
+    const allPersons = _pR.data || [];
 
     document.getElementById('statYearsActive') && (document.getElementById('statYearsActive').textContent = (flights||[]).length > 0 ? (() => { const yrs = [...new Set((flights||[]).map(f=>f.flight_date.substring(0,4)))]; return yrs.length > 1 ? (Math.max(...yrs)-Math.min(...yrs)+1) : 1; })() : '—');
 
@@ -2427,16 +2436,15 @@ async function showFlightBrowser() {
     const isIsland = code => ['TIST','MYEF','MBPV','TNCM','MYNN'].includes(code);
     const fmt = d => new Date(d+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
 
-    // Load flights + all passengers in parallel
-    const [flightsRes, fpsRes, personsRes] = await Promise.all([
-      db.from('flights').select('id,flight_date,tail_number,aircraft_type,origin,destination,notes').order('flight_date',{ascending:true}),
-      db.from('flight_passengers').select('flight_id,person_id,name_as_logged,is_identified,is_redacted'),
-      db.from('persons').select('id,full_name,category,relationship_to_epstein'),
-    ]);
-
+    // Load flights + all passengers sequentially to avoid Headers clone error
+    const flightsRes = await db.from('flights').select('id,flight_date,tail_number,aircraft_type,origin,destination,notes').order('flight_date',{ascending:true});
     if (flightsRes.error) throw flightsRes.error;
     const flights = flightsRes.data || [];
+
+    const fpsRes = await db.from('flight_passengers').select('flight_id,person_id,name_as_logged,is_identified,is_redacted');
     const allFPs = fpsRes.data || [];
+
+    const personsRes = await db.from('persons').select('id,full_name,category,relationship_to_epstein');
     const allPersons = personsRes.data || [];
 
     // Build lookup maps
@@ -2552,7 +2560,7 @@ function showLanding() {
   document.getElementById('tabProfiles').innerHTML = `
     <div class="landing">
       <div class="landing-title">Search the<br>Epstein DOJ Database</div>
-      <div class="landing-sub">141 individuals indexed from the Epstein archive and pilot logbooks. Search by name to view profiles, flight history, connection analysis, and power index.</div>
+      <div class="landing-sub">139 individuals indexed from the Epstein archive and pilot logbooks. Search by name to view profiles, flight history, connection analysis, and power index.</div>
       <div class="landing-suggestions">
         <span class="suggestion-chip" onclick="doSearch('Lesley Groff')">Lesley Groff</span>
         <span class="suggestion-chip" onclick="doSearch('Ghislaine Maxwell')">Ghislaine Maxwell</span>
@@ -2594,14 +2602,12 @@ function clearRightPanel() {
 // ── FLIGHT MANIFESTS sidebar ──
 async function showFlightSidebarStats() {
   try {
-    const [flightsRes, fpsRes, personsRes] = await Promise.all([
-      db.from('flights').select('id,flight_date,origin,destination,tail_number'),
-      db.from('flight_passengers').select('flight_id,person_id'),
-      db.from('persons').select('id,full_name,category,relationship_to_epstein').eq('is_victim',false),
-    ]);
-    const flights = flightsRes.data || [];
-    const fps = fpsRes.data || [];
-    const persons = personsRes.data || [];
+    const _sfR = await db.from('flights').select('id,flight_date,origin,destination,tail_number');
+    const flights = _sfR.data || [];
+    const _sfpR = await db.from('flight_passengers').select('flight_id,person_id');
+    const fps = _sfpR.data || [];
+    const _spR = await db.from('persons').select('id,full_name,category,relationship_to_epstein').eq('is_victim',false);
+    const persons = _spR.data || [];
     const pById = {}; persons.forEach(p => pById[p.id] = p);
 
     // Archive stats
@@ -3350,9 +3356,15 @@ async function tlLoadPerson(name) {
 // ══════════════════════════════════════════════════════════
 
 const PROC_TYPE_LABELS = {
-  conviction: 'Conviction', settlement: 'Settlement', immunity: 'Immunity Grant',
-  investigation: 'Investigation', civil: 'Civil Action', regulatory: 'Regulatory Action',
-  arrest: 'Arrest', other: 'Other'
+  criminal_conviction: 'Criminal Conviction',
+  criminal_charge: 'Criminal Charge',
+  civil_lawsuit: 'Civil Lawsuit',
+  civil_settlement: 'Civil Settlement',
+  named_co_conspirator: 'Named Co-Conspirator',
+  investigation: 'Investigation',
+  regulatory_action: 'Regulatory Action',
+  congressional_inquiry: 'Congressional Inquiry',
+  other: 'Other'
 };
 
 const STATUS_COLORS = {
@@ -3389,10 +3401,10 @@ function legalFilter(btn, ltype) {
   legalCurrentFilter = ltype;
   const filtered = ltype === 'all' ? allLegalProceedings :
     ltype === 'active' ? allLegalProceedings.filter(p => ['active','ongoing','open'].includes((p.status||'').toLowerCase())) :
-    ltype === 'conviction' ? allLegalProceedings.filter(p => p.proceeding_type === 'conviction') :
-    ltype === 'settlement' ? allLegalProceedings.filter(p => ['settlement','civil'].includes(p.proceeding_type)) :
-    ltype === 'immunity' ? allLegalProceedings.filter(p => p.proceeding_type === 'immunity') :
-    ltype === 'investigation' ? allLegalProceedings.filter(p => ['investigation','regulatory'].includes(p.proceeding_type)) :
+    ltype === 'conviction' ? allLegalProceedings.filter(p => ['criminal_conviction','criminal_charge'].includes(p.proceeding_type)) :
+    ltype === 'settlement' ? allLegalProceedings.filter(p => ['civil_lawsuit','civil_settlement'].includes(p.proceeding_type)) :
+    ltype === 'immunity' ? allLegalProceedings.filter(p => p.proceeding_type === 'named_co_conspirator') :
+    ltype === 'investigation' ? allLegalProceedings.filter(p => ['investigation','regulatory_action','congressional_inquiry'].includes(p.proceeding_type)) :
     allLegalProceedings;
   renderLegalGrid(filtered);
 }
