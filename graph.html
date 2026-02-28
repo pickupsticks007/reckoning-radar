@@ -3,20 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Network Graph — The Reckoning Radar</title>
+<title>Network Graph — The Reckoning Radar | Epstein Files Intelligence</title>
+<meta name="description" content="Interactive network graph of documented relationships between 123 individuals in the Epstein files. Sourced from DOJ primary documents.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://www.thereckoningradar.com/graph.html">
+<meta property="og:title" content="Network Graph — The Reckoning Radar">
+<meta property="og:description" content="Interactive network visualization of the Epstein files. 123 individuals, sourced from DOJ documents.">
+<meta property="og:image" content="https://www.thereckoningradar.com/og-image.png">
+<meta property="og:url" content="https://www.thereckoningradar.com/graph.html">
+<meta name="twitter:card" content="summary_large_image">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link href="https://use.typekit.net/zzw7dfl.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root {
-  --bg: #efeff2;
-  --bg-secondary: #EDE9E1;
-  --surface: #FFFFFF;
+  --bg: #f9f9f6;
+  --bg-secondary: #f9f9f6;
+  --surface: #f9f9f6;
   --border: rgba(0,0,0,0.08);
   --border-strong: rgba(0,0,0,0.14);
-  --text-primary:   #474543;
-  --text-secondary: #474543;
-  --text-tertiary:  #474543;
+  --text-primary:   #1B1B1B;
+  --text-secondary: #3a3a3a;
+  --text-tertiary:  #6a6a6a;
   --accent: #1A1A1A;
 }
 
@@ -39,7 +48,7 @@ body {
   justify-content: space-between;
   padding: 0 1.5rem;
   height: 52px;
-  background: #f0ede7;
+  background: #f9f9f6;
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
   z-index: 100;
@@ -66,6 +75,7 @@ body {
   letter-spacing: -0.02em;
   color: var(--text-primary);
   white-space: nowrap;
+  cursor: pointer;
 }
 .topbar-right {
   display: flex;
@@ -105,12 +115,16 @@ body {
 /* CONTROLS SIDEBAR */
 .controls {
   width: 220px;
-  background: #f0ede7;
+  background: #f9f9f6;
   border-right: 1px solid var(--border);
-  padding: 1.1rem 0.75rem;
+  padding: 1.5rem 0.75rem 1.1rem;
   overflow-y: auto;
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
+.controls > * { width: 100%; }
 .ctrl-title {
   font-family: 'Montserrat', sans-serif;
   font-weight: 600;
@@ -121,6 +135,7 @@ body {
   margin-bottom: 0.75rem;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid var(--border);
+  text-align: center;
 }
 .legend-item {
   display: flex;
@@ -185,7 +200,7 @@ body {
   flex: 1;
   position: relative;
   overflow: hidden;
-  background: #f4f1ed;
+  background: #f9f9f6;
 }
 
 #graph-svg {
@@ -239,7 +254,7 @@ body {
   right: 0;
   width: 300px;
   height: 100%;
-  background: #f4f1ed;
+  background: #f9f9f6;
   border-left: 1px solid var(--border-strong);
   transform: translateX(100%);
   transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
@@ -322,7 +337,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #f4f1ed;
+  background: #f9f9f6;
   z-index: 300;
   flex-direction: column;
   gap: 1rem;
@@ -347,18 +362,22 @@ body {
 }
 
 /* hamburger */
+.topbar-right { display: none; }
 .mobile-nav-btn {
-  display: none;
+  display: flex;
   background: none;
   border: 1px solid var(--border-strong);
-  border-radius: 4px;
-  color: var(--text-tertiary);
+  border-radius: 6px;
+  color: var(--text-primary);
   font-size: 1rem;
-  width: 32px; height: 32px;
+  width: 36px; height: 36px;
   cursor: pointer;
   align-items: center; justify-content: center;
   flex-shrink: 0;
+  flex-direction: column;
+  gap: 5px;
 }
+.mobile-nav-btn span { display:block; width:16px; height:1.5px; background:var(--text-primary); border-radius:2px; }
 .mobile-nav-drawer {
   display: none;
   position: fixed;
@@ -417,8 +436,6 @@ body {
 @media (max-width: 600px) {
   .controls { display: none; }
   .profile-panel { width: 100%; }
-  .topbar-right { display: none; }
-  .mobile-nav-btn { display: flex; }
   .page-title { display: none; }
 }
 </style>
@@ -431,20 +448,23 @@ body {
     <span class="logo-main">Reckoning Radar</span>
   </div></a>
   <span class="page-title">Network Graph</span>
-  <button class="mobile-nav-btn" onclick="openMobileNav()" aria-label="Menu">☰</button>
+  <button class="mobile-nav-btn" onclick="openMobileNav()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
   <div class="topbar-right">
     <a href="https://www.thereckoningradar.com" class="back-btn">Profiles</a>
     <a href="graph.html" class="back-btn" style="color:var(--text-primary);border-color:var(--border-strong);">Network</a>
     <a href="https://www.thereckoningradar.com?tab=unidentified" class="back-btn">Unidentified</a>
     <a href="https://www.thereckoningradar.com?tab=connections" class="back-btn">Connections</a>
     <a href="https://www.thereckoningradar.com?tab=locations" class="back-btn">Location Intel</a>
+    <a href="about.html" class="back-btn">About</a>
   </div>
 </div>
 
 <div class="layout">
   <!-- CONTROLS -->
   <div class="controls">
-    <div class="ctrl-title">Node Color</div>
+    <div class="ctrl-title">Category</div>
     <div id="legend"></div>
 
     <div class="ctrl-sep"></div>
@@ -768,7 +788,7 @@ function buildGraph(nodes, edges) {
     .attr('font-family', 'Montserrat, sans-serif')
     .attr('font-size', d => {
       const r = getR(d);
-      return r > 18 ? '13px' : r > 12 ? '12px' : '11px';
+      return r > 18 ? '16px' : r > 12 ? '15px' : '13px';
     })
     .attr('font-weight', d => d.power_public_profile > 70 ? '600' : '400')
     .attr('fill', 'var(--text-primary)')
@@ -1067,6 +1087,7 @@ window.addEventListener('resize', () => {
     <a href="https://www.thereckoningradar.com?tab=unidentified" class="drawer-nav-link">Unidentified</a>
     <a href="https://www.thereckoningradar.com?tab=connections" class="drawer-nav-link">Connections</a>
     <a href="https://www.thereckoningradar.com?tab=locations" class="drawer-nav-link">Location Intel</a>
+    <a href="about.html" class="drawer-nav-link">About</a>
   </div>
 </div>
 
