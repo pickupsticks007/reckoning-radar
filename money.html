@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Money Map — The Reckoning Radar</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link href="https://use.typekit.net/zzw7dfl.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --bg: #f9f9f6;
+  --surface: #f9f9f6;
+  --border: rgba(0,0,0,0.08);
+  --border-strong: rgba(0,0,0,0.14);
+  --text-primary: #1B1B1B;
+  --text-secondary: #3a3a3a;
+  --text-tertiary: #6b6b6b;
+  --accent-dim: #e0e0dd;
+  --money-gold:   #660099;
+  --money-red:    #ff0033;
+  --money-green:  #009966;
+  --money-blue:   #ff9933;
+  --money-purple: #3333ff;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Montserrat',sans-serif; background:var(--bg); color:var(--text-primary); height:100vh; overflow:hidden; display:flex; flex-direction:column; }
+
+/* TOPBAR */
+.topbar { display:flex; align-items:center; justify-content:space-between; padding:0 1.5rem; height:52px; background:var(--bg); border-bottom:1px solid var(--border); flex-shrink:0; z-index:100; }
+.logo-group { display:flex; flex-direction:column; align-items:flex-start; line-height:1; gap:1px; }
+.logo-the { font-family:'neue-haas-grotesk-display',sans-serif; font-weight:700; font-size:0.58rem; letter-spacing:0.25em; text-transform:uppercase; color:var(--text-primary); }
+.logo-main { font-family:'neue-haas-grotesk-display',sans-serif; font-weight:700; font-size:1.3rem; letter-spacing:-0.02em; color:var(--text-primary); white-space:nowrap; }
+.topbar-center { font-family:'Montserrat',sans-serif; font-weight:400; font-size:0.88rem; letter-spacing:0.28em; color:var(--text-tertiary); text-transform:uppercase; }
+.hamburger-btn { background:none; border:1px solid var(--border-strong); border-radius:6px; width:36px; height:36px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; cursor:pointer; transition:all 0.15s; }
+.hamburger-btn:hover { background:var(--accent-dim); border-color:var(--text-primary); }
+.hamburger-btn span { display:block; width:16px; height:1.5px; background:var(--text-primary); border-radius:2px; }
+
+/* DRAWER */
+.nav-drawer { display:none; position:fixed; inset:0; z-index:500; }
+.nav-drawer.open { display:block; }
+.drawer-overlay { position:absolute; inset:0; background:rgba(0,0,0,0.35); }
+.drawer-panel { position:absolute; top:0; right:0; width:240px; height:100%; background:var(--surface); border-left:1px solid var(--border-strong); padding:1.25rem 1rem; display:flex; flex-direction:column; gap:0; box-shadow:-4px 0 24px rgba(0,0,0,0.08); }
+.drawer-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.75rem; padding-bottom:1rem; border-bottom:1px solid var(--border); }
+.drawer-title { font-family:'Montserrat',sans-serif; font-size:0.6rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--text-tertiary); }
+.drawer-close-btn { background:none; border:none; cursor:pointer; color:var(--text-tertiary); font-size:1.1rem; line-height:1; }
+.drawer-section-label { font-family:'Montserrat',sans-serif; font-size:0.6rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-tertiary); padding:0 0.5rem; margin:1rem 0 0.4rem; }
+.drawer-nav-link { font-family:'Montserrat',sans-serif; font-weight:600; font-size:0.82rem; color:var(--text-secondary); text-decoration:none; padding:0.45rem 0.5rem; border-radius:6px; display:block; transition:color 0.15s,background 0.15s; margin-bottom:0.1rem; }
+.drawer-nav-link:hover { background:var(--accent-dim); color:var(--text-primary); }
+.drawer-nav-link.active { background:rgba(26,26,26,0.09); color:var(--text-primary); border-left:2px solid var(--text-primary); padding-left:calc(0.5rem - 2px); }
+
+/* LAYOUT */
+.layout { display:flex; flex:1; overflow:hidden; }
+
+/* LEFT PANEL */
+.left-panel { width:268px; flex-shrink:0; border-right:1px solid var(--border); display:flex; flex-direction:column; overflow:hidden; background:var(--surface); }
+.panel-section { padding:1.6rem 1.1rem 0.8rem; border-bottom:1px solid var(--border); }
+.panel-label {
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 0.68rem !important;
+  color: var(--text-tertiary) !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  margin-bottom: 0.6rem;
+  padding: 0 0.25rem;
+  text-align: center;
+}
+.filter-btn {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.55rem 0.5rem;
+  border-radius: 6px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 0.82rem !important;
+  letter-spacing: 0.01em !important;
+  color: var(--text-secondary);
+  text-align: left;
+  transition: background 0.12s;
+  margin-bottom: 0.3rem;
+}
+.filter-btn:hover { background: var(--accent-dim); color: var(--text-primary); }
+.filter-btn.active {
+  background: rgba(26,26,26,0.09);
+  color: var(--text-primary);
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 0.82rem !important;
+  border-left: 2px solid var(--text-primary);
+  padding-left: calc(0.5rem - 2px);
+}
+.filter-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+.penalty-list { padding:0.6rem 0 0; display:flex; flex-direction:column; gap:0.55rem; }
+.penalty-row { display:flex; justify-content:space-between; align-items:baseline; padding:0.45rem 0; }
+.penalty-label { font-size:0.82rem; color:var(--text-tertiary); letter-spacing:0.01em; max-width:160px; line-height:1.4; font-family:"Montserrat",sans-serif; font-weight:600; white-space:nowrap; }
+.penalty-amount { font-family:'Montserrat',sans-serif; font-size:0.82rem; font-weight:700; color:var(--money-red); white-space:nowrap; }
+.penalty-total { border-top:1px solid var(--border); padding-top:0.5rem; margin-top:0.1rem; }
+
+.detail-panel { flex:1; overflow-y:auto; padding:1rem 1.1rem; }
+.detail-empty { color:var(--text-tertiary); font-size:0.88rem; letter-spacing:0.01em; line-height:1.7; font-family:"Montserrat",sans-serif; font-weight:600; }
+.detail-name { font-family:'neue-haas-grotesk-display',sans-serif; font-size:1.05rem; font-weight:700; color:var(--text-primary); margin-bottom:0.2rem; }
+.detail-role { font-size:0.62rem; letter-spacing:0.06em; color:var(--text-tertiary); text-transform:uppercase; margin-bottom:0.75rem; }
+.detail-section-head { font-size:0.55rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-tertiary); margin:0.85rem 0 0.35rem; border-top:1px solid var(--border); padding-top:0.7rem; }
+.detail-body { font-size:0.73rem; line-height:1.65; color:var(--text-secondary); }
+.detail-link { display:block; margin-top:0.85rem; font-size:0.65rem; font-weight:600; letter-spacing:0.06em; color:var(--text-primary); text-decoration:none; border:1px solid var(--border-strong); padding:6px 10px; border-radius:4px; text-align:center; transition:background 0.12s; }
+.detail-link:hover { background:var(--accent-dim); }
+.conn-row { display:flex; align-items:center; gap:0.45rem; padding:0.28rem 0; font-size:0.71rem; color:var(--text-secondary); border-bottom:1px solid var(--border); }
+.conn-row:last-child { border-bottom:none; }
+.conn-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+.conn-type { font-size:0.57rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--text-tertiary); margin-left:auto; flex-shrink:0; }
+.penalty-chip { display:inline-flex; align-items:center; gap:0.3rem; background:rgba(255,0,51,0.07); border:1px solid rgba(255,0,51,0.18); border-radius:4px; padding:4px 8px; font-size:0.63rem; font-weight:700; color:var(--money-red); letter-spacing:0.03em; margin-bottom:0.45rem; line-height:1.3; }
+
+/* CANVAS */
+.canvas-wrap { flex:1; position:relative; overflow:hidden; }
+#moneyCanvas { width:100%; height:100%; }
+.canvas-overlay { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:0.75rem; }
+.loading-spinner { width:24px; height:24px; border:2px solid var(--border-strong); border-top-color:var(--text-primary); border-radius:50%; animation:spin 0.8s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.loading-label { font-size:0.65rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-tertiary); }
+
+/* LEGEND */
+.legend { position:absolute; bottom:1.25rem; left:1.25rem; background:rgba(249,249,246,0.92); border:1px solid var(--border-strong); border-radius:8px; padding:1rem 1.2rem; backdrop-filter:blur(4px); min-width:220px; }
+.legend-title { font-family:'Montserrat',sans-serif; font-size:0.68rem; font-weight:400; letter-spacing:0.12em; text-transform:uppercase; color:var(--text-tertiary); margin-bottom:0.75rem; }
+.legend-row { display:flex; align-items:center; gap:0.65rem; font-family:'Montserrat',sans-serif; font-size:0.82rem; font-weight:600; color:var(--text-secondary); margin-bottom:0.45rem; }
+.legend-swatch { width:24px; height:3px; flex-shrink:0; border-radius:2px; }
+.legend-note { font-family:'Montserrat',sans-serif; font-size:0.72rem; font-weight:400; color:var(--text-tertiary); line-height:1.6; max-width:200px; margin-top:0.65rem; }
+
+/* TOOLTIP */
+.mm-tooltip { position:absolute; background:rgba(27,27,27,0.92); color:#fff; border-radius:5px; padding:0.48rem 0.72rem; font-size:0.68rem; pointer-events:none; opacity:0; transition:opacity 0.12s; max-width:210px; line-height:1.5; z-index:200; }
+.mm-tooltip.visible { opacity:1; }
+.tt-name { font-weight:700; font-size:0.72rem; }
+.tt-sub { opacity:0.65; font-size:0.62rem; letter-spacing:0.04em; }
+
+/* ZOOM */
+.zoom-controls { position:absolute; bottom:1.25rem; right:1.25rem; display:flex; flex-direction:column; gap:0.35rem; }
+.zoom-btn { width:32px; height:32px; background:var(--surface); border:1px solid var(--border-strong); border-radius:4px; font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--text-primary); transition:background 0.12s; }
+.zoom-btn:hover { background:var(--accent-dim); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo-group">
+    <span class="logo-the">The</span>
+    <span class="logo-main">Reckoning Radar</span>
+  </div>
+  <div class="topbar-center">Money Map</div>
+  <div>
+    <button class="hamburger-btn" onclick="openDrawer()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</div>
+
+<div class="nav-drawer" id="navDrawer">
+  <div class="drawer-overlay" onclick="closeDrawer()"></div>
+  <div class="drawer-panel">
+    <div class="drawer-header">
+      <span class="drawer-title">Navigate</span>
+      <button class="drawer-close-btn" onclick="closeDrawer()">✕</button>
+    </div>
+    <div class="drawer-section-label">Query Type</div>
+    <a href="https://www.thereckoningradar.com" class="drawer-nav-link">Person Profile</a>
+    <a href="graph.html" class="drawer-nav-link">Network Graph</a>
+    <a href="money.html" class="drawer-nav-link active">Money Map</a>
+    <a href="https://www.thereckoningradar.com?tab=flights" class="drawer-nav-link">Flight Manifests</a>
+    <a href="https://www.thereckoningradar.com?tab=unidentified" class="drawer-nav-link">Unidentified</a>
+    <a href="https://www.thereckoningradar.com?tab=connections" class="drawer-nav-link">Connections</a>
+    <div class="drawer-section-label">Research Tools</div>
+    <a href="https://www.thereckoningradar.com?tab=documents" class="drawer-nav-link">Document Library</a>
+    <a href="https://www.thereckoningradar.com?tab=timeline" class="drawer-nav-link">Evidence Timeline</a>
+    <a href="https://www.thereckoningradar.com?tab=legal" class="drawer-nav-link">Legal Tracker</a>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="left-panel">
+
+    <div class="panel-section">
+      <div class="panel-label">Connection Type</div>
+      <button class="filter-btn active" onclick="setFilter('all',this)">
+        <span class="filter-dot" style="background:#009966"></span>All Financial Ties
+      </button>
+      <button class="filter-btn" onclick="setFilter('financial_advisor',this)">
+        <span class="filter-dot" style="background:#660099"></span>Financial Advisors
+      </button>
+      <button class="filter-btn" onclick="setFilter('banker_client',this)">
+        <span class="filter-dot" style="background:#ff9933"></span>Banker / Client
+      </button>
+      <button class="filter-btn" onclick="setFilter('funder_recipient',this)">
+        <span class="filter-dot" style="background:#ff0033"></span>Funder / Recipient
+      </button>
+      <button class="filter-btn" onclick="setFilter('business_partner',this)">
+        <span class="filter-dot" style="background:#3333ff"></span>Business Partners
+      </button>
+      <button class="filter-btn" onclick="setFilter('legal_counsel',this)">
+        <span class="filter-dot" style="background:#ffff33;border:1px solid rgba(0,0,0,0.15)"></span>Legal Counsel
+      </button>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-label">Documented Penalties</div>
+      <div class="penalty-list">
+        <div class="penalty-row">
+          <span class="penalty-label">USVI v. Epstein Estate</span>
+          <span class="penalty-amount">$105M</span>
+        </div>
+        <div class="penalty-row">
+          <span class="penalty-label">Rothschild DOJ NPA</span>
+          <span class="penalty-amount">$45.2M</span>
+        </div>
+        <div class="penalty-row">
+          <span class="penalty-label">Giuffre v. Prince Andrew</span>
+          <span class="penalty-amount">$16M</span>
+        </div>
+        <div class="penalty-row penalty-total">
+          <span class="penalty-label" style="color:var(--text-primary);font-weight:600">Documented total</span>
+          <span class="penalty-amount" style="color:var(--text-primary)">$166.2M</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-panel" id="detailPanel">
+      <div class="detail-empty">Click any node to view financial profile and connections</div>
+    </div>
+  </div>
+
+  <div class="canvas-wrap">
+    <svg id="moneyCanvas"></svg>
+    <div class="canvas-overlay" id="loadingOverlay">
+      <div class="loading-spinner"></div>
+      <div class="loading-label">Loading financial network…</div>
+    </div>
+    <div class="legend">
+      <div class="legend-title">Connection type</div>
+      <div class="legend-row"><div class="legend-swatch" style="background:#660099"></div>Financial advisor</div>
+      <div class="legend-row"><div class="legend-swatch" style="background:#ff9933"></div>Banker / Client</div>
+      <div class="legend-row"><div class="legend-swatch" style="background:#ff0033"></div>Funder / Recipient</div>
+      <div class="legend-row"><div class="legend-swatch" style="background:#3333ff"></div>Business partner</div>
+      <div class="legend-row"><div class="legend-swatch" style="background:#ffff33;border:1px solid rgba(0,0,0,0.12);height:2.5px"></div>Legal Counsel</div>
+      <div class="legend-note" style="margin-top:0.5rem;">Dashed edge = corroborated (not confirmed). Red ring = financial penalty on record. Node size = power index.</div>
+    </div>
+    <div class="zoom-controls">
+      <button class="zoom-btn" onclick="zoomIn()">+</button>
+      <button class="zoom-btn" onclick="zoomReset()">⊙</button>
+      <button class="zoom-btn" onclick="zoomOut()">−</button>
+    </div>
+    <div class="mm-tooltip" id="mmTooltip"></div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://gljuffkufkggynlaoyim.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdsanVmZmt1ZmtnZ3lubGFveWltIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDA2NjMwMjYsImV4cCI6MjA1NjIzOTAyNn0.SdOmMjPxCuqaqt2XMzJnJJvpC1hG5fQHxbMONMJXX2I';
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const FIN_TYPES = ['financial_advisor','banker_client','funder_recipient','business_partner','legal_counsel'];
+const EDGE_HEX = { financial_advisor:'#660099', banker_client:'#ff9933', funder_recipient:'#ff0033', business_partner:'#3333ff', legal_counsel:'#ffff33' };
+const EDGE_LABELS = { financial_advisor:'Financial Advisor', banker_client:'Banker / Client', funder_recipient:'Funder / Recipient', business_partner:'Business Partner', legal_counsel:'Legal Counsel' };
+const CAT_COLORS = { finance:'#660099', politics:'#ff9933', technology:'#009966', legal:'#ff0033', academia:'#3333ff', entertainment:'#6b3a1a', royalty:'#2b1700', media:'#1a4a4a', other:'#555' };
+
+let allNodes=[], allEdges=[], legalByPerson={}, activeFilter='all';
+let svg, g, zoomBehavior, simulation;
+
+function openDrawer(){ document.getElementById('navDrawer').classList.add('open'); }
+function closeDrawer(){ document.getElementById('navDrawer').classList.remove('open'); }
+
+function setFilter(type, btn){
+  activeFilter = type;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  updateGraph();
+}
+
+async function loadData(){
+  const relRes = await db.from('person_relationships').select('*').in('relationship_type', FIN_TYPES);
+  const persRes = await db.from('persons').select('id,full_name,category,relationship_to_epstein,power_public_profile,notes');
+  const legRes = await db.from('legal_proceedings').select('person_id,title,financial_penalty,proceeding_type,status,outcome,epstein_nexus');
+
+  const edges = relRes.data || [];
+  const persons = persRes.data || [];
+  const legal = legRes.data || [];
+
+  legal.forEach(lp => {
+    if (!legalByPerson[lp.person_id]) legalByPerson[lp.person_id] = [];
+    legalByPerson[lp.person_id].push(lp);
+  });
+
+  const relevantIds = new Set();
+  edges.forEach(e => { relevantIds.add(e.person_a_id); relevantIds.add(e.person_b_id); });
+  legal.filter(lp => lp.financial_penalty).forEach(lp => relevantIds.add(lp.person_id));
+
+  allNodes = persons.filter(p => relevantIds.has(p.id)).map(p => ({
+    ...p, radius: Math.max(7, Math.min(26, 7 + ((p.power_public_profile||20)/100)*19))
+  }));
+
+  allEdges = edges.map(e => ({
+    source: e.person_a_id, target: e.person_b_id,
+    type: e.relationship_type, confidence: e.confidence, notes: e.notes
+  }));
+
+  document.getElementById('loadingOverlay').style.display = 'none';
+  buildGraph();
+}
+
+function buildGraph(){
+  const wrap = document.querySelector('.canvas-wrap');
+  const W = wrap.clientWidth, H = wrap.clientHeight;
+  svg = d3.select('#moneyCanvas').attr('width',W).attr('height',H);
+  zoomBehavior = d3.zoom().scaleExtent([0.2,4]).on('zoom', e => g.attr('transform', e.transform));
+  svg.call(zoomBehavior);
+  g = svg.append('g');
+
+  // Arrow markers
+  const defs = svg.append('defs');
+  Object.entries(EDGE_HEX).forEach(([type, color]) => {
+    defs.append('marker')
+      .attr('id','arr-'+type).attr('viewBox','0 -5 10 10')
+      .attr('refX',20).attr('refY',0).attr('markerWidth',5).attr('markerHeight',5).attr('orient','auto')
+      .append('path').attr('d','M0,-5L10,0L0,5').attr('fill',color);
+  });
+
+  updateGraph();
+}
+
+function updateGraph(){
+  if (!g) return;
+  g.selectAll('*').remove();
+
+  const fedges = activeFilter === 'all' ? allEdges : allEdges.filter(e => e.type === activeFilter);
+  const activeIds = new Set();
+  fedges.forEach(e => {
+    activeIds.add(typeof e.source==='object'?e.source.id:e.source);
+    activeIds.add(typeof e.target==='object'?e.target.id:e.target);
+  });
+  // Also include nodes with financial penalties even if no visible edges
+  allNodes.filter(n => legalByPerson[n.id]?.some(lp=>lp.financial_penalty)).forEach(n => activeIds.add(n.id));
+
+  const fnodes = allNodes.filter(n => activeIds.has(n.id));
+  const wrap = document.querySelector('.canvas-wrap');
+  const W = wrap.clientWidth, H = wrap.clientHeight;
+
+  simulation = d3.forceSimulation(fnodes)
+    .force('link', d3.forceLink(fedges).id(d=>d.id).distance(d => 85+(d.source.radius||10)+(d.target.radius||10)).strength(0.45))
+    .force('charge', d3.forceManyBody().strength(-260))
+    .force('center', d3.forceCenter(W/2, H/2))
+    .force('collision', d3.forceCollide(d => d.radius+8));
+
+  // Links
+  const link = g.append('g').selectAll('line').data(fedges).join('line')
+    .attr('stroke', d => EDGE_HEX[d.type]||'#999')
+    .attr('stroke-width', d => d.confidence==='confirmed' ? 2 : 1.2)
+    .attr('stroke-dasharray', d => d.confidence==='confirmed' ? null : '5,4')
+    .attr('stroke-opacity', 0.65)
+    .attr('marker-end', d => `url(#arr-${d.type})`);
+
+  // Node groups
+  const nodeMap = {};
+  fnodes.forEach(n => nodeMap[n.id] = n);
+
+  const node = g.append('g').selectAll('g.node').data(fnodes, d=>d.id).join('g').attr('class','node')
+    .attr('cursor','pointer')
+    .call(d3.drag()
+      .on('start',(e,d)=>{ if(!e.active) simulation.alphaTarget(0.3).restart(); d.fx=d.x; d.fy=d.y; })
+      .on('drag', (e,d)=>{ d.fx=e.x; d.fy=e.y; })
+      .on('end',  (e,d)=>{ if(!e.active) simulation.alphaTarget(0); d.fx=null; d.fy=null; }))
+    .on('click',(e,d)=>{ e.stopPropagation(); selectNode(d, fedges, nodeMap); })
+    .on('mouseenter',(e,d)=>showTip(e,d))
+    .on('mousemove',moveTip)
+    .on('mouseleave',hideTip);
+
+  // Penalty halo (dashed red ring)
+  node.filter(d => legalByPerson[d.id]?.some(lp=>lp.financial_penalty))
+    .append('circle')
+    .attr('r', d => d.radius+5)
+    .attr('fill','none')
+    .attr('stroke','#ff0033')
+    .attr('stroke-width',1.5)
+    .attr('stroke-dasharray','3,2.5')
+    .attr('stroke-opacity',0.55);
+
+  node.append('circle')
+    .attr('r', d=>d.radius)
+    .attr('fill', d=>CAT_COLORS[d.category]||'#555')
+    .attr('fill-opacity', 0.82)
+    .attr('stroke','#fff')
+    .attr('stroke-width',1.5);
+
+  node.append('text')
+    .attr('text-anchor','middle')
+    .attr('dy', d=>d.radius+11)
+    .attr('font-family','Montserrat,sans-serif')
+    .attr('font-size', d=>d.radius>14?'9px':'8px')
+    .attr('font-weight','600')
+    .attr('fill','#1B1B1B')
+    .attr('fill-opacity',0.82)
+    .text(d=>shortName(d.full_name));
+
+  svg.on('click', ()=>{ clearDetail(); g.selectAll('circle').attr('stroke','#fff').attr('stroke-width',1.5); });
+
+  simulation.on('tick', ()=>{
+    link.attr('x1',d=>d.source.x).attr('y1',d=>d.source.y).attr('x2',d=>d.target.x).attr('y2',d=>d.target.y);
+    node.attr('transform', d=>`translate(${d.x},${d.y})`);
+  });
+}
+
+function shortName(name){
+  if (!name) return '';
+  const p = name.split(' ');
+  if (p.length<=2) return name;
+  return p[0]+' '+p[p.length-1];
+}
+
+function selectNode(d, fedges, nodeMap){
+  g.selectAll('circle').attr('stroke','#fff').attr('stroke-width',1.5);
+  g.selectAll('g.node').filter(n=>n.id===d.id).selectAll('circle').filter((c,i)=>i===1||i===0)
+    .each(function(c,i){ if(i===1||d3.select(this).attr('fill')) d3.select(this).attr('stroke','#1B1B1B').attr('stroke-width',2.5); });
+
+  const panel = document.getElementById('detailPanel');
+  const legal = legalByPerson[d.id] || [];
+  const penalties = legal.filter(lp=>lp.financial_penalty);
+
+  const myEdges = fedges.filter(e=>{
+    const s = typeof e.source==='object'?e.source.id:e.source;
+    const t = typeof e.target==='object'?e.target.id:e.target;
+    return s===d.id||t===d.id;
+  });
+
+  let html = `<div class="detail-name">${d.full_name}</div>
+  <div class="detail-role">${(d.category||'unknown').toUpperCase()} · ${relLabel(d.relationship_to_epstein)}</div>`;
+
+  penalties.forEach(lp=>{
+    html += `<div class="penalty-chip">⚖ ${fmt(lp.financial_penalty)}&ensp;${lp.title.length>42?lp.title.slice(0,42)+'…':lp.title}</div>`;
+  });
+
+  if (d.notes){
+    const clean = d.notes.replace(/\[jwiki:[^\]]+\]\s*/g,'').trim().slice(0,300);
+    html += `<div class="detail-section-head">Profile</div><div class="detail-body">${clean}${d.notes.length>300?'…':''}</div>`;
+  }
+
+  if (myEdges.length){
+    html += `<div class="detail-section-head">Financial Connections (${myEdges.length})</div>`;
+    myEdges.forEach(e=>{
+      const s = typeof e.source==='object'?e.source.id:e.source;
+      const t = typeof e.target==='object'?e.target.id:e.target;
+      const otherId = s===d.id?t:s;
+      const other = nodeMap[otherId];
+      if (!other) return;
+      html += `<div class="conn-row">
+        <span class="conn-dot" style="background:${EDGE_HEX[e.type]}"></span>
+        <span>${other.full_name}</span>
+        <span class="conn-type">${EDGE_LABELS[e.type]||e.type}</span>
+      </div>`;
+    });
+  }
+
+  if (legal.length){
+    html += `<div class="detail-section-head">Legal Proceedings</div>`;
+    legal.forEach(lp=>{
+      html += `<div class="detail-body" style="margin-bottom:0.45rem;">
+        <strong style="font-size:0.72rem">${lp.title}</strong><br>
+        <span style="color:var(--text-tertiary);font-size:0.65rem">${lp.status.replace(/_/g,' ').toUpperCase()}</span>
+        ${lp.financial_penalty?` · <span style="color:#ff0033;font-weight:700">${fmt(lp.financial_penalty)}</span>`:''}
+      </div>`;
+    });
+  }
+
+  html += `<a href="https://www.thereckoningradar.com?search=${encodeURIComponent(d.full_name)}" class="detail-link" target="_blank">View Full Profile →</a>`;
+  panel.innerHTML = html;
+}
+
+function clearDetail(){
+  document.getElementById('detailPanel').innerHTML = '<div class="detail-empty">Click any node to view financial profile and connections</div>';
+}
+
+function relLabel(rel){
+  const m={direct_contact:'Direct Contact',associate:'Associate',mentioned_only:'Mentioned',alleged_client:'Alleged Client',victim:'Victim / Survivor',employee:'Employee'};
+  return m[rel]||(rel||'Unknown').replace(/_/g,' ');
+}
+function fmt(n){
+  if (!n) return '';
+  if (n>=1e9) return '$'+(n/1e9).toFixed(1)+'B';
+  if (n>=1e6) return '$'+(n/1e6).toFixed(1)+'M';
+  return '$'+n.toLocaleString();
+}
+
+function showTip(e,d){
+  const tt = document.getElementById('mmTooltip');
+  const legal = legalByPerson[d.id]||[];
+  const pen = legal.find(lp=>lp.financial_penalty);
+  tt.innerHTML=`<div class="tt-name">${d.full_name}</div><div class="tt-sub">${(d.category||'').toUpperCase()}${pen?' · '+fmt(pen.financial_penalty)+' penalty':''}</div>`;
+  tt.classList.add('visible');
+  moveTip(e);
+}
+function moveTip(e){
+  const tt=document.getElementById('mmTooltip');
+  const r=document.querySelector('.canvas-wrap').getBoundingClientRect();
+  let x=e.clientX-r.left+14, y=e.clientY-r.top-10;
+  if(x+220>r.width) x=e.clientX-r.left-225;
+  tt.style.left=x+'px'; tt.style.top=y+'px';
+}
+function hideTip(){ document.getElementById('mmTooltip').classList.remove('visible'); }
+
+function zoomIn(){ svg.transition().call(zoomBehavior.scaleBy,1.4); }
+function zoomOut(){ svg.transition().call(zoomBehavior.scaleBy,0.7); }
+function zoomReset(){ svg.transition().call(zoomBehavior.transform,d3.zoomIdentity); }
+
+window.addEventListener('resize',()=>{
+  if(!svg) return;
+  const w=document.querySelector('.canvas-wrap');
+  svg.attr('width',w.clientWidth).attr('height',w.clientHeight);
+  if(simulation) simulation.force('center',d3.forceCenter(w.clientWidth/2,w.clientHeight/2)).alpha(0.3).restart();
+});
+
+loadData().catch(err=>{
+  document.getElementById('loadingOverlay').innerHTML=`<div class="loading-label" style="color:#ff0033">Error: ${err.message}</div>`;
+});
+</script>
+</body>
+</html>
