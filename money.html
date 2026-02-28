@@ -282,8 +282,13 @@ function setFilter(type, btn){
 
 async function loadData(){
   const relRes = await db.from('person_relationships').select('*').in('relationship_type', FIN_TYPES);
+  if (relRes.error) throw new Error('person_relationships: ' + relRes.error.message);
+
   const persRes = await db.from('persons').select('id,full_name,category,relationship_to_epstein,power_public_profile,notes');
+  if (persRes.error) throw new Error('persons: ' + persRes.error.message);
+
   const legRes = await db.from('legal_proceedings').select('person_id,title,financial_penalty,proceeding_type,status,outcome,epstein_nexus');
+  if (legRes.error) throw new Error('legal_proceedings: ' + legRes.error.message);
 
   const edges = relRes.data || [];
   const persons = persRes.data || [];
@@ -307,8 +312,8 @@ async function loadData(){
     type: e.relationship_type, confidence: e.confidence, notes: e.notes
   }));
 
-  if (!edges.length && !persons.length) {
-    document.getElementById('loadingOverlay').innerHTML = `<div class="loading-label" style="color:#ff0033">No data returned — check Supabase connection</div>`;
+  if (!persons.length) {
+    document.getElementById('loadingOverlay').innerHTML = `<div class="loading-label" style="color:#ff0033">No persons data returned (edges: ${edges.length})</div>`;
     return;
   }
 
