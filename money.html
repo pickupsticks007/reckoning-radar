@@ -16,7 +16,7 @@
   --border-strong: rgba(0,0,0,0.14);
   --text-primary: #1B1B1B;
   --text-secondary: #3a3a3a;
-  --text-tertiary: #6b6b6b;
+  --text-tertiary: #3a3a3a;
   --accent-dim: #e0e0dd;
   --money-gold:   #660099;
   --money-red:    #ff0033;
@@ -148,10 +148,10 @@ body { font-family:'Montserrat',sans-serif; background:var(--bg); color:var(--te
 <body>
 
 <div class="topbar">
-  <div class="logo-group">
+  <a href="https://www.thereckoningradar.com" class="logo-group" style="text-decoration:none;">
     <span class="logo-the">The</span>
     <span class="logo-main">Reckoning Radar</span>
-  </div>
+  </a>
   <div class="topbar-center">Money Map</div>
   <div>
     <button class="hamburger-btn" onclick="openDrawer()" aria-label="Menu">
@@ -365,7 +365,7 @@ function updateGraph(){
 
   simulation = d3.forceSimulation(fnodes)
     .force('link', d3.forceLink(fedges).id(d=>d.id).distance(d => 85+(d.source.radius||10)+(d.target.radius||10)).strength(0.45))
-    .force('charge', d3.forceManyBody().strength(-260))
+    .force('charge', d3.forceManyBody().strength(-320))
     .force('center', d3.forceCenter(W/2, H/2))
     .force('collision', d3.forceCollide(d => d.radius+8));
 
