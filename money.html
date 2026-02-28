@@ -307,8 +307,18 @@ async function loadData(){
     type: e.relationship_type, confidence: e.confidence, notes: e.notes
   }));
 
-  document.getElementById('loadingOverlay').style.display = 'none';
-  buildGraph();
+  if (!edges.length && !persons.length) {
+    document.getElementById('loadingOverlay').innerHTML = `<div class="loading-label" style="color:#ff0033">No data returned — check Supabase connection</div>`;
+    return;
+  }
+
+  // Wait for browser to paint layout before measuring SVG dimensions
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      document.getElementById('loadingOverlay').style.display = 'none';
+      buildGraph();
+    }, 100);
+  });
 }
 
 function buildGraph(){
