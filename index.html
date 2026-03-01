@@ -51,6 +51,319 @@
     "description": "Primary source intelligence platform covering the Jeffrey Epstein network based on DOJ-released documents"
   }
 }
+
+// ════════════════════════════════════════
+// ── DOCUMENT LIBRARY JS ──
+// ════════════════════════════════════════
+
+let allDocs = [];
+let activeDocFilter = 'all';
+
+const DOC_TYPE_FILTERS = [
+  { value: 'all', label: 'All Documents' },
+  { value: 'court_filing', label: 'Court Filings' },
+  { value: 'fbi_report', label: 'FBI Reports' },
+  { value: 'financial_record', label: 'Financial Records' },
+  { value: 'email', label: 'Emails' },
+  { value: 'other', label: 'Other' },
+];
+
+async function initDocumentLibrary() {
+  const container = document.getElementById('docLibContent');
+  try {
+    const { data: docs, error } = await db.from('documents')
+      .select('*, person_documents(person_id, persons(id, full_name))')
+      .order('document_date', { ascending: true });
+    if (error) throw error;
+    allDocs = docs || [];
+    renderDocLibrary(allDocs);
+  } catch(err) {
+    if (container) container.innerHTML = `<div class="state-msg"><div class="state-label" style="color:#dc2626;">Error: ${err.message}</div></div>`;
+  }
+}
+
+function renderDocLibrary(docs) {
+  const container = document.getElementById('docLibContent');
+  if (!container) return;
+
+  const filterBtns = DOC_TYPE_FILTERS.map(f =>
+    `<button class="doc-filter-btn ${activeDocFilter === f.value ? 'active' : ''}" onclick="filterDocs('${f.value}',this)">${f.label}</button>`
+  ).join('');
+
+  const filtered = activeDocFilter === 'all' ? docs : docs.filter(d => d.document_type === activeDocFilter);
+
+  const cards = filtered.map((d, idx) => {
+    const refId = d.doc_reference_id || d.id.substring(0,8).toUpperCase();
+    const docType = d.document_type ? cap(d.document_type.replace(/_/g,' ')) : 'Document';
+    const docYear = d.document_date ? d.document_date.substring(0,4) : '';
+    const pages = d.page_count ? `${d.page_count} pages` : '';
+    const citations = (d.person_documents || []).map(pd => pd.persons).filter(Boolean);
+    const uniqueCitations = [];
+    const seen = new Set();
+    citations.forEach(p => { if (!seen.has(p.id)) { seen.add(p.id); uniqueCitations.push(p); } });
+
+    const citationChips = uniqueCitations.slice(0,6).map(p =>
+      `<span class="doc-cite-chip" onclick="doSearch('${p.full_name.replace(/'/g,"\'")}');switchTab('profiles')">${p.full_name}</span>`
+    ).join('');
+    const moreCitations = uniqueCitations.length > 6 ? `<span class="doc-cite-chip" style="opacity:0.6;">+${uniqueCitations.length-6} more</span>` : '';
+
+    const dojBtn = d.doj_url ? `<a class="doj-link" href="${d.doj_url}" target="_blank" rel="noopener noreferrer">VIEW DOC ↗</a>` : '';
+    const redactPct = d.redaction_percentage ? Math.round(d.redaction_percentage) : null;
+
+    return `
+      <div class="doc-card" data-type="${d.document_type||'other'}" data-id="${d.id}">
+        <div class="doc-card-header" onclick="toggleDocCard(this)">
+          <div class="doc-card-left">
+            <div class="doc-card-ref">${refId}</div>
+            <div class="doc-card-title">${d.title || 'Untitled Document'}</div>
+            <div class="doc-card-meta">
+              <span>${docType}</span>
+              ${docYear ? `<span>${docYear}</span>` : ''}
+              ${pages ? `<span>${pages}</span>` : ''}
+              ${d.classification_level ? `<span>${d.classification_level.toUpperCase()}</span>` : ''}
+            </div>
+          </div>
+          <div class="doc-card-right">
+            <span class="doc-type-badge">${docType}</span>
+            ${redactPct ? `<span class="doc-redact-badge">${redactPct}% redacted</span>` : ''}
+            <span class="doc-chevron">›</span>
+          </div>
+        </div>
+        <div class="doc-expand" id="docexp-${d.id}">
+          <div class="doc-expand-grid">
+            <div class="doc-expand-stat">
+              <div class="doc-expand-stat-label">Persons Cited</div>
+              <div class="doc-expand-stat-val">${uniqueCitations.length}</div>
+            </div>
+            <div class="doc-expand-stat">
+              <div class="doc-expand-stat-label">Pages</div>
+              <div class="doc-expand-stat-val">${d.page_count || '—'}</div>
+            </div>
+          </div>
+          ${d.description ? `<div style="font-family:'Source Sans 3',sans-serif;font-size:0.82rem;color:var(--text-secondary);line-height:1.6;margin-bottom:0.75rem;">${d.description}</div>` : ''}
+          ${uniqueCitations.length > 0 ? `<div class="section-title" style="margin-bottom:0.5rem;">Persons cited in this document</div><div class="doc-citations">${citationChips}${moreCitations}</div>` : ''}
+          ${dojBtn ? `<div style="margin-top:0.75rem;">${dojBtn}</div>` : ''}
+        </div>
+      </div>`;
+  }).join('');
+
+  container.innerHTML = `
+    <div style="margin-bottom:1.25rem;">
+      <div class="subject-name" style="font-size:1.6rem;margin-bottom:0.25rem;">Document Library</div>
+      <div style="font-family:'Montserrat',sans-serif;font-size:0.78rem;color:var(--text-tertiary);letter-spacing:0.06em;">${allDocs.length} PRIMARY SOURCE DOCUMENTS · DOJ EPSTEIN FILES RELEASE</div>
+    </div>
+    <div class="doc-filters">${filterBtns}</div>
+    <div style="font-family:'Montserrat',sans-serif;font-size:0.72rem;color:var(--text-tertiary);margin-bottom:1rem;">${filtered.length} document${filtered.length!==1?'s':''} ${activeDocFilter !== 'all' ? '— filtered' : ''}</div>
+    ${cards}`;
+}
+
+function filterDocs(type, btn) {
+  activeDocFilter = type;
+  document.querySelectorAll('.doc-filter-btn').forEach(el => el.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderDocLibrary(allDocs);
+}
+
+function toggleDocCard(headerEl) {
+  const card = headerEl.closest('.doc-card');
+  const docId = card.dataset.id;
+  const expand = document.getElementById('docexp-' + docId);
+  const chev = headerEl.querySelector('.doc-chevron');
+  if (!expand) return;
+  const isOpen = expand.classList.contains('open');
+  expand.classList.toggle('open', !isOpen);
+  if (chev) chev.style.transform = isOpen ? '' : 'rotate(90deg)';
+}
+
+// ════════════════════════════════════════
+// ── EVIDENCE TIMELINE JS ──
+// ════════════════════════════════════════
+
+let tlAllEvents = [];
+let tlSelectedPerson = null;
+let tlPersons = [];
+
+async function initTimeline() {
+  try {
+    const [evRes, pRes] = await Promise.all([
+      db.from('events').select('id, event_name, event_date, event_type, notes, confidence, location_id').order('event_date', { ascending: true }),
+      db.from('persons').select('id, full_name, category').eq('is_victim', false).order('full_name', { ascending: true })
+    ]);
+    tlAllEvents = evRes.data || [];
+    tlPersons = pRes.data || [];
+    renderTimeline(tlAllEvents);
+    setupTlAutocomplete();
+  } catch(err) {
+    const el = document.getElementById('tlContent');
+    if (el) el.innerHTML = `<div class="state-msg"><div class="state-label" style="color:#dc2626;">Error: ${err.message}</div></div>`;
+  }
+}
+
+async function tlLoadPerson(person) {
+  tlSelectedPerson = person;
+  document.getElementById('tlSearchInput').value = person.full_name;
+  document.getElementById('tlClear').style.display = '';
+  document.getElementById('tlAutocomplete').classList.remove('open');
+
+  const el = document.getElementById('tlContent');
+  el.innerHTML = `<div class="state-msg"><div class="state-label">FILTERING…</div></div>`;
+
+  // Get events for this person
+  const { data: epData } = await db.from('event_persons')
+    .select('event_id').eq('person_id', person.id);
+
+  const evIds = (epData || []).map(ep => ep.event_id);
+  if (evIds.length === 0) {
+    el.innerHTML = `<div class="state-msg"><div class="state-label">NO TIMELINE EVENTS FOUND FOR ${person.full_name.toUpperCase()}</div></div>`;
+    return;
+  }
+  const filtered = tlAllEvents.filter(ev => evIds.includes(ev.id));
+  renderTimeline(filtered, person.full_name);
+}
+
+function tlClearPerson() {
+  tlSelectedPerson = null;
+  document.getElementById('tlSearchInput').value = '';
+  document.getElementById('tlClear').style.display = 'none';
+  renderTimeline(tlAllEvents);
+}
+
+function renderTimeline(events, personName) {
+  const el = document.getElementById('tlContent');
+  if (!el) return;
+  if (!events || events.length === 0) {
+    el.innerHTML = `<div class="state-msg"><div class="state-label">NO EVENTS FOUND</div></div>`;
+    return;
+  }
+
+  // Group by year
+  const byYear = {};
+  events.forEach(ev => {
+    const yr = ev.event_date ? ev.event_date.substring(0,4) : 'Unknown';
+    if (!byYear[yr]) byYear[yr] = [];
+    byYear[yr].push(ev);
+  });
+
+  const headerNote = personName
+    ? `<div style="font-family:'Montserrat',sans-serif;font-size:0.72rem;color:var(--text-secondary);margin-bottom:1rem;padding:0.5rem 0.75rem;background:var(--surface);border:1px solid var(--border);border-radius:6px;">Showing ${events.length} events linked to <strong>${personName}</strong></div>`
+    : `<div style="font-family:'Montserrat',sans-serif;font-size:0.72rem;color:var(--text-tertiary);margin-bottom:1rem;">${events.length} events across all years</div>`;
+
+  const yearBlocks = Object.keys(byYear).sort().map(yr => {
+    const rows = byYear[yr].map(ev => {
+      const date = ev.event_date ? ev.event_date.substring(5,10).replace('-','/') : '—';
+      const evType = ev.event_type ? cap(ev.event_type.replace(/_/g,' ')) : '';
+      const conf = ev.confidence || 'indicated';
+      return `
+        <div class="tl-event-row" data-event-id="${ev.id}">
+          <div class="tl-event-date">${date}</div>
+          <div class="tl-event-body">
+            <div class="tl-event-title">${ev.event_name || 'Undocumented Event'}</div>
+            ${ev.notes ? `<div class="tl-event-notes">${ev.notes}</div>` : ''}
+            <div style="display:flex;gap:0.4rem;flex-wrap:wrap;align-items:center;">
+              ${evType ? `<span class="tl-event-type-badge">${evType}</span>` : ''}
+              <span class="conf-badge ${conf}" style="font-size:0.58rem;padding:0.12rem 0.45rem;">● ${cap(conf)}</span>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+    return `<div class="tl-year-group"><div class="tl-year-label">${yr} — ${byYear[yr].length} event${byYear[yr].length!==1?'s':''}</div>${rows}</div>`;
+  }).join('');
+
+  el.innerHTML = headerNote + yearBlocks;
+}
+
+function setupTlAutocomplete() {
+  const input = document.getElementById('tlSearchInput');
+  const drop = document.getElementById('tlAutocomplete');
+  if (!input || !drop) return;
+
+  input.addEventListener('input', () => {
+    const q = input.value.trim().toLowerCase();
+    if (q.length < 1) { drop.classList.remove('open'); return; }
+    const matches = tlPersons.filter(p => p.full_name.toLowerCase().includes(q)).slice(0, 8);
+    if (matches.length === 0) { drop.classList.remove('open'); return; }
+    drop.innerHTML = matches.map(p =>
+      `<div class="autocomplete-item" data-id="${p.id}" data-name="${p.full_name}">
+        <span class="autocomplete-name">${p.full_name}</span>
+        <span class="autocomplete-meta">${cap(p.category||'')}</span>
+      </div>`
+    ).join('');
+    drop.querySelectorAll('.autocomplete-item').forEach(el => {
+      el.addEventListener('mousedown', e => { e.preventDefault(); tlLoadPerson({ id: el.dataset.id, full_name: el.dataset.name }); });
+    });
+    drop.classList.add('open');
+  });
+  input.addEventListener('blur', () => setTimeout(() => drop.classList.remove('open'), 150));
+  document.addEventListener('click', e => { if (!document.getElementById('tlSearchInput')?.contains(e.target)) drop.classList.remove('open'); });
+}
+
+// ════════════════════════════════════════
+// ── LEGAL TRACKER JS ──
+// ════════════════════════════════════════
+
+let allLegal = [];
+let activeLegalFilter = 'all';
+
+async function initLegalTracker() {
+  const el = document.getElementById('legalContent');
+  try {
+    const { data, error } = await db.from('legal_proceedings')
+      .select('*')
+      .order('start_date', { ascending: false });
+    if (error) throw error;
+    allLegal = data || [];
+    renderLegal(allLegal);
+  } catch(err) {
+    if (el) el.innerHTML = `<div class="state-msg"><div class="state-label" style="color:#dc2626;">Error: ${err.message}</div></div>`;
+  }
+}
+
+function filterLegal(status, btn) {
+  activeLegalFilter = status;
+  document.querySelectorAll('.legal-filter-btn').forEach(el => el.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const filtered = status === 'all' ? allLegal : allLegal.filter(l => l.status === status);
+  renderLegal(filtered);
+}
+
+function renderLegal(proceedings) {
+  const el = document.getElementById('legalContent');
+  if (!el) return;
+  if (!proceedings || proceedings.length === 0) {
+    el.innerHTML = `<div class="state-msg"><div class="state-label">NO PROCEEDINGS FOUND</div></div>`;
+    return;
+  }
+
+  const totalPenalty = proceedings.reduce((sum, p) => sum + (p.financial_penalty || 0), 0);
+  const summaryBar = totalPenalty > 0 ? `<div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0.75rem 1rem;margin-bottom:1.25rem;display:flex;gap:2rem;flex-wrap:wrap;">
+    <div><div style="font-family:'Montserrat',sans-serif;font-size:1.2rem;font-weight:700;">${proceedings.length}</div><div style="font-family:'Montserrat',sans-serif;font-size:0.6rem;color:var(--text-tertiary);letter-spacing:0.08em;text-transform:uppercase;">Proceedings</div></div>
+    <div><div style="font-family:'Montserrat',sans-serif;font-size:1.2rem;font-weight:700;">$${(totalPenalty/1000000).toFixed(0)}M+</div><div style="font-family:'Montserrat',sans-serif;font-size:0.6rem;color:var(--text-tertiary);letter-spacing:0.08em;text-transform:uppercase;">Financial penalties</div></div>
+  </div>` : '';
+
+  const cards = proceedings.map(p => {
+    const status = p.status || 'closed';
+    const startYr = p.start_date ? p.start_date.substring(0,4) : '';
+    const endYr = p.end_date ? p.end_date.substring(0,4) : '';
+    const dateRange = startYr ? (endYr && endYr !== startYr ? `${startYr}–${endYr}` : startYr) : '';
+    const penalty = p.financial_penalty ? `$${(p.financial_penalty/1000000).toFixed(1)}M settlement` : '';
+    const court = p.court || '';
+    const meta = [dateRange, court, penalty].filter(Boolean);
+    return `
+      <div class="legal-card" data-status="${status}">
+        <div class="legal-status-dot ${status}"></div>
+        <div class="legal-card-body">
+          <div class="legal-card-title">${p.case_name || p.case_number || 'Untitled Proceeding'}</div>
+          <div class="legal-card-meta">${meta.map(m => `<span>${m}</span>`).join('')}</div>
+          ${p.description ? `<div class="legal-card-notes">${p.description}</div>` : ''}
+        </div>
+        <span class="legal-status-label ${status}">${cap(status)}</span>
+      </div>`;
+  }).join('');
+
+  el.innerHTML = summaryBar + cards;
+}
+
+
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -60,10 +373,10 @@
 
 /* ── THEME TOKENS ── */
 :root {
-  --bg:             #f9f9f6;
-  --bg-secondary:   #f9f9f6;
-  --bg-card:        #f9f9f6;
-  --surface:        #f9f9f6;
+  --bg:             #FAFAFA;
+  --bg-secondary:   #FAFAFA;
+  --bg-card:        #FAFAFA;
+  --surface:        #FAFAFA;
   --border:         rgba(0,0,0,0.08);
   --border-mid:     rgba(0,0,0,0.12);
   --border-strong:  rgba(0,0,0,0.18);
@@ -88,7 +401,7 @@
   --unverified-bg:  rgba(138,26,26,0.08);
   --unverified-border:rgba(138,26,26,0.25);
   --shadow-sm:      0 1px 3px rgba(0,0,0,0.06);
-  --topbar-bg:      #f9f9f6;
+  --topbar-bg:      #FAFAFA;
   --header-bg:      #0D0D0D;
   --header-text:    #F7F4EF;
   --redact-color:   #1A1A1A;
@@ -126,7 +439,8 @@ body {
   display: grid;
   grid-template-columns: minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);
   align-items: center;
-  padding: 0 1.25rem;
+  padding: 0 1.75rem;
+  min-height: 128px;
   background: var(--topbar-bg);
   border-bottom: 1px solid var(--border);
   backdrop-filter: blur(12px);
@@ -139,14 +453,14 @@ body {
   grid-row: 2;
   overflow-y: auto;
   border-right: 1px solid var(--border);
-  padding: 1.1rem 0.75rem;
+  padding: 6.5rem 0.75rem 1.1rem;
   background: var(--bg-secondary);
 }
 .main {
   grid-column: 2;
   grid-row: 2;
   overflow-y: auto;
-  padding: 0;
+  padding: 10rem 0 0;
   position: relative;
 }
 .main-inner {
@@ -400,7 +714,7 @@ kbd {
 .status-text {
   font-family: 'Montserrat', sans-serif;
   font-weight: 500;
-  font-size: 0.72rem;
+  font-size: 0.85rem;
   color: var(--text-secondary);
   white-space: nowrap;
 }
@@ -413,11 +727,12 @@ kbd {
   font-family: 'Montserrat', sans-serif !important;
   font-weight: 400 !important;
   font-size: 0.68rem !important;
-  color: var(--text-tertiary) !important;
+  color: #3B3B3B !important;
   letter-spacing: 0.12em !important;
   text-transform: uppercase !important;
   margin-bottom: 0.6rem;
   padding: 0 0.25rem;
+  text-align: center;
 }
 
 /* Individual nav items — SemiBold */
@@ -428,10 +743,10 @@ kbd {
   padding: 0.45rem 0.5rem;
   border-radius: 6px;
   cursor: pointer;
-  color: var(--text-secondary);
-  font-family: 'Montserrat', sans-serif !important;
-  font-weight: 600 !important;
-  font-size: 0.82rem !important;
+  color: #0D0D0D;
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 1rem !important;
   letter-spacing: 0.01em !important;
   margin-bottom: 0.15rem;
 }
@@ -439,9 +754,9 @@ kbd {
 .nav-item.active {
   background: rgba(26,26,26,0.09);
   color: var(--text-primary);
-  font-family: 'Montserrat', sans-serif !important;
-  font-weight: 600 !important;
-  font-size: 0.82rem !important;
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 1rem !important;
   border-left: 2px solid var(--accent);
   padding-left: calc(0.5rem - 2px);
 }
@@ -507,11 +822,11 @@ kbd {
   padding: 2rem 1rem;
 }
 .landing-title {
-  font-family: "Inter", sans-serif;
+  font-family: 'neue-haas-grotesk-display', sans-serif;
   font-optical-sizing: auto;
   font-weight: 900;
   font-size: 2.8rem;
-  color: var(--text-primary);
+  color: #1B1B1B;
   max-width: 600px;
   line-height: 1.3;
 }
@@ -526,7 +841,7 @@ kbd {
   font-family: 'Montserrat', sans-serif;
   font-weight: 500;
   font-size: 0.95rem;
-  color: var(--text-tertiary);
+  color: #1B1B1B;
   max-width: 600px;
   line-height: 1.75;
 }
@@ -1352,6 +1667,145 @@ kbd {
   .loc-stats-grid { grid-template-columns: repeat(3, 1fr); }
   .loc-detail { padding: 1.25rem; }
 }
+
+/* ── DOCUMENT LIBRARY ── */
+#tabDocuments { padding: 1.5rem 1.75rem; }
+.doc-filters { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.25rem; }
+.doc-filter-btn {
+  font-family: 'Montserrat', sans-serif; font-size: 0.62rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.28rem 0.75rem; border-radius: 20px;
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--text-secondary); cursor: pointer; transition: all 0.15s;
+}
+.doc-filter-btn:hover, .doc-filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.doc-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  margin-bottom: 0.6rem; overflow: hidden; transition: border-color 0.15s;
+}
+.doc-card:hover { border-color: var(--border-strong); }
+.doc-card-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: 1rem; padding: 1rem 1.25rem; cursor: pointer;
+}
+.doc-card-left { flex: 1; min-width: 0; }
+.doc-card-ref { font-family: 'Montserrat', sans-serif; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 0.3rem; }
+.doc-card-title { font-size: 0.92rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.3rem; line-height: 1.35; }
+.doc-card-meta { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; color: var(--text-tertiary); display: flex; gap: 0.75rem; flex-wrap: wrap; }
+.doc-card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.4rem; flex-shrink: 0; }
+.doc-type-badge {
+  font-family: 'Montserrat', sans-serif; font-size: 0.58rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.18rem 0.5rem; border-radius: 4px;
+  background: rgba(26,92,138,0.08); color: #1A5C8A; border: 1px solid rgba(26,92,138,0.2);
+}
+.doc-redact-badge {
+  font-family: 'Montserrat', sans-serif; font-size: 0.55rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.12rem 0.4rem; border-radius: 3px;
+  background: rgba(138,26,26,0.08); color: #8A1A1A; border: 1px solid rgba(138,26,26,0.2);
+}
+.doc-chevron { font-size: 1rem; color: var(--text-tertiary); transition: transform 0.2s; }
+.doc-expand { display: none; padding: 0 1.25rem 1rem; border-top: 1px solid var(--border); }
+.doc-expand.open { display: block; }
+.doc-expand-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1rem; }
+.doc-expand-stat { background: var(--bg-secondary); border-radius: 6px; padding: 0.6rem 0.75rem; }
+.doc-expand-stat-label { font-family: 'Montserrat', sans-serif; font-size: 0.58rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 0.2rem; }
+.doc-expand-stat-val { font-size: 0.88rem; font-weight: 600; color: var(--text-primary); }
+.doc-citations { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.5rem; }
+.doc-cite-chip {
+  font-family: 'Montserrat', sans-serif; font-size: 0.62rem; font-weight: 600;
+  padding: 0.2rem 0.6rem; border: 1px solid var(--border); border-radius: 20px;
+  background: var(--surface); color: var(--text-secondary); cursor: pointer;
+  transition: all 0.1s;
+}
+.doc-cite-chip:hover { border-color: var(--accent); color: var(--text-primary); }
+
+/* ── EVIDENCE TIMELINE ── */
+#tabTimeline { padding: 1.5rem 1.75rem; }
+.tl-search-bar {
+  display: flex; gap: 0.5rem; align-items: center;
+  background: var(--surface); border: 1px solid var(--border-strong);
+  border-radius: 8px; padding: 0 0.75rem;
+  margin-bottom: 1.25rem;
+}
+.tl-search-input {
+  flex: 1; border: none; background: transparent; color: var(--text-primary);
+  font-family: 'Montserrat', sans-serif; font-size: 0.85rem;
+  outline: none; padding: 0.55rem 0; font-style: italic;
+}
+.tl-search-input::placeholder { color: var(--text-tertiary); }
+.tl-autocomplete {
+  position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+  background: var(--bg-card); border: 1px solid var(--border-mid);
+  border-radius: 6px; z-index: 50; max-height: 220px; overflow-y: auto;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08); display: none;
+}
+.tl-autocomplete.open { display: block; }
+.tl-search-wrap { position: relative; flex: 1; }
+.tl-year-group { margin-bottom: 2rem; }
+.tl-year-label {
+  font-family: 'Montserrat', sans-serif; font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-tertiary);
+  padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); margin-bottom: 1rem;
+}
+.tl-event-row {
+  display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 0.75rem;
+  padding: 0.85rem 1rem; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; transition: border-color 0.15s;
+}
+.tl-event-row:hover { border-color: var(--border-strong); }
+.tl-event-date { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; color: var(--text-tertiary); min-width: 72px; flex-shrink: 0; padding-top: 0.1rem; }
+.tl-event-body { flex: 1; min-width: 0; }
+.tl-event-title { font-size: 0.88rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.3rem; }
+.tl-event-notes { font-family: 'Source Sans 3', sans-serif; font-size: 0.8rem; color: var(--text-secondary); line-height: 1.55; margin-bottom: 0.4rem; }
+.tl-event-type-badge {
+  font-family: 'Montserrat', sans-serif; font-size: 0.58rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.12rem 0.45rem; border-radius: 3px;
+  background: var(--accent-dim); color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+
+/* ── LEGAL TRACKER ── */
+#tabLegal { padding: 1.5rem 1.75rem; }
+.legal-status-filters { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.25rem; }
+.legal-filter-btn {
+  font-family: 'Montserrat', sans-serif; font-size: 0.62rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.28rem 0.75rem; border-radius: 20px;
+  border: 1px solid var(--border); background: var(--surface);
+  color: var(--text-secondary); cursor: pointer; transition: all 0.15s;
+}
+.legal-filter-btn:hover, .legal-filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.legal-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  padding: 1rem 1.25rem; margin-bottom: 0.6rem;
+  display: flex; gap: 1rem; align-items: flex-start; transition: border-color 0.15s;
+}
+.legal-card:hover { border-color: var(--border-strong); }
+.legal-status-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 0.35rem; }
+.legal-status-dot.active    { background: #1A6B3C; box-shadow: 0 0 6px rgba(26,107,60,0.5); }
+.legal-status-dot.conviction{ background: #1A1A1A; }
+.legal-status-dot.settlement{ background: #1A5C8A; }
+.legal-status-dot.immunity  { background: #8A5A1A; }
+.legal-status-dot.closed    { background: #ccc; }
+.legal-card-body { flex: 1; min-width: 0; }
+.legal-card-title { font-size: 0.92rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.25rem; }
+.legal-card-meta { font-family: 'Montserrat', sans-serif; font-size: 0.65rem; color: var(--text-tertiary); display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.4rem; }
+.legal-card-notes { font-family: 'Source Sans 3', sans-serif; font-size: 0.8rem; color: var(--text-secondary); line-height: 1.55; }
+.legal-status-label {
+  font-family: 'Montserrat', sans-serif; font-size: 0.6rem; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.18rem 0.55rem; border-radius: 4px; flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+.legal-status-label.active     { background: rgba(26,107,60,0.1); color: #1A6B3C; border: 1px solid rgba(26,107,60,0.25); }
+.legal-status-label.conviction { background: rgba(26,26,26,0.08); color: #1A1A1A; border: 1px solid rgba(26,26,26,0.2); }
+.legal-status-label.settlement { background: rgba(26,92,138,0.1); color: #1A5C8A; border: 1px solid rgba(26,92,138,0.25); }
+.legal-status-label.immunity   { background: rgba(138,90,26,0.1); color: #8A5A1A; border: 1px solid rgba(138,90,26,0.25); }
+.legal-status-label.closed     { background: rgba(0,0,0,0.04); color: #888; border: 1px solid var(--border); }
+
 </style>
 </head>
 <body>
@@ -1389,28 +1843,33 @@ kbd {
       <div class="nav-item active" id="navProfiles" onclick="switchTab('profiles'); document.getElementById('searchInput').value=''; document.getElementById('globalSearchClear').style.display='none'; if(typeof closeGSD==='function')closeGSD(); showLanding();"><span>Person Profile</span></div>
       <div class="nav-item" id="navFlights" onclick="switchTab('flights')" style="cursor:pointer;"><span>Flight Manifests</span></div>
       <div class="nav-item" onclick="window.location.href='graph.html'" style="cursor:pointer;"><span>Network Graph</span></div>
+      <div class="nav-item" onclick="window.location.href='money.html'" style="cursor:pointer;"><span>Money Map</span></div>
       <div class="nav-item" id="navUnidentified" onclick="switchTab('unidentified')" style="cursor:pointer;"><span>Unidentified</span></div>
-      <div class="nav-item" id="navConnections" onclick="switchTab('connections')" style="cursor:pointer;"><span>Connections</span></div>
       <div class="nav-item" id="navLocations" onclick="switchTab('locations')" style="cursor:pointer;"><span>Location Intel</span></div>
+      <div class="nav-item" id="navDocuments" onclick="switchTab('documents')" style="cursor:pointer;"><span>Document Library</span></div>
+      <div class="nav-item" id="navTimeline" onclick="switchTab('timeline')" style="cursor:pointer;"><span>Evidence Timeline</span></div>
+      <div class="nav-item" id="navLegal" onclick="switchTab('legal')" style="cursor:pointer;"><span>Legal Tracker</span></div>
       <div class="nav-item" onclick="window.location.href='about.html'" style="cursor:pointer;"><span>About</span></div>
+      <div class="nav-item" id="navConnections" style="cursor:default;opacity:0.45;pointer-events:none;"><span>Connections</span><span style="margin-left:0.4rem;background:#CC2200;color:#fff;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.48rem;letter-spacing:0.08em;text-transform:uppercase;padding:1px 5px;border-radius:3px;vertical-align:middle;">Soon</span></div>
     </div>
     <div class="sidebar-section" id="sidebarFilters">
       <div class="sidebar-label">Category</div>
-      <div class="nav-item filter-item" data-filter="category" data-value="finance"><span>Finance</span></div>
-      <div class="nav-item filter-item" data-filter="category" data-value="politics"><span>Politics</span></div>
-      <div class="nav-item filter-item" data-filter="category" data-value="technology"><span>Technology</span></div>
-      <div class="nav-item filter-item" data-filter="category" data-value="legal"><span>Legal</span></div>
-      <div class="nav-item filter-item" data-filter="category" data-value="academia"><span>Academia</span></div>
-      <div class="nav-item filter-item" data-filter="category" data-value="entertainment"><span>Entertainment</span></div>
-      <div class="nav-item filter-item" data-filter="category" data-value="royalty"><span>Royalty</span></div>
-      <div class="nav-item filter-item" data-filter="category" data-value="media"><span>Media</span></div>
+      <div class="nav-item filter-item" data-filter="category" data-value="finance"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#2E6F40;margin-right:0.5rem;flex-shrink:0;"></span>Finance</span></div>
+      <div class="nav-item filter-item" data-filter="category" data-value="politics"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#FF2C2C;margin-right:0.5rem;flex-shrink:0;"></span>Politics</span></div>
+      <div class="nav-item filter-item" data-filter="category" data-value="technology"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#000080;margin-right:0.5rem;flex-shrink:0;"></span>Technology</span></div>
+      <div class="nav-item filter-item" data-filter="category" data-value="legal"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#FFEF00;margin-right:0.5rem;flex-shrink:0;border:1px solid #ccc;"></span>Legal</span></div>
+      <div class="nav-item filter-item" data-filter="category" data-value="academia"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#2B1700;margin-right:0.5rem;flex-shrink:0;"></span>Academia</span></div>
+      <div class="nav-item filter-item" data-filter="category" data-value="entertainment"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#FF5C00;margin-right:0.5rem;flex-shrink:0;"></span>Entertainment</span></div>
+      <div class="nav-item filter-item" data-filter="category" data-value="royalty"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#FFC8D3;margin-right:0.5rem;flex-shrink:0;border:1px solid #ccc;"></span>Royalty</span></div>
+      <div class="nav-item filter-item" data-filter="category" data-value="media"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#00B9B3;margin-right:0.5rem;flex-shrink:0;"></span>Media</span></div>
+      <div class="nav-item filter-item" data-filter="category" data-value="other"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#FFA21F;margin-right:0.5rem;flex-shrink:0;"></span>Other</span></div>
     </div>
     <div class="sidebar-section" id="sidebarRelFilters">
       <div class="sidebar-label">Relationship</div>
       <div class="nav-item filter-item" data-filter="relationship" data-value="direct_contact"><span>Direct Contact</span></div>
       <div class="nav-item filter-item" data-filter="relationship" data-value="employee"><span>Employee / Staff</span></div>
-      <div class="nav-item filter-item" data-filter="relationship" data-value="alleged_client"><span>Alleged Client</span></div>
-      <div class="nav-item filter-item" data-filter="relationship" data-value="victim"><span>Victim / Survivor</span></div>
+      <div class="nav-item filter-item" data-filter="relationship" data-value="associate"><span>Associate</span></div>
+      <div class="nav-item filter-item" data-filter="relationship" data-value="mentioned_only"><span>Mentioned Only</span></div>
       <div class="nav-item filter-item" data-filter="relationship" data-value="legal_counsel"><span>Legal Counsel</span></div>
     </div>
   </aside>
@@ -1421,8 +1880,8 @@ kbd {
     <!-- ── TAB: PROFILES ── -->
     <div class="tab-panel active" id="tabProfiles">
       <div class="landing">
-        <div class="landing-title">The Epstein Record</div>
-        <div class="landing-sub" style="font-style:italic;color:var(--text-secondary);">A structured intelligence record of the Epstein network — built on primary DOJ sources, designed for journalists, researchers, and investigators who need more than a search bar.</div>
+        <div class="landing-title" style="color:#1B1B1B;">The Epstein Record</div>
+        <div class="landing-sub">A structured intelligence record of the Epstein network — built on primary DOJ sources, designed for journalists, researchers, and investigators who need more than a search bar.</div>
         <div class="landing-sub">123 individuals indexed from the Epstein archive and pilot logbooks. Search by name, document title, event, or flight route to investigate connections, build timelines, and analyze the network.</div>
         <div class="landing-suggestions">
           <span class="suggestion-chip" onclick="doSearch('Lesley Groff')">Lesley Groff</span>
@@ -1439,6 +1898,15 @@ kbd {
           <span class="suggestion-chip" onclick="doSearch('Larry Summers')">Larry Summers</span>
           <span class="suggestion-chip" onclick="doSearch('Elon Musk')">Elon Musk</span>
           <span class="suggestion-chip" onclick="doSearch('Sarah Ferguson')">Sarah Ferguson</span>
+          <span class="suggestion-chip" onclick="doSearch('Sarah Kellen')">Sarah Kellen</span>
+          <span class="suggestion-chip" onclick="doSearch('Peter Mandelson')">Peter Mandelson</span>
+          <span class="suggestion-chip" onclick="doSearch('Bill Clinton')">Bill Clinton</span>
+          <span class="suggestion-chip" onclick="doSearch('Darren Indyke')">Darren Indyke</span>
+          <span class="suggestion-chip" onclick="doSearch('Boris Nikolic')">Boris Nikolic</span>
+          <span class="suggestion-chip" onclick="doSearch('Jes Staley')">Jes Staley</span>
+          <span class="suggestion-chip" onclick="doSearch('Nicole Junkermann')">Nicole Junkermann</span>
+          <span class="suggestion-chip" onclick="doSearch('Noam Chomsky')">Noam Chomsky</span>
+          <span class="suggestion-chip" onclick="doSearch('Tom Pritzker')">Tom Pritzker</span>
         </div>
       </div>
     </div>
@@ -1579,6 +2047,51 @@ kbd {
       </div>
     </div>
 
+    <!-- ── TAB: DOCUMENT LIBRARY ── -->
+    <div class="tab-panel" id="tabDocuments">
+      <div id="docLibContent" style="padding:1.5rem 1.75rem;max-width:780px;margin:0 auto;">
+        <div class="state-msg"><div class="state-label">LOADING ARCHIVE…</div></div>
+      </div>
+    </div>
+
+    <!-- ── TAB: EVIDENCE TIMELINE ── -->
+    <div class="tab-panel" id="tabTimeline">
+      <div style="max-width:780px;margin:0 auto;padding:1.5rem 1.75rem;">
+        <div class="subject-name" style="font-size:1.6rem;margin-bottom:0.25rem;">Evidence Timeline</div>
+        <div style="font-family:'Montserrat',sans-serif;font-size:0.78rem;color:var(--text-tertiary);margin-bottom:1.25rem;letter-spacing:0.06em;">Search a person to filter their chronological event record</div>
+        <div style="position:relative;margin-bottom:1.25rem;">
+          <div class="tl-search-bar">
+            <span style="color:var(--text-tertiary);font-size:1.1rem;">⌕</span>
+            <input class="tl-search-input" id="tlSearchInput" placeholder="Filter by person…" autocomplete="off" spellcheck="false">
+            <span id="tlClear" style="display:none;cursor:pointer;color:var(--text-tertiary);" onclick="tlClearPerson()">×</span>
+          </div>
+          <div class="tl-autocomplete" id="tlAutocomplete"></div>
+        </div>
+        <div id="tlContent">
+          <div class="state-msg"><div class="state-label">LOADING TIMELINE…</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB: LEGAL TRACKER ── -->
+    <div class="tab-panel" id="tabLegal">
+      <div style="max-width:780px;margin:0 auto;padding:1.5rem 1.75rem;">
+        <div class="subject-name" style="font-size:1.6rem;margin-bottom:0.25rem;">Legal Tracker</div>
+        <div style="font-family:'Montserrat',sans-serif;font-size:0.78rem;color:var(--text-tertiary);margin-bottom:1.25rem;letter-spacing:0.06em;">Active proceedings, convictions, settlements, and immunity agreements</div>
+        <div class="legal-status-filters" id="legalFilters">
+          <button class="legal-filter-btn active" data-status="all" onclick="filterLegal('all',this)">All</button>
+          <button class="legal-filter-btn" data-status="active" onclick="filterLegal('active',this)">Active / Ongoing</button>
+          <button class="legal-filter-btn" data-status="conviction" onclick="filterLegal('conviction',this)">Convictions</button>
+          <button class="legal-filter-btn" data-status="settlement" onclick="filterLegal('settlement',this)">Settlements</button>
+          <button class="legal-filter-btn" data-status="immunity" onclick="filterLegal('immunity',this)">Immunity</button>
+        </div>
+        <div id="legalContent">
+          <div class="state-msg"><div class="state-label">LOADING PROCEEDINGS…</div></div>
+        </div>
+      </div>
+    </div>
+
+
   </main>
 
   <!-- RIGHT PANEL -->
@@ -1651,28 +2164,33 @@ kbd {
       <div class="nav-item" onclick="switchTab('profiles'); document.getElementById('searchInput').value=''; document.getElementById('globalSearchClear').style.display='none'; if(typeof closeGSD==='function')closeGSD(); showLanding(); closeDrawer()"><span>Person Profile</span></div>
       <div class="nav-item" onclick="switchTab('flights');closeDrawer()"><span>Flight Manifests</span></div>
       <div class="nav-item" onclick="window.location.href='graph.html'"><span>Network Graph</span></div>
+      <div class="nav-item" onclick="window.location.href='money.html'"><span>Money Map</span></div>
       <div class="nav-item" onclick="switchTab('unidentified');closeDrawer()"><span>Unidentified</span></div>
-      <div class="nav-item" onclick="switchTab('connections');closeDrawer()"><span>Connections</span></div>
       <div class="nav-item" onclick="switchTab('locations');closeDrawer()"><span>Location Intel</span></div>
+      <div class="nav-item" onclick="switchTab('documents');closeDrawer()"><span>Document Library</span></div>
+      <div class="nav-item" onclick="switchTab('timeline');closeDrawer()"><span>Evidence Timeline</span></div>
+      <div class="nav-item" onclick="switchTab('legal');closeDrawer()"><span>Legal Tracker</span></div>
       <div class="nav-item" onclick="window.location.href='about.html';closeDrawer()"><span>About</span></div>
+      <div class="nav-item" style="cursor:default;opacity:0.45;pointer-events:none;"><span>Connections</span><span style="margin-left:0.4rem;background:#CC2200;color:#fff;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.48rem;letter-spacing:0.08em;text-transform:uppercase;padding:1px 5px;border-radius:3px;vertical-align:middle;">Soon</span></div>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-label">Category</div>
-      <div class="nav-item filter-item-m" data-filter="category" data-value="finance"><span>Finance</span></div>
-      <div class="nav-item filter-item-m" data-filter="category" data-value="politics"><span>Politics</span></div>
-      <div class="nav-item filter-item-m" data-filter="category" data-value="technology"><span>Technology</span></div>
-      <div class="nav-item filter-item-m" data-filter="category" data-value="legal"><span>Legal</span></div>
-      <div class="nav-item filter-item-m" data-filter="category" data-value="academia"><span>Academia</span></div>
-      <div class="nav-item filter-item-m" data-filter="category" data-value="entertainment"><span>Entertainment</span></div>
-      <div class="nav-item filter-item-m" data-filter="category" data-value="royalty"><span>Royalty</span></div>
-      <div class="nav-item filter-item-m" data-filter="category" data-value="media"><span>Media</span></div>
+      <div class="nav-item filter-item-m" data-filter="category" data-value="finance"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#2E6F40;margin-right:0.5rem;flex-shrink:0;"></span>Finance</span></div>
+      <div class="nav-item filter-item-m" data-filter="category" data-value="politics"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#FF2C2C;margin-right:0.5rem;flex-shrink:0;"></span>Politics</span></div>
+      <div class="nav-item filter-item-m" data-filter="category" data-value="technology"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#000080;margin-right:0.5rem;flex-shrink:0;"></span>Technology</span></div>
+      <div class="nav-item filter-item-m" data-filter="category" data-value="legal"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#FFEF00;margin-right:0.5rem;flex-shrink:0;border:1px solid #ccc;"></span>Legal</span></div>
+      <div class="nav-item filter-item-m" data-filter="category" data-value="academia"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#2B1700;margin-right:0.5rem;flex-shrink:0;"></span>Academia</span></div>
+      <div class="nav-item filter-item-m" data-filter="category" data-value="entertainment"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#FF5C00;margin-right:0.5rem;flex-shrink:0;"></span>Entertainment</span></div>
+      <div class="nav-item filter-item-m" data-filter="category" data-value="royalty"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#FFC8D3;margin-right:0.5rem;flex-shrink:0;border:1px solid #ccc;"></span>Royalty</span></div>
+      <div class="nav-item filter-item-m" data-filter="category" data-value="media"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#00B9B3;margin-right:0.5rem;flex-shrink:0;"></span>Media</span></div>
+      <div class="nav-item filter-item-m" data-filter="category" data-value="other"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#FFA21F;margin-right:0.5rem;flex-shrink:0;"></span>Other</span></div>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-label">Relationship</div>
       <div class="nav-item filter-item-m" data-filter="relationship" data-value="direct_contact"><span>Direct Contact</span></div>
       <div class="nav-item filter-item-m" data-filter="relationship" data-value="employee"><span>Employee / Staff</span></div>
-      <div class="nav-item filter-item-m" data-filter="relationship" data-value="alleged_client"><span>Alleged Client</span></div>
-      <div class="nav-item filter-item-m" data-filter="relationship" data-value="victim"><span>Victim / Survivor</span></div>
+      <div class="nav-item filter-item-m" data-filter="relationship" data-value="associate"><span>Associate</span></div>
+      <div class="nav-item filter-item-m" data-filter="relationship" data-value="mentioned_only"><span>Mentioned Only</span></div>
       <div class="nav-item filter-item-m" data-filter="relationship" data-value="legal_counsel"><span>Legal Counsel</span></div>
     </div>
   </div>
@@ -1695,10 +2213,13 @@ let currentTab = 'profiles';
 let unidentifiedLoaded = false;
 let connectionsLoaded = false;
 let locationsLoaded = false;
+let documentsLoaded = false;
+let timelineLoaded = false;
+let legalLoaded = false;
 
 function switchTab(tab) {
   document.querySelectorAll('.tab-panel').forEach(el => el.classList.remove('active'));
-  ['navProfiles','navFlights','navUnidentified','navConnections'].forEach(id => {
+  ['navProfiles','navFlights','navUnidentified','navConnections','navLocations','navDocuments','navTimeline','navLegal'].forEach(id => {
     const el = document.getElementById(id); if (el) el.classList.remove('active');
   });
 
@@ -1749,6 +2270,27 @@ function switchTab(tab) {
     relFilterSections.style.display = 'none';
     rightPanel.style.display = 'none';
     if (!locationsLoaded) { initLocations(); locationsLoaded = true; }
+  } else if (tab === 'documents') {
+    document.getElementById('tabDocuments').classList.add('active');
+    document.getElementById('navDocuments').classList.add('active');
+    filterSections.style.display = 'none';
+    relFilterSections.style.display = 'none';
+    rightPanel.style.display = 'none';
+    if (!documentsLoaded) { initDocumentLibrary(); documentsLoaded = true; }
+  } else if (tab === 'timeline') {
+    document.getElementById('tabTimeline').classList.add('active');
+    document.getElementById('navTimeline').classList.add('active');
+    filterSections.style.display = 'none';
+    relFilterSections.style.display = 'none';
+    rightPanel.style.display = 'none';
+    if (!timelineLoaded) { initTimeline(); timelineLoaded = true; }
+  } else if (tab === 'legal') {
+    document.getElementById('tabLegal').classList.add('active');
+    document.getElementById('navLegal').classList.add('active');
+    filterSections.style.display = 'none';
+    relFilterSections.style.display = 'none';
+    rightPanel.style.display = 'none';
+    if (!legalLoaded) { initLegalTracker(); legalLoaded = true; }
   }
   currentTab = tab;
 }
@@ -2052,6 +2594,7 @@ document.querySelectorAll('.filter-item').forEach(el => {
     document.querySelectorAll('.filter-item, .filter-item-m').forEach(x => x.classList.remove('active'));
     if (!wasActive) {
       el.classList.add('active');
+      switchTab('profiles');
       searchInput.value = '';
       globalSearchClear.style.display = 'none';
       closeGSD();
@@ -2654,8 +3197,8 @@ function showLanding() {
   document.querySelector('.app').classList.add('landing-active');
   document.getElementById('tabProfiles').innerHTML = `
     <div class="landing">
-      <div class="landing-title">The Epstein Record</div>
-      <div class="landing-sub" style="font-style:italic;color:var(--text-secondary);">A structured intelligence record of the Epstein network — built on primary DOJ sources, designed for journalists, researchers, and investigators who need more than a search bar.</div>
+      <div class="landing-title" style="color:#1B1B1B;">The Epstein Record</div>
+      <div class="landing-sub">A structured intelligence record of the Epstein network — built on primary DOJ sources, designed for journalists, researchers, and investigators who need more than a search bar.</div>
       <div class="landing-sub">123 individuals indexed from the Epstein archive and pilot logbooks. Search by name to view profiles, flight history, connection analysis, and power index.</div>
       <div class="landing-suggestions">
         <span class="suggestion-chip" onclick="doSearch('Lesley Groff')">Lesley Groff</span>
@@ -2672,6 +3215,15 @@ function showLanding() {
         <span class="suggestion-chip" onclick="doSearch('Larry Summers')">Larry Summers</span>
         <span class="suggestion-chip" onclick="doSearch('Elon Musk')">Elon Musk</span>
         <span class="suggestion-chip" onclick="doSearch('Sarah Ferguson')">Sarah Ferguson</span>
+        <span class="suggestion-chip" onclick="doSearch('Sarah Kellen')">Sarah Kellen</span>
+        <span class="suggestion-chip" onclick="doSearch('Peter Mandelson')">Peter Mandelson</span>
+        <span class="suggestion-chip" onclick="doSearch('Bill Clinton')">Bill Clinton</span>
+        <span class="suggestion-chip" onclick="doSearch('Darren Indyke')">Darren Indyke</span>
+        <span class="suggestion-chip" onclick="doSearch('Boris Nikolic')">Boris Nikolic</span>
+        <span class="suggestion-chip" onclick="doSearch('Jes Staley')">Jes Staley</span>
+        <span class="suggestion-chip" onclick="doSearch('Nicole Junkermann')">Nicole Junkermann</span>
+        <span class="suggestion-chip" onclick="doSearch('Noam Chomsky')">Noam Chomsky</span>
+        <span class="suggestion-chip" onclick="doSearch('Tom Pritzker')">Tom Pritzker</span>
       </div>
     </div>`;
 }
