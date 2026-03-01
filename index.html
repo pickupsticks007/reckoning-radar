@@ -52,7 +52,9 @@
   }
 }
 </script>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Source+Sans+3:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:wght@300;400;500;600;700&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Source+Sans+3:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://use.typekit.net/zzw7dfl.css">
 <style>
 
@@ -121,9 +123,9 @@ body {
 .topbar {
   grid-column: 1/-1;
   grid-row: 1;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);
   align-items: center;
-  gap: 1rem;
   padding: 0 1.25rem;
   background: var(--topbar-bg);
   border-bottom: 1px solid var(--border);
@@ -146,6 +148,12 @@ body {
   overflow-y: auto;
   padding: 0;
   position: relative;
+}
+.main-inner {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0;
+  text-align: center;
 }
 .sidebar-right {
   grid-column: 3;
@@ -201,7 +209,8 @@ body {
   border: none;
   background: transparent;
   color: var(--text-primary);
-  font-family: 'Source Sans 3', 'Source Sans Pro', sans-serif;
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
   font-style: italic;
   font-size: 0.9rem;
   outline: none;
@@ -211,11 +220,12 @@ body {
 
 /* ── GLOBAL SEARCH DROPDOWN ── */
 .global-search-wrap {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 480px;
+  width: 100%;
+  max-width: 360px;
+  justify-self: center;
+  margin-left: 3rem;
   z-index: 9999;
+  position: relative;
 }
 .global-search-input-row {
   display: flex;
@@ -374,7 +384,7 @@ kbd {
 }
 
 .topbar-right {
-  margin-left: auto;
+  justify-self: end;
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -436,20 +446,11 @@ kbd {
   padding-left: calc(0.5rem - 2px);
 }
 
-.nav-item.coming-soon { opacity: 0.38; cursor: default; }
 
-.coming-soon-badge {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.55rem;
-  color: var(--text-tertiary);
-  letter-spacing: 0.06em;
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  padding: 0.05rem 0.3rem;
-}
+
 
 /* ── PROFILES TAB CONTENT ── */
-#tabProfiles { padding: 1.5rem 1.75rem; }
+#tabProfiles { padding: 1.5rem 1.75rem; text-align: center; max-width: 780px; margin: 0 auto; }
 .subject-name { font-size: 2.2rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 0.6rem; }
 .subject-meta { display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center; }
 .meta-pill {
@@ -506,7 +507,8 @@ kbd {
   padding: 2rem 1rem;
 }
 .landing-title {
-  font-family: 'Source Sans 3', 'Source Sans Pro', sans-serif;
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
   font-weight: 900;
   font-size: 2.8rem;
   color: var(--text-primary);
@@ -581,10 +583,14 @@ kbd {
 .location-count { font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; font-size: 0.68rem; color: var(--text-primary); white-space: nowrap; flex-shrink: 0; }
 
 /* Source docs */
-.source-doc-row { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+.source-doc-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; padding: 0.6rem 0; border-bottom: 1px solid var(--border); }
 .source-doc-row:last-child { border-bottom: none; }
 .source-doc-id { font-family: 'Roboto', sans-serif !important; font-weight: 600 !important; font-size: 0.72rem; color: var(--text-primary); }
 .source-doc-meta { font-family: 'Roboto', sans-serif !important; font-weight: 400 !important; font-size: 0.58rem; color: var(--text-tertiary); margin-top: 2px; }
+.source-doc-title { font-family: 'Montserrat', sans-serif !important; font-size: 0.62rem; color: var(--text-secondary); margin-top: 3px; line-height: 1.4; }
+.doj-link { display: inline-flex; align-items: center; gap: 3px; font-family: 'Montserrat', sans-serif; font-size: 0.58rem; font-weight: 700; letter-spacing: 0.06em; color: #FF2C2C; text-decoration: none; margin-top: 5px; border: 1px solid #FF2C2C; border-radius: 3px; padding: 2px 6px; transition: background 0.15s, color 0.15s; white-space: nowrap; flex-shrink: 0; }
+.doj-link:hover { background: #FF2C2C; color: #fff; }
+.doj-link svg { width: 8px; height: 8px; flex-shrink: 0; }
 .conf-circle { width: 20px; height: 20px; border-radius: 50%; border: 1px solid; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: 'Montserrat', sans-serif !important; font-weight: 600 !important; font-size: 0.6rem; }
 .conf-circle.confirmed { border-color: var(--confirmed); color: var(--confirmed); }
 .conf-circle.corroborated { border-color: var(--corroborated); color: var(--corroborated); }
@@ -615,6 +621,8 @@ kbd {
 /* ── TAB PANELS ── */
 .tab-panel { display: none; width: 100%; }
 .tab-panel.active { display: block; }
+.tab-panel > * { max-width: 780px; margin-left: auto; margin-right: auto; }
+.tab-panel > div[style*="padding"] { text-align: center; }
 
 /* ── UNIDENTIFIED TAB ── */
 #tabUnidentified {
@@ -1358,9 +1366,9 @@ kbd {
     </div>
     <div class="global-search-wrap" id="globalSearchWrap">
       <div class="global-search-input-row" id="globalSearchRow">
-        <span class="search-icon">⌕</span>
+        <span class="search-icon" style="font-size:1.4rem;">⌕</span>
         <input class="search-bar" id="searchInput" type="text" 
-          placeholder="Search persons, documents, events, flights…"
+          placeholder="Search"
           autocomplete="off" spellcheck="false">
         <span id="globalSearchClear" style="display:none;cursor:pointer;color:var(--text-tertiary);font-size:1.1rem;line-height:1;padding:0 2px;" onclick="clearGlobalSearch()">×</span>
       </div>
@@ -1413,7 +1421,8 @@ kbd {
     <!-- ── TAB: PROFILES ── -->
     <div class="tab-panel active" id="tabProfiles">
       <div class="landing">
-        <div class="landing-title">Search the<br>Epstein DOJ Database</div>
+        <div class="landing-title">The Epstein Record</div>
+        <div class="landing-sub" style="font-style:italic;color:var(--text-secondary);">A structured intelligence record of the Epstein network — built on primary DOJ sources, designed for journalists, researchers, and investigators who need more than a search bar.</div>
         <div class="landing-sub">123 individuals indexed from the Epstein archive and pilot logbooks. Search by name, document title, event, or flight route to investigate connections, build timelines, and analyze the network.</div>
         <div class="landing-suggestions">
           <span class="suggestion-chip" onclick="doSearch('Lesley Groff')">Lesley Groff</span>
@@ -1591,6 +1600,10 @@ kbd {
       <div class="panel-card-title">Locations — Documented Presence</div>
       <div id="locationsContent"></div>
     </div>
+    <div id="primarySourcesPanel" style="display:none" class="panel-card">
+      <div class="panel-card-title">View Primary Sources</div>
+      <div id="primarySourcesContent"></div>
+    </div>
     <div id="sourceDocsPanel" style="display:none" class="panel-card">
       <div class="panel-card-title">Source Documents</div>
       <div id="sourceDocsContent"></div>
@@ -1694,7 +1707,7 @@ function switchTab(tab) {
   const rightPanel = document.getElementById('rightPanel');
 
   // Hide all right panel cards first
-  const allPanelCards = ['powerPanel','coPresentPanel','locationsPanel','sourceDocsPanel',
+  const allPanelCards = ['powerPanel','coPresentPanel','locationsPanel','primarySourcesPanel','sourceDocsPanel',
     'flightStatsPanel','flightRoutesPanel','flightTravelersPanel',
     'connPanelA','connPanelB','connPathPanel'];
   allPanelCards.forEach(id => { const el=document.getElementById(id); if(el) el.style.display='none'; });
@@ -2062,7 +2075,7 @@ async function searchPersons(query) {
   try {
     const { data, error } = await db
       .from('persons')
-      .select('id, full_name, confidence, category, relationship_to_epstein, public_title, total_document_count, power_public_profile, power_institutional, power_network_centrality, power_corroboration, current_status, notes, nationality, active_period_start, active_period_end, upgrade_gap_note')
+      .select('id, full_name, confidence, category, relationship_to_epstein, public_title, total_document_count, power_public_profile, power_institutional, power_network_centrality, power_corroboration, current_status, notes, nationality, active_period_start, active_period_end, upgrade_gap_note, jmail_url, jwiki_url, jphotos_url')
       .ilike('full_name', `%${query}%`)
       .eq('is_victim', false)
       .order('total_document_count', { ascending: false })
@@ -2080,7 +2093,7 @@ async function browseByFilter(field, value) {
   try {
     const { data, error } = await db
       .from('persons')
-      .select('id, full_name, confidence, category, relationship_to_epstein, public_title, total_document_count, power_public_profile, power_institutional, power_network_centrality, power_corroboration, current_status, notes, nationality, active_period_start, active_period_end, upgrade_gap_note')
+      .select('id, full_name, confidence, category, relationship_to_epstein, public_title, total_document_count, power_public_profile, power_institutional, power_network_centrality, power_corroboration, current_status, notes, nationality, active_period_start, active_period_end, upgrade_gap_note, jmail_url, jwiki_url, jphotos_url')
       .eq(col, value)
       .eq('is_victim', false)
       .order('total_document_count', { ascending: false })
@@ -2157,6 +2170,48 @@ function renderProfile(p) {
   document.getElementById('locationsPanel').style.display = 'none';
   document.getElementById('sourceDocsPanel').style.display = 'none';
 
+  // === PRIMARY SOURCES PANEL ===
+  const psLinks = [];
+  if (p.jmail_url) {
+    psLinks.push(`
+      <div class="source-doc-row">
+        <div style="flex:1;min-width:0;">
+          <div class="source-doc-id">EMAIL CORRESPONDENCE</div>
+          <div class="source-doc-title">View ${p.full_name.split(' ')[0]}'s direct emails with Epstein</div>
+          <div class="source-doc-meta">Source: DOJ Epstein Files · jmail.world</div>
+          <a class="doj-link" href="${p.jmail_url}" target="_blank" rel="noopener noreferrer">VIEW EMAILS ↗</a>
+        </div>
+      </div>`);
+  }
+  if (p.jphotos_url) {
+    psLinks.push(`
+      <div class="source-doc-row">
+        <div style="flex:1;min-width:0;">
+          <div class="source-doc-id">ARCHIVE PHOTOGRAPHS</div>
+          <div class="source-doc-title">Photos of ${p.full_name.split(' ')[0]} from the DOJ file release</div>
+          <div class="source-doc-meta">Source: DOJ Epstein Files · jmail.world/photos</div>
+          <a class="doj-link" href="${p.jphotos_url}" target="_blank" rel="noopener noreferrer">VIEW PHOTOS ↗</a>
+        </div>
+      </div>`);
+  }
+  if (p.jwiki_url) {
+    psLinks.push(`
+      <div class="source-doc-row">
+        <div style="flex:1;min-width:0;">
+          <div class="source-doc-id">JWIKI PROFILE</div>
+          <div class="source-doc-title">AI-generated profile from Epstein archive</div>
+          <div class="source-doc-meta">Source: jmail.world/wiki</div>
+          <a class="doj-link" href="${p.jwiki_url}" target="_blank" rel="noopener noreferrer">VIEW ON JWIKI ↗</a>
+        </div>
+      </div>`);
+  }
+  if (psLinks.length > 0) {
+    document.getElementById('primarySourcesPanel').style.display = 'block';
+    document.getElementById('primarySourcesContent').innerHTML = psLinks.join('');
+  } else {
+    document.getElementById('primarySourcesPanel').style.display = 'none';
+  }
+
   fetchFlights(p.id, p.full_name, conf, p.upgrade_gap_note, emailCount);
 }
 
@@ -2182,8 +2237,35 @@ async function fetchFlights(personId, personName, conf, upgradeGapNote, emailCou
       document.getElementById('coPresentContent').innerHTML = `<div style="font-family:'Montserrat',sans-serif;font-size:0.72rem;color:var(--text-tertiary);padding:0.5rem 0;">No co-present persons documented in flight records.</div>`;
       document.getElementById('locationsPanel').style.display = 'block';
       document.getElementById('locationsContent').innerHTML = `<div style="font-family:'Montserrat',sans-serif;font-size:0.72rem;color:var(--text-tertiary);padding:0.5rem 0;">No flight location data available.</div>`;
+      // Still fetch person_documents even if no flights
+      const { data: personDocsNoFlight } = await db
+        .from('person_documents')
+        .select('document_id, confidence, context_note, documents(id, title, doc_reference_id, document_type, document_date, doj_url)')
+        .eq('person_id', personId)
+        .limit(10);
+      const dojLinkBtnNF = (url) => {
+        if (!url) return '';
+        const isLanding = url.includes('doj-disclosures') && !url.includes('DataSet') && !url.includes('data-set');
+        return `<a class="doj-link" href="${url}" target="_blank" rel="noopener noreferrer">${isLanding ? 'VIEW ON DOJ ↗' : 'VIEW FILE ↗'}</a>`;
+      };
+      const nfRows = (personDocsNoFlight || []).map(pd => {
+        const d = pd.documents;
+        if (!d) return '';
+        const refId = d.doc_reference_id || d.id.substring(0,8).toUpperCase();
+        const docType = d.document_type ? cap(d.document_type.replace(/_/g,' ')) : 'Document';
+        const docYear = d.document_date ? d.document_date.substring(0,4) : '';
+        return `<div class="source-doc-row">
+          <div style="flex:1;min-width:0;">
+            <div class="source-doc-id">${refId}</div>
+            <div class="source-doc-title">${d.title}</div>
+            <div class="source-doc-meta">${docType}${docYear ? ' · ' + docYear : ''}</div>
+            ${dojLinkBtnNF(d.doj_url)}
+          </div>
+        </div>`;
+      }).filter(Boolean).join('');
       document.getElementById('sourceDocsPanel').style.display = 'block';
-      document.getElementById('sourceDocsContent').innerHTML = `<div style="font-family:'Montserrat',sans-serif;font-size:0.72rem;color:var(--text-tertiary);padding:0.5rem 0;">Source: Epstein email archive · ${emailCount.toLocaleString()} documents indexed.</div>`;
+      document.getElementById('sourceDocsContent').innerHTML = nfRows ||
+        `<div style="font-family:'Montserrat',sans-serif;font-size:0.72rem;color:var(--text-tertiary);padding:0.5rem 0;">Source: Epstein archive · ${emailCount.toLocaleString()} documents indexed.</div>`;
       return;
     }
 
@@ -2316,25 +2398,50 @@ async function fetchFlights(personId, personName, conf, upgradeGapNote, emailCou
     document.getElementById('locationsPanel').style.display = 'block';
     document.getElementById('locationsContent').innerHTML = locRows.join('');
 
-    // === RIGHT PANEL: Source Documents with check/dash indicators ===
-    const confCircle = (c) => {
-      if (c === 'confirmed') return `<div style="width:20px;height:20px;border-radius:50%;border:1px solid var(--confirmed);display:flex;align-items:center;justify-content:center;"><span style="color:var(--confirmed);font-size:0.65rem;">✓</span></div>`;
-      if (c === 'corroborated') return `<div style="width:20px;height:20px;border-radius:50%;border:1px solid var(--corroborated);display:flex;align-items:center;justify-content:center;"><span style="color:var(--corroborated);font-size:0.65rem;">✓</span></div>`;
-      return `<div style="width:20px;height:20px;border-radius:50%;border:1px solid var(--border-mid);display:flex;align-items:center;justify-content:center;"><span style="color:var(--text-tertiary);font-size:0.75rem;">−</span></div>`;
+    // === RIGHT PANEL: Source Documents with DOJ links ===
+    const dojLinkBtn = (url) => {
+      if (!url) return '';
+      const isLanding = url.includes('doj-disclosures') && !url.includes('DataSet') && !url.includes('data-set');
+      const label = isLanding ? 'VIEW ON DOJ ↗' : 'VIEW FILE ↗';
+      return `<a class="doj-link" href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`;
     };
-    document.getElementById('sourceDocsPanel').style.display = 'block';
-    document.getElementById('sourceDocsContent').innerHTML = (flights||[]).slice(0,5).map((f,i) => {
-      const docId = `DOC-FL-${String(f.id).padStart(4,'0')}`;
-      const fDate = new Date(f.flight_date+'T12:00:00').toLocaleDateString('en-US',{month:'short',year:'numeric'});
-      const fConf = (isIsland(f.destination)||isIsland(f.origin)) ? 'confirmed' : conf;
+
+    // Fetch person_documents joined with documents for this person
+    const { data: personDocs } = await db
+      .from('person_documents')
+      .select('document_id, confidence, context_note, documents(id, title, doc_reference_id, document_type, document_date, doj_url)')
+      .eq('person_id', personId)
+      .limit(10);
+
+    const docRows = (personDocs || []).map(pd => {
+      const d = pd.documents;
+      if (!d) return '';
+      const refId = d.doc_reference_id || d.id.substring(0,8).toUpperCase();
+      const docType = d.document_type ? cap(d.document_type.replace(/_/g,' ')) : 'Document';
+      const docYear = d.document_date ? d.document_date.substring(0,4) : '';
       return `<div class="source-doc-row">
-        <div>
-          <div class="source-doc-id">${docId}</div>
-          <div class="source-doc-meta">Flight Manifest · ${fDate}</div>
+        <div style="flex:1;min-width:0;">
+          <div class="source-doc-id">${refId}</div>
+          <div class="source-doc-title">${d.title}</div>
+          <div class="source-doc-meta">${docType}${docYear ? ' · ' + docYear : ''}</div>
+          ${dojLinkBtn(d.doj_url)}
         </div>
-        ${confCircle(fConf)}
       </div>`;
-    }).join('');
+    }).filter(Boolean);
+
+    // Also show flight log entry if there are flights
+    const flightLogRow = (flights||[]).length > 0 ? `<div class="source-doc-row">
+      <div style="flex:1;min-width:0;">
+        <div class="source-doc-id">FLIGHT-LOGS-LOLITA</div>
+        <div class="source-doc-title">Epstein Flight Logs — N908JE and N909JE</div>
+        <div class="source-doc-meta">Flight Manifest · ${(flights||[]).length} legs documented</div>
+        <a class="doj-link" href="https://www.justice.gov/multimedia/Court%20Records/United%20States%20v.%20Maxwell,%20No.%20120-cr-00330%20(S.D.N.Y.%202020)/B.%20Flight%20Log_Released%20in%20U.S.%20v.%20Maxwell_Part1.pdf" target="_blank" rel="noopener noreferrer">VIEW FILE ↗</a>
+      </div>
+    </div>` : '';
+
+    document.getElementById('sourceDocsPanel').style.display = 'block';
+    document.getElementById('sourceDocsContent').innerHTML = docRows.join('') + flightLogRow ||
+      `<div style="font-family:'Montserrat',sans-serif;font-size:0.72rem;color:var(--text-tertiary);padding:0.5rem 0;">Source: Epstein flight archive · ${emailCount.toLocaleString()} documents indexed.</div>`;
 
     // === MAIN: Event Timeline ===
     el.innerHTML = (flights||[]).map(f => {
@@ -2410,7 +2517,7 @@ function showResults(persons, query) {
 
 async function loadById(id) {
   showProfilesLoading();
-  const { data } = await db.from('persons').select('*').eq('id', id).single();
+  const { data } = await db.from('persons').select('*, jmail_url, jwiki_url').eq('id', id).single();
   if (data) renderProfile(data);
 }
 
@@ -2547,8 +2654,9 @@ function showLanding() {
   document.querySelector('.app').classList.add('landing-active');
   document.getElementById('tabProfiles').innerHTML = `
     <div class="landing">
-      <div class="landing-title">Search the<br>Epstein DOJ Database</div>
-      <div class="landing-sub">141 individuals indexed from the Epstein archive and pilot logbooks. Search by name to view profiles, flight history, connection analysis, and power index.</div>
+      <div class="landing-title">The Epstein Record</div>
+      <div class="landing-sub" style="font-style:italic;color:var(--text-secondary);">A structured intelligence record of the Epstein network — built on primary DOJ sources, designed for journalists, researchers, and investigators who need more than a search bar.</div>
+      <div class="landing-sub">123 individuals indexed from the Epstein archive and pilot logbooks. Search by name to view profiles, flight history, connection analysis, and power index.</div>
       <div class="landing-suggestions">
         <span class="suggestion-chip" onclick="doSearch('Lesley Groff')">Lesley Groff</span>
         <span class="suggestion-chip" onclick="doSearch('Ghislaine Maxwell')">Ghislaine Maxwell</span>
