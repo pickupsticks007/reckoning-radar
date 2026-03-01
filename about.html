@@ -4,494 +4,235 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>About — The Reckoning Radar | Epstein Files Intelligence Platform</title>
-
-<!-- Primary SEO -->
-<meta name="description" content="About The Reckoning Radar — an investigative intelligence platform built on primary source documents from the DOJ Epstein Files. Learn about our methodology, data sources, and how to get in touch.">
+<meta name="description" content="About The Reckoning Radar — an investigative intelligence platform built on primary source documents from the DOJ Epstein Files.">
 <meta name="robots" content="index, follow">
-<meta name="author" content="The Reckoning Radar">
 <link rel="canonical" href="https://www.thereckoningradar.com/about.html">
-
-<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.thereckoningradar.com/about.html">
 <meta property="og:title" content="About — The Reckoning Radar">
-<meta property="og:description" content="An investigative intelligence platform built on primary source documents from the DOJ Epstein Files. 123 individuals indexed. Every claim sourced.">
-<meta property="og:site_name" content="The Reckoning Radar">
+<meta property="og:description" content="An investigative intelligence platform built on primary source documents from the DOJ Epstein Files. 123 individuals indexed.">
 <meta property="og:image" content="https://www.thereckoningradar.com/og-image.png">
-
-<!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="About — The Reckoning Radar">
-<meta name="twitter:description" content="An investigative intelligence platform built on primary source documents from the DOJ Epstein Files.">
 <meta name="twitter:image" content="https://www.thereckoningradar.com/og-image.png">
-
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-<link href="https://use.typekit.net/zzw7dfl.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:wght@300;400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://use.typekit.net/zzw7dfl.css">
 <style>
 :root {
-  --bg: #f9f9f6;
-  --bg-secondary: #f4f1ed;
-  --surface: #f9f9f6;
-  --border: rgba(0,0,0,0.08);
-  --border-strong: rgba(0,0,0,0.14);
-  --text-primary: #1B1B1B;
-  --text-secondary: #3a3a3a;
-  --text-tertiary: #6a6a6a;
-  --accent-dim: #e0e0dd;
-  --highlight: #C8102E;
+  --bg: #FAFAFA; --bg-secondary: #FAFAFA; --bg-card: #FAFAFA; --surface: #FAFAFA;
+  --border: rgba(0,0,0,0.08); --border-mid: rgba(0,0,0,0.12); --border-strong: rgba(0,0,0,0.18);
+  --accent: #1A1A1A; --accent-dim: rgba(26,26,26,0.10); --accent-bg: rgba(26,26,26,0.08);
+  --text-primary: #1B1B1B; --text-secondary: #3a3a3a; --text-tertiary: #6a6a6a;
+  --highlight: #C8102E; --topbar-bg: #FAFAFA;
 }
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-body {
-  font-family: 'neue-haas-grotesk-display', -apple-system, sans-serif;
-  background: var(--bg);
-  color: var(--text-primary);
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* ── TOPBAR ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: "neue-haas-grotesk-display", -apple-system, sans-serif; background: var(--bg); color: var(--text-primary); font-size: 14px; line-height: 1.5; }
+.app { display: grid; grid-template-columns: 210px 1fr; grid-template-rows: 128px 1fr; height: 100vh; overflow: hidden; }
 .topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 1.5rem;
-  height: 52px;
-  background: var(--bg-secondary);
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  grid-column: 1/-1; grid-row: 1;
+  display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);
+  align-items: center; padding: 0 1.75rem; min-height: 128px;
+  background: var(--topbar-bg); border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 100;
 }
-.logo-group {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  line-height: 1;
-  gap: 1px;
-  text-decoration: none;
-}
-.logo-the {
-  font-family: 'neue-haas-grotesk-display', sans-serif;
-  font-weight: 700;
-  font-size: 0.58rem;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--text-primary);
-}
-.logo-main {
-  font-family: 'neue-haas-grotesk-display', sans-serif;
-  font-weight: 700;
-  font-size: 1.3rem;
-  letter-spacing: -0.02em;
-  color: var(--text-primary);
-  white-space: nowrap;
-}
-.topbar-center {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 400;
-  font-size: 0.88rem;
-  letter-spacing: 0.28em;
-  color: var(--text-tertiary);
-  text-transform: uppercase;
-}
-.hamburger-btn {
-  background: none;
-  border: 1px solid var(--border-strong);
-  border-radius: 6px;
-  width: 36px;
-  height: 36px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  cursor: pointer;
-  transition: all 0.15s;
-}
-.hamburger-btn:hover { background: var(--accent-dim); border-color: var(--text-primary); }
-.hamburger-btn span { display:block; width:16px; height:1.5px; background:var(--text-primary); border-radius:2px; }
-
-/* ── DRAWER ── */
-.nav-drawer { display:none; position:fixed; inset:0; z-index:500; }
-.nav-drawer.open { display:block; }
-.drawer-overlay { position:absolute; inset:0; background:rgba(0,0,0,0.3); }
-.drawer-panel {
-  position: absolute; top:0; right:0;
-  width: 240px; height:100%;
-  background: var(--surface);
-  border-left: 1px solid var(--border-strong);
-  padding: 1.25rem 1rem;
-  display: flex; flex-direction:column; gap:0;
-  box-shadow: -4px 0 24px rgba(0,0,0,0.08);
-}
-.drawer-header {
-  display: flex; align-items:center; justify-content:space-between;
-  margin-bottom: 1.25rem;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid var(--border);
-}
-.drawer-title {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 700; font-size: 0.75rem;
-  letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--text-tertiary);
-}
-.drawer-close-btn {
-  background:none; border:none; cursor:pointer;
-  font-size:1rem; color:var(--text-tertiary); line-height:1;
-}
-.drawer-section-label {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.6rem; font-weight: 700;
-  letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--text-tertiary);
-  padding: 0.6rem 0.5rem 0.3rem;
-}
-.drawer-nav-link {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 600; font-size: 0.82rem;
-  color: var(--text-secondary);
-  text-decoration: none;
-  padding: 0.45rem 0.5rem;
-  border-radius: 6px;
-  display: block;
-  transition: color 0.15s, background 0.15s;
-  margin-bottom: 0.1rem;
-}
-.drawer-nav-link:hover { background: var(--accent-dim); color: var(--text-primary); }
-.drawer-nav-link.active {
-  background: rgba(26,26,26,0.09);
-  color: var(--text-primary);
-  border-left: 2px solid var(--text-primary);
-  padding-left: calc(0.5rem - 2px);
-}
-
-/* ── MAIN CONTENT ── */
-.page-body {
-  flex: 1;
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 3.5rem 2rem 5rem;
-  width: 100%;
-}
-
-.page-label {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--text-tertiary);
-  margin-bottom: 0.75rem;
-}
-.page-title {
-  font-family: 'neue-haas-grotesk-display', sans-serif;
-  font-size: 2.2rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--text-primary);
-  line-height: 1.1;
-  margin-bottom: 2.5rem;
-}
-
-.section {
-  margin-bottom: 2.75rem;
-}
-.section-title {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--text-tertiary);
-  margin-bottom: 0.85rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-.section-body {
-  font-family: 'Source Sans 3', sans-serif;
-  font-size: 1rem;
-  line-height: 1.8;
-  color: var(--text-secondary);
-}
-.section-body p { margin-bottom: 1rem; }
+.mobile-menu-btn { display: none; background: none; border: none; font-size: 1.25rem; cursor: pointer; color: var(--text-primary); padding: 0.25rem; }
+.topbar-logo { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-start; line-height: 1; gap: 1px; cursor: pointer; text-decoration: none; }
+.logo-the { font-family: "neue-haas-grotesk-display", sans-serif; font-weight: 300; font-size: 0.58rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-tertiary); }
+.logo-main { font-family: "neue-haas-grotesk-display", sans-serif; font-weight: 700; font-size: 1.3rem; letter-spacing: -0.02em; color: var(--text-primary); white-space: nowrap; }
+.topbar-right { justify-self: end; display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; background: #1A6B3C; box-shadow: 0 0 6px rgba(26,107,60,0.6); flex-shrink: 0; }
+.status-text { font-family: "Montserrat", sans-serif; font-weight: 500; font-size: 0.85rem; color: var(--text-secondary); white-space: nowrap; }
+.sidebar-left { grid-column: 1; grid-row: 2; overflow-y: auto; border-right: 1px solid var(--border); padding: 3.5rem 0.75rem 1.1rem; background: var(--bg-secondary); display: flex; flex-direction: column; }
+.sidebar-section { margin-bottom: 1.6rem; }
+.sidebar-label { font-family: "Montserrat", sans-serif !important; font-weight: 700 !important; font-size: 0.58rem !important; color: var(--text-tertiary) !important; letter-spacing: 0.16em !important; text-transform: uppercase !important; margin-bottom: 0.4rem; padding: 0 0.25rem; text-align: center !important; }
+.nav-item { display: flex; justify-content: space-between; align-items: center; padding: 0.45rem 0.5rem; border-radius: 6px; cursor: pointer; color: #0D0D0D; font-family: "Inter", sans-serif !important; font-weight: 400 !important; font-size: 1rem !important; letter-spacing: 0.01em !important; margin-bottom: 0.15rem; text-decoration: none; }
+.nav-item:hover { background: var(--accent-dim); color: var(--text-primary); }
+.sidebar-footer { padding: 1.5rem 0.75rem 2rem; margin-top: auto; border-top: 1px solid var(--border); text-align: center; }
+.sidebar-footer-link { font-family: "Montserrat", sans-serif; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-tertiary); text-decoration: none; }
+.sidebar-footer-link:hover { color: var(--text-primary); }
+.main { grid-column: 2; grid-row: 2; overflow-y: auto; padding: 3.5rem 0 0; display: flex; flex-direction: column; align-items: center; }
+.mobile-drawer { display: none; position: fixed; inset: 0; z-index: 200; }
+.mobile-drawer.open { display: block; }
+.drawer-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.45); }
+.drawer-panel { position: absolute; top: 0; left: 0; bottom: 0; width: 280px; background: var(--bg-secondary); padding: 1.25rem 1rem; overflow-y: auto; box-shadow: 4px 0 24px rgba(0,0,0,0.18); }
+.drawer-close { display: flex; justify-content: flex-end; margin-bottom: 1rem; }
+.drawer-close button { background: none; border: 1px solid var(--border); border-radius: 6px; padding: 0.3rem 0.65rem; cursor: pointer; color: var(--text-secondary); font-size: 0.8rem; }
+/* About page content */
+.page-body { max-width: 680px; width: 100%; padding: 0 2.5rem 5rem; font-family: "Source Sans 3", sans-serif; text-align: center; }
+.page-label { font-family: "Montserrat", sans-serif; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 0.65rem; }
+.page-title { font-family: "neue-haas-grotesk-display", sans-serif; font-weight: 700; font-size: 2rem; letter-spacing: -0.02em; color: var(--text-primary); margin-bottom: 2.5rem; line-height: 1.1; }
+.section { margin-bottom: 2.5rem; }
+.section-title { font-family: "Montserrat", sans-serif; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 0.85rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+.section-body p { font-family: "neue-haas-grotesk-display", sans-serif; font-weight: 400; font-size: 0.95rem; line-height: 1.75; color: #1B1B1B; margin-bottom: 0.85rem; }
 .section-body p:last-child { margin-bottom: 0; }
-
-.source-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  margin-top: 0.25rem;
-}
-.source-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: 7px;
-}
-.source-icon {
-  font-size: 0.9rem;
-  flex-shrink: 0;
-  margin-top: 0.1rem;
-}
-.source-name {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 0.15rem;
-}
-.source-desc {
-  font-family: 'Source Sans 3', sans-serif;
-  font-size: 0.82rem;
-  color: var(--text-tertiary);
-  line-height: 1.5;
-}
-
-.confidence-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.6rem;
-  margin-top: 0.25rem;
-}
-.conf-item {
-  padding: 0.75rem 1rem;
-  border-radius: 7px;
-  border: 1px solid var(--border);
-}
-.conf-label {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: 0.3rem;
-}
-.conf-desc {
-  font-family: 'Source Sans 3', sans-serif;
-  font-size: 0.8rem;
-  color: var(--text-tertiary);
-  line-height: 1.5;
-}
-.conf-confirmed { background: rgba(26,107,60,0.06); border-color: rgba(26,107,60,0.2); }
+.source-list { list-style: none; display: flex; flex-direction: column; gap: 0.85rem; }
+.source-item { display: flex; gap: 0.85rem; align-items: flex-start; padding: 0.85rem 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; }
+.source-icon { font-size: 1rem; flex-shrink: 0; margin-top: 0.1rem; }
+.source-name { font-family: "Montserrat", sans-serif; font-size: 0.78rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.25rem; }
+.source-desc { font-size: 0.85rem; color: var(--text-tertiary); line-height: 1.5; }
+.confidence-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+.conf-item { padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid var(--border); }
+.conf-confirmed { border-left: 3px solid #1A6B3C; }
+.conf-corroborated { border-left: 3px solid #1A5C8A; }
+.conf-indicated { border-left: 3px solid #8A5A1A; }
+.conf-unverified { border-left: 3px solid #8A1A1A; }
+.conf-label { font-family: "Montserrat", sans-serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.4rem; }
 .conf-confirmed .conf-label { color: #1A6B3C; }
-.conf-indicated { background: rgba(138,90,26,0.06); border-color: rgba(138,90,26,0.2); }
-.conf-indicated .conf-label { color: #8A5A1A; }
-.conf-corroborated { background: rgba(26,92,138,0.06); border-color: rgba(26,92,138,0.2); }
 .conf-corroborated .conf-label { color: #1A5C8A; }
-.conf-unverified { background: rgba(138,26,26,0.06); border-color: rgba(138,26,26,0.2); }
+.conf-indicated .conf-label { color: #8A5A1A; }
 .conf-unverified .conf-label { color: #8A1A1A; }
-
-.contact-box {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 1.5rem 1.75rem;
-}
-.contact-box p {
-  font-family: 'Source Sans 3', sans-serif;
-  font-size: 1rem;
-  line-height: 1.8;
-  color: var(--text-secondary);
-  margin-bottom: 1rem;
-}
+.conf-desc { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.55; }
+.divider { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+.contact-box { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem 1.5rem; }
+.contact-box p { font-size: 0.92rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 0.65rem; }
 .contact-box p:last-child { margin-bottom: 0; }
-.contact-email {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: var(--text-primary);
-  text-decoration: none;
-  border-bottom: 1px solid var(--border-strong);
-  padding-bottom: 1px;
-  transition: border-color 0.15s;
-}
-.contact-email:hover { border-color: var(--text-primary); }
-
-.divider {
-  border: none;
-  border-top: 1px solid var(--border);
-  margin: 2.75rem 0;
-}
-
-.disclaimer {
-  font-family: 'Source Sans 3', sans-serif;
-  font-size: 0.82rem;
-  line-height: 1.7;
-  color: var(--text-tertiary);
-  padding: 1.25rem 1.5rem;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--bg-secondary);
-}
-
-@media (max-width: 600px) {
-  .page-body { padding: 2rem 1.25rem 4rem; }
-  .page-title { font-size: 1.7rem; }
+.contact-email { font-family: "Montserrat", sans-serif; font-weight: 600; font-size: 0.88rem; color: var(--text-primary); text-decoration: none; border-bottom: 1px solid var(--border-strong); }
+.contact-email:hover { border-bottom-color: var(--text-primary); }
+.disclaimer { font-size: 0.78rem; color: var(--text-tertiary); line-height: 1.65; border-top: 1px solid var(--border); padding-top: 1.5rem; margin-top: 0; }
+@media (max-width: 768px) {
+  .app { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+  .topbar { grid-template-columns: auto 1fr auto; min-height: 64px; }
+  .mobile-menu-btn { display: block; }
+  .sidebar-left { display: none; }
+  .main { grid-column: 1; padding-top: 1.5rem; }
+  .page-body { padding: 0 1.25rem 4rem; }
   .confidence-grid { grid-template-columns: 1fr; }
-  .topbar-center { display: none; }
 }
 </style>
 </head>
 <body>
+<div class="app">
 
-<!-- TOPBAR -->
-<div class="topbar">
-  <a href="https://www.thereckoningradar.com" class="logo-group">
-    <span class="logo-the">The</span>
-    <span class="logo-main">Reckoning Radar</span>
-  </a>
-  <div class="topbar-center">About</div>
-  <button class="hamburger-btn" onclick="openDrawer()" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
+  <header class="topbar">
+    <button class="mobile-menu-btn" onclick="openDrawer()" aria-label="Menu">&#9776;</button>
+    <a class="topbar-logo" href="index.html">
+      <span class="logo-the">The</span>
+      <span class="logo-main">Reckoning Radar</span>
+    </a>
+    <div></div>
+    <div class="topbar-right">
+      <div style="display:flex;align-items:center;gap:0.4rem;">
+        <div class="status-dot"></div>
+        <span class="status-text">123 profiles indexed</span>
+      </div>
+    </div>
+  </header>
+
+  <aside class="sidebar-left">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Investigate</div>
+      <a class="nav-item" href="index.html"><span>Person Profiles</span></a>
+      <a class="nav-item" href="index.html?tab=timeline"><span>Evidence Timeline</span></a>
+      <a class="nav-item" href="connections.html"><span>Connections</span><span style="margin-left:0.4rem;background:#CC2200;color:#fff;font-family:Montserrat,sans-serif;font-weight:700;font-size:0.48rem;letter-spacing:0.08em;text-transform:uppercase;padding:1px 5px;border-radius:3px;vertical-align:middle;">Soon</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Explore the Record</div>
+      <a class="nav-item" href="index.html?tab=flights"><span>Flight Manifests</span></a>
+      <a class="nav-item" href="index.html?tab=unidentified"><span>Unidentified Passengers</span></a>
+      <a class="nav-item" href="index.html?tab=documents"><span>Document Library</span></a>
+      <a class="nav-item" href="index.html?tab=legal"><span>Legal Tracker</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Visualize</div>
+      <a class="nav-item" href="graph.html"><span>Network Graph</span></a>
+      <a class="nav-item" href="money.html"><span>Money Map</span></a>
+      <a class="nav-item" href="index.html?tab=locations"><span>Location Intel</span></a>
+    </div>
+    <div class="sidebar-footer">
+      <a href="about.html" class="sidebar-footer-link" style="color:var(--text-primary);">About</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="page-body">
+
+      <h1 class="page-title">The Reckoning Radar</h1>
+
+      <div class="section">
+        <div class="section-title">About This Platform</div>
+        <div class="section-body">
+          <p>The Reckoning Radar is an investigative intelligence platform built on primary source documents released by the U.S. Department of Justice as part of the Jeffrey Epstein case files.</p>
+          <p>It is not a news site. It does not publish allegations or speculation. Every person indexed, every relationship mapped, and every event documented is sourced directly to a primary document &mdash; court records, flight logs, FBI reports, deposition transcripts, financial consent orders, or congressional disclosures.</p>
+          <p>The goal is simple: make the public record searchable, navigable, and useful &mdash; for journalists, researchers, investigators, and anyone who wants to understand what the documents actually say.</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Primary Sources</div>
+        <ul class="source-list">
+          <li class="source-item"><span class="source-icon">&#128196;</span><div><div class="source-name">DOJ Epstein Files &mdash; justice.gov/epstein</div><div class="source-desc">Court records, FBI disclosures, deposition transcripts, and the AG Bondi congressional letter released December 2025 and January 2026.</div></div></li>
+          <li class="source-item"><span class="source-icon">&#9992;</span><div><div class="source-name">Epstein Flight Logs &mdash; Pilot Logbooks</div><div class="source-desc">Pilot logbooks released in U.S. v. Maxwell documenting passengers aboard Epstein's aircraft.</div></div></li>
+          <li class="source-item"><span class="source-icon">&#128220;</span><div><div class="source-name">Epstein Little Black Book &mdash; Contact Directory</div><div class="source-desc">Epstein's personal contact book released as part of the court record.</div></div></li>
+          <li class="source-item"><span class="source-icon">&#127974;</span><div><div class="source-name">JPMorgan Suspicious Activity Report</div><div class="source-desc">SAR filed post-Epstein death covering approximately $1 billion in flagged transactions.</div></div></li>
+          <li class="source-item"><span class="source-icon">&#127974;</span><div><div class="source-name">Deutsche Bank Consent Order &mdash; NYDFS 2020</div><div class="source-desc">New York Department of Financial Services consent order detailing Deutsche Bank's Epstein accounts.</div></div></li>
+          <li class="source-item"><span class="source-icon">&#127891;</span><div><div class="source-name">MIT Internal Review &mdash; January 2020</div><div class="source-desc">MIT's independent fact-finding report on Epstein donations to the Media Lab and other departments.</div></div></li>
+        </ul>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Confidence Levels</div>
+        <div class="section-body" style="margin-bottom:0.85rem;"><p>Every person in the database is assigned a confidence rating reflecting how strongly the evidence supports their documented connection to Epstein.</p></div>
+        <div class="confidence-grid">
+          <div class="conf-item conf-confirmed"><div class="conf-label">Confirmed</div><div class="conf-desc">Directly evidenced by primary source documents &mdash; court records, sworn testimony, or official filings.</div></div>
+          <div class="conf-item conf-corroborated"><div class="conf-label">Corroborated</div><div class="conf-desc">Supported by multiple independent sources or secondary documentation that corroborates primary evidence.</div></div>
+          <div class="conf-item conf-indicated"><div class="conf-label">Indicated</div><div class="conf-desc">Documented in a single primary source. Connection is real but the full extent is not yet established.</div></div>
+          <div class="conf-item conf-unverified"><div class="conf-label">Unverified</div><div class="conf-desc">Named in documents but connection requires further corroboration from additional primary sources.</div></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Who is not included</div>
+        <div class="section-body"><p>Anyone who appears in the Epstein files solely because they are famous &mdash; but has no documented direct connection to Epstein or his network &mdash; is not included. Being named on a broad government list of politically exposed persons is not sufficient. Being photographed near Epstein at a public event is not sufficient. Every person in this database has a documented, sourced connection.</p></div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="section" style="margin-top:-1.25rem;">
+        <div class="section-title" style="border-bottom:none;padding-bottom:0;">Contact</div>
+        <div class="contact-box">
+          <p>Questions, corrections, tips, or source documents &mdash; get in touch.</p>
+          <p>We're also genuinely open to suggestions on how to improve the platform. If there's a feature that would make this more useful to your work, we want to hear it.</p>
+          <p><a href="mailto:reckoningradar@gmail.com" style="display:inline-block;font-size:3.5rem;line-height:1;color:var(--text-primary);text-decoration:none;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.6'" onmouseout="this.style.opacity='1'">✉</a></p>
+        </div>
+      </div>
+
+    </div><!-- end page-body -->
+
+    <div style="width:100%;max-width:680px;padding:12rem 2.5rem 4rem;">
+      <div class="disclaimer">The Reckoning Radar is an independent research platform. It is not affiliated with the U.S. Department of Justice, any government agency, or any news organization. Nothing on this site constitutes legal advice or a finding of criminal liability. Inclusion in this database reflects documented presence in primary source materials &mdash; not a determination of guilt. Where no accusation of wrongdoing exists in the source documents, that is noted in the profile.</div>
+    </div>
+  </main>
 </div>
 
-<!-- DRAWER -->
-<div class="nav-drawer" id="navDrawer">
+<div class="mobile-drawer" id="mobileDrawer">
   <div class="drawer-overlay" onclick="closeDrawer()"></div>
   <div class="drawer-panel">
-    <div class="drawer-header">
-      <span class="drawer-title">Navigate</span>
-      <button class="drawer-close-btn" onclick="closeDrawer()">✕</button>
+    <div class="drawer-close"><button onclick="closeDrawer()">&#10005; Close</button></div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Investigate</div>
+      <a class="nav-item" href="index.html"><span>Person Profiles</span></a>
+      <a class="nav-item" href="index.html?tab=timeline"><span>Evidence Timeline</span></a>
+      <a class="nav-item" href="connections.html"><span>Connections</span><span style="margin-left:0.4rem;background:#CC2200;color:#fff;font-family:Montserrat,sans-serif;font-weight:700;font-size:0.48rem;letter-spacing:0.08em;text-transform:uppercase;padding:1px 5px;border-radius:3px;vertical-align:middle;">Soon</span></a>
     </div>
-    <div class="drawer-section-label">Query Type</div>
-    <a href="https://www.thereckoningradar.com" class="drawer-nav-link">Person Profile</a>
-    <a href="graph.html" class="drawer-nav-link">Network Graph</a>
-    <a href="money.html" class="drawer-nav-link">Money Map</a>
-    <a href="https://www.thereckoningradar.com?tab=flights" class="drawer-nav-link">Flight Manifests</a>
-    <a href="https://www.thereckoningradar.com?tab=unidentified" class="drawer-nav-link">Unidentified</a>
-    <a href="https://www.thereckoningradar.com?tab=connections" class="drawer-nav-link">Connections</a>
-    <a href="https://www.thereckoningradar.com?tab=locations" class="drawer-nav-link">Location Intel</a>
-    <a href="https://www.thereckoningradar.com?tab=documents" class="drawer-nav-link">Document Library</a>
-    <a href="https://www.thereckoningradar.com?tab=timeline" class="drawer-nav-link">Evidence Timeline</a>
-    <a href="https://www.thereckoningradar.com?tab=legal" class="drawer-nav-link">Legal Tracker</a>
-    <div class="drawer-section-label" style="margin-top:0.75rem;">Info</div>
-    <a href="about.html" class="drawer-nav-link active">About</a>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Explore the Record</div>
+      <a class="nav-item" href="index.html?tab=flights"><span>Flight Manifests</span></a>
+      <a class="nav-item" href="index.html?tab=unidentified"><span>Unidentified Passengers</span></a>
+      <a class="nav-item" href="index.html?tab=documents"><span>Document Library</span></a>
+      <a class="nav-item" href="index.html?tab=legal"><span>Legal Tracker</span></a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Visualize</div>
+      <a class="nav-item" href="graph.html"><span>Network Graph</span></a>
+      <a class="nav-item" href="money.html"><span>Money Map</span></a>
+      <a class="nav-item" href="index.html?tab=locations"><span>Location Intel</span></a>
+    </div>
+    <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);text-align:center;">
+      <a href="about.html" style="font-family:Montserrat,sans-serif;font-size:0.72rem;color:var(--text-tertiary);text-decoration:none;letter-spacing:0.08em;text-transform:uppercase;">About</a>
+    </div>
   </div>
 </div>
 
-<!-- CONTENT -->
-<div class="page-body">
-
-  <div class="page-label">About this platform</div>
-  <h1 class="page-title">The Reckoning Radar</h1>
-
-  <div class="section">
-    <div class="section-title">What this is</div>
-    <div class="section-body">
-      <p>The Reckoning Radar is an investigative intelligence platform built on primary source documents released by the U.S. Department of Justice as part of the Jeffrey Epstein case files.</p>
-      <p>It is not a news site. It does not publish allegations or speculation. Every person indexed, every relationship mapped, and every event documented is sourced directly to a primary document — court records, flight logs, FBI reports, deposition transcripts, financial consent orders, or congressional disclosures.</p>
-      <p>The goal is simple: make the public record searchable, navigable, and useful — for journalists, researchers, investigators, and anyone who wants to understand what the documents actually say.</p>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Primary Sources</div>
-    <ul class="source-list">
-      <li class="source-item">
-        <span class="source-icon">📄</span>
-        <div>
-          <div class="source-name">DOJ Epstein Files — justice.gov/epstein</div>
-          <div class="source-desc">Court records, FBI disclosures, deposition transcripts, and the AG Bondi congressional letter released December 2025 and January 2026.</div>
-        </div>
-      </li>
-      <li class="source-item">
-        <span class="source-icon">✈</span>
-        <div>
-          <div class="source-name">Epstein Flight Logs — Pilot Logbooks</div>
-          <div class="source-desc">Pilot logbooks released in U.S. v. Maxwell documenting passengers aboard Epstein's aircraft.</div>
-        </div>
-      </li>
-      <li class="source-item">
-        <span class="source-icon">📒</span>
-        <div>
-          <div class="source-name">Epstein Little Black Book — Contact Directory</div>
-          <div class="source-desc">Epstein's personal contact book released as part of the court record.</div>
-        </div>
-      </li>
-      <li class="source-item">
-        <span class="source-icon">🏦</span>
-        <div>
-          <div class="source-name">JPMorgan Suspicious Activity Report</div>
-          <div class="source-desc">SAR filed post-Epstein death covering approximately $1 billion in flagged transactions.</div>
-        </div>
-      </li>
-      <li class="source-item">
-        <span class="source-icon">🏦</span>
-        <div>
-          <div class="source-name">Deutsche Bank Consent Order — NYDFS 2020</div>
-          <div class="source-desc">New York Department of Financial Services consent order detailing Deutsche Bank's Epstein accounts.</div>
-        </div>
-      </li>
-      <li class="source-item">
-        <span class="source-icon">🎓</span>
-        <div>
-          <div class="source-name">MIT Internal Review — January 2020</div>
-          <div class="source-desc">MIT's independent fact-finding report on Epstein donations to the Media Lab and other departments.</div>
-        </div>
-      </li>
-    </ul>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Confidence Levels</div>
-    <div class="section-body" style="margin-bottom:0.85rem;">
-      <p>Every person in the database is assigned a confidence rating reflecting how strongly the evidence supports their documented connection to Epstein.</p>
-    </div>
-    <div class="confidence-grid">
-      <div class="conf-item conf-confirmed">
-        <div class="conf-label">Confirmed</div>
-        <div class="conf-desc">Directly evidenced by primary source documents — court records, sworn testimony, or official filings.</div>
-      </div>
-      <div class="conf-item conf-corroborated">
-        <div class="conf-label">Corroborated</div>
-        <div class="conf-desc">Supported by multiple independent sources or secondary documentation that corroborates primary evidence.</div>
-      </div>
-      <div class="conf-item conf-indicated">
-        <div class="conf-label">Indicated</div>
-        <div class="conf-desc">Documented in a single primary source. Connection is real but the full extent is not yet established.</div>
-      </div>
-      <div class="conf-item conf-unverified">
-        <div class="conf-label">Unverified</div>
-        <div class="conf-desc">Named in documents but connection requires further corroboration from additional primary sources.</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="section">
-    <div class="section-title">Who is not included</div>
-    <div class="section-body">
-      <p>Anyone who appears in the Epstein files solely because they are famous — but has no documented direct connection to Epstein or his network — is not included. Being named on a broad government list of politically exposed persons is not sufficient. Being photographed near Epstein at a public event is not sufficient. Every person in this database has a documented, sourced connection.</p>
-    </div>
-  </div>
-
-  <hr class="divider">
-
-  <div class="section">
-    <div class="section-title">Contact</div>
-    <div class="contact-box">
-      <p>Questions, corrections, tips, or source documents — get in touch.</p>
-      <p>We're also genuinely open to suggestions on how to improve the platform. If there's a feature that would make this more useful to your work, we want to hear it.</p>
-      <p><a href="mailto:reckoningradar@gmail.com" class="contact-email">reckoningradar@gmail.com</a></p>
-    </div>
-  </div>
-
-  <div class="disclaimer">
-    The Reckoning Radar is an independent research platform. It is not affiliated with the U.S. Department of Justice, any government agency, or any news organization. Nothing on this site constitutes legal advice or a finding of criminal liability. Inclusion in this database reflects documented presence in primary source materials — not a determination of guilt. Where no accusation of wrongdoing exists in the source documents, that is noted in the profile.
-  </div>
-
-</div>
-
-<script>
-function openDrawer() { document.getElementById('navDrawer').classList.add('open'); }
-function closeDrawer() { document.getElementById('navDrawer').classList.remove('open'); }
-</script>
-</body>
-</html>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-
