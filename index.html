@@ -90,7 +90,10 @@ function renderDocLibrary(docs) {
     `<button class="doc-filter-btn ${activeDocFilter === f.value ? 'active' : ''}" onclick="filterDocs('${f.value}',this)">${f.label}</button>`
   ).join('');
 
-  const filtered = activeDocFilter === 'all' ? docs : docs.filter(d => d.document_type === activeDocFilter);
+  const knownTypes = ['court_filing','fbi_report','financial_record','email'];
+  const filtered = activeDocFilter === 'all' ? docs 
+    : activeDocFilter === 'other' ? docs.filter(d => !knownTypes.includes(d.document_type))
+    : docs.filter(d => d.document_type === activeDocFilter);
 
   const cards = filtered.map((d, idx) => {
     const refId = d.doc_reference_id || d.id.substring(0,8).toUpperCase();
@@ -108,7 +111,7 @@ function renderDocLibrary(docs) {
     const moreCitations = uniqueCitations.length > 6 ? `<span class="doc-cite-chip" style="opacity:0.6;">+${uniqueCitations.length-6} more</span>` : '';
 
     const dojBtn = d.doj_url ? `<a class="doj-link" href="${d.doj_url}" target="_blank" rel="noopener noreferrer">VIEW DOC ↗</a>` : '';
-    const redactPct = d.redaction_percentage ? Math.round(d.redaction_percentage) : null;
+    const redactStatus = d.redaction_status && d.redaction_status !== 'none' ? d.redaction_status : null;
 
     return `
       <div class="doc-card" data-type="${d.document_type||'other'}" data-id="${d.id}">
@@ -125,7 +128,7 @@ function renderDocLibrary(docs) {
           </div>
           <div class="doc-card-right">
             <span class="doc-type-badge">${docType}</span>
-            ${redactPct ? `<span class="doc-redact-badge">${redactPct}% redacted</span>` : ''}
+            ${redactStatus ? `<span class="doc-redact-badge">${redactStatus} redaction</span>` : ''}
             <span class="doc-chevron">›</span>
           </div>
         </div>
@@ -140,7 +143,7 @@ function renderDocLibrary(docs) {
               <div class="doc-expand-stat-val">${d.page_count || '—'}</div>
             </div>
           </div>
-          ${d.description ? `<div style="font-family:'Source Sans 3',sans-serif;font-size:0.82rem;color:var(--text-secondary);line-height:1.6;margin-bottom:0.75rem;">${d.description}</div>` : ''}
+          ${d.notes ? `<div style="font-family:'Source Sans 3',sans-serif;font-size:0.82rem;color:var(--text-secondary);line-height:1.6;margin-bottom:0.75rem;">${d.notes}</div>` : ''}
           ${uniqueCitations.length > 0 ? `<div class="section-title" style="margin-bottom:0.5rem;">Persons cited in this document</div><div class="doc-citations">${citationChips}${moreCitations}</div>` : ''}
           ${dojBtn ? `<div style="margin-top:0.75rem;">${dojBtn}</div>` : ''}
         </div>
@@ -186,7 +189,7 @@ let tlPersons = [];
 async function initTimeline() {
   try {
     const [evRes, pRes] = await Promise.all([
-      db.from('events').select('id, event_name, event_date, event_type, notes, confidence, location_id').order('event_date', { ascending: true }),
+      db.from('events').select('id, title, event_date, event_type, notes, confidence, primary_location_id').order('event_date', { ascending: true }),
       db.from('persons').select('id, full_name, category').eq('is_victim', false).order('full_name', { ascending: true })
     ]);
     tlAllEvents = evRes.data || [];
@@ -257,7 +260,7 @@ function renderTimeline(events, personName) {
         <div class="tl-event-row" data-event-id="${ev.id}">
           <div class="tl-event-date">${date}</div>
           <div class="tl-event-body">
-            <div class="tl-event-title">${ev.event_name || 'Undocumented Event'}</div>
+            <div class="tl-event-title">${ev.title || 'Undocumented Event'}</div>
             ${ev.notes ? `<div class="tl-event-notes">${ev.notes}</div>` : ''}
             <div style="display:flex;gap:0.4rem;flex-wrap:wrap;align-items:center;">
               ${evType ? `<span class="tl-event-type-badge">${evType}</span>` : ''}
@@ -308,8 +311,8 @@ async function initLegalTracker() {
   const el = document.getElementById('legalContent');
   try {
     const { data, error } = await db.from('legal_proceedings')
-      .select('*')
-      .order('start_date', { ascending: false });
+      .select('*, persons(full_name)')
+      .order('initiated_date', { ascending: false });
     if (error) throw error;
     allLegal = data || [];
     renderLegal(allLegal);
@@ -318,11 +321,21 @@ async function initLegalTracker() {
   }
 }
 
+function getLegalDisplayCat(p) {
+  const pt = p.proceeding_type || '';
+  const dbStatus = p.status || 'resolved';
+  if (pt.includes('conviction') || pt === 'plea_deal' || pt === 'criminal_charge') return 'conviction';
+  if (pt.includes('settlement') || pt === 'civil_lawsuit') return 'settlement';
+  if (pt === 'immunity_granted') return 'immunity';
+  if (dbStatus === 'active' || dbStatus === 'ongoing') return 'active';
+  return 'resolved';
+}
+
 function filterLegal(status, btn) {
   activeLegalFilter = status;
   document.querySelectorAll('.legal-filter-btn').forEach(el => el.classList.remove('active'));
   if (btn) btn.classList.add('active');
-  const filtered = status === 'all' ? allLegal : allLegal.filter(l => l.status === status);
+  const filtered = status === 'all' ? allLegal : allLegal.filter(l => getLegalDisplayCat(l) === status);
   renderLegal(filtered);
 }
 
@@ -334,29 +347,42 @@ function renderLegal(proceedings) {
     return;
   }
 
-  const totalPenalty = proceedings.reduce((sum, p) => sum + (p.financial_penalty || 0), 0);
-  const summaryBar = totalPenalty > 0 ? `<div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0.75rem 1rem;margin-bottom:1.25rem;display:flex;gap:2rem;flex-wrap:wrap;">
+  const totalPenalty = proceedings.reduce((sum, p) => sum + (Number(p.financial_penalty) || 0), 0);
+  const penaltyDisplay = totalPenalty > 0 ? `<div><div style="font-family:'Montserrat',sans-serif;font-size:1.2rem;font-weight:700;">$${(totalPenalty/1000000).toFixed(0)}M+</div><div style="font-family:'Montserrat',sans-serif;font-size:0.6rem;color:var(--text-tertiary);letter-spacing:0.08em;text-transform:uppercase;">Financial penalties</div></div>` : '';
+  const summaryBar = `<div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0.75rem 1rem;margin-bottom:1.25rem;display:flex;gap:2rem;flex-wrap:wrap;">
     <div><div style="font-family:'Montserrat',sans-serif;font-size:1.2rem;font-weight:700;">${proceedings.length}</div><div style="font-family:'Montserrat',sans-serif;font-size:0.6rem;color:var(--text-tertiary);letter-spacing:0.08em;text-transform:uppercase;">Proceedings</div></div>
-    <div><div style="font-family:'Montserrat',sans-serif;font-size:1.2rem;font-weight:700;">$${(totalPenalty/1000000).toFixed(0)}M+</div><div style="font-family:'Montserrat',sans-serif;font-size:0.6rem;color:var(--text-tertiary);letter-spacing:0.08em;text-transform:uppercase;">Financial penalties</div></div>
-  </div>` : '';
+    ${penaltyDisplay}
+  </div>`;
 
   const cards = proceedings.map(p => {
-    const status = p.status || 'closed';
-    const startYr = p.start_date ? p.start_date.substring(0,4) : '';
-    const endYr = p.end_date ? p.end_date.substring(0,4) : '';
+    // Map DB status/proceeding_type to display category
+    const dbStatus = p.status || 'resolved';
+    const pt = p.proceeding_type || '';
+    // Derive display category from proceeding_type for meaningful filtering
+    let displayCat;
+    if (pt.includes('conviction') || pt === 'plea_deal' || pt === 'criminal_charge') displayCat = 'conviction';
+    else if (pt.includes('settlement') || pt === 'civil_lawsuit') displayCat = 'settlement';
+    else if (pt === 'immunity_granted') displayCat = 'immunity';
+    else if (dbStatus === 'active' || dbStatus === 'ongoing') displayCat = 'active';
+    else displayCat = 'resolved';
+
+    const startYr = p.initiated_date ? p.initiated_date.substring(0,4) : '';
+    const endYr = p.resolved_date ? p.resolved_date.substring(0,4) : '';
     const dateRange = startYr ? (endYr && endYr !== startYr ? `${startYr}–${endYr}` : startYr) : '';
-    const penalty = p.financial_penalty ? `$${(p.financial_penalty/1000000).toFixed(1)}M settlement` : '';
-    const court = p.court || '';
-    const meta = [dateRange, court, penalty].filter(Boolean);
+    const penalty = p.financial_penalty ? `$${(Number(p.financial_penalty)/1000000).toFixed(1)}M` : '';
+    const court = p.jurisdiction || '';
+    const personName = p.persons?.full_name || '';
+    const meta = [personName, dateRange, court, penalty].filter(Boolean);
+    const description = p.epstein_nexus || p.source_description || '';
     return `
-      <div class="legal-card" data-status="${status}">
-        <div class="legal-status-dot ${status}"></div>
+      <div class="legal-card" data-status="${displayCat}">
+        <div class="legal-status-dot ${displayCat}"></div>
         <div class="legal-card-body">
-          <div class="legal-card-title">${p.case_name || p.case_number || 'Untitled Proceeding'}</div>
+          <div class="legal-card-title">${p.title || p.case_number || 'Untitled Proceeding'}</div>
           <div class="legal-card-meta">${meta.map(m => `<span>${m}</span>`).join('')}</div>
-          ${p.description ? `<div class="legal-card-notes">${p.description}</div>` : ''}
+          ${description ? `<div class="legal-card-notes">${description}</div>` : ''}
         </div>
-        <span class="legal-status-label ${status}">${cap(status)}</span>
+        <span class="legal-status-label ${displayCat}">${cap(displayCat)}</span>
       </div>`;
   }).join('');
 
@@ -723,17 +749,7 @@ kbd {
 .sidebar-section { margin-bottom: 1.6rem; }
 
 /* QUERY TYPE / CATEGORY / RELATIONSHIP headers */
-.sidebar-label {
-  font-family: 'Montserrat', sans-serif !important;
-  font-weight: 400 !important;
-  font-size: 0.68rem !important;
-  color: #3B3B3B !important;
-  letter-spacing: 0.12em !important;
-  text-transform: uppercase !important;
-  margin-bottom: 0.6rem;
-  padding: 0 0.25rem;
-  text-align: center;
-}
+
 
 /* Individual nav items — SemiBold */
 .nav-item {
@@ -1805,6 +1821,71 @@ kbd {
 .legal-status-label.settlement { background: rgba(26,92,138,0.1); color: #1A5C8A; border: 1px solid rgba(26,92,138,0.25); }
 .legal-status-label.immunity   { background: rgba(138,90,26,0.1); color: #8A5A1A; border: 1px solid rgba(138,90,26,0.25); }
 .legal-status-label.closed     { background: rgba(0,0,0,0.04); color: #888; border: 1px solid var(--border); }
+.legal-status-label.resolved   { background: rgba(0,0,0,0.04); color: #888; border: 1px solid var(--border); }
+
+
+/* ── SIDEBAR GROUP LABELS (section headers like INVESTIGATE) ── */
+.sidebar-label {
+  font-family: 'Montserrat', sans-serif !important;
+  font-weight: 700 !important;
+  font-size: 0.58rem !important;
+  color: var(--text-tertiary) !important;
+  letter-spacing: 0.16em !important;
+  text-transform: uppercase !important;
+  margin-bottom: 0.4rem;
+  padding: 0 0.25rem;
+  text-align: left !important;
+}
+
+/* ── SIDEBAR FOOTER ── */
+.sidebar-footer {
+  padding: 1.5rem 0.75rem 2rem;
+  margin-top: auto;
+  border-top: 1px solid var(--border);
+  text-align: center;
+}
+.sidebar-footer-link {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.sidebar-footer-link:hover { color: var(--text-primary); }
+
+/* ── MAIN FOOTER ── */
+.main-footer {
+  padding: 3rem 1.75rem 2.5rem;
+  text-align: center;
+  border-top: 1px solid var(--border);
+  margin-top: 3rem;
+}
+.main-footer-link {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.main-footer-link:hover { color: var(--text-primary); }
+
+/* ── SIDEBAR: make it flex column so footer sticks to bottom ── */
+.sidebar-left {
+  display: flex;
+  flex-direction: column;
+}
+.sidebar-left .sidebar-section {
+  flex-shrink: 0;
+}
+.sidebar-section:last-of-type {
+  flex-shrink: 0;
+}
 
 </style>
 </head>
@@ -1839,18 +1920,23 @@ kbd {
   <!-- LEFT SIDEBAR -->
   <aside class="sidebar-left">
     <div class="sidebar-section">
-      <div class="sidebar-label">Query Type</div>
-      <div class="nav-item active" id="navProfiles" onclick="switchTab('profiles'); document.getElementById('searchInput').value=''; document.getElementById('globalSearchClear').style.display='none'; if(typeof closeGSD==='function')closeGSD(); showLanding();"><span>Person Profile</span></div>
+      <div class="sidebar-label">Investigate</div>
+      <div class="nav-item active" id="navProfiles" onclick="switchTab('profiles'); document.getElementById('searchInput').value=''; document.getElementById('globalSearchClear').style.display='none'; if(typeof closeGSD==='function')closeGSD(); showLanding();"><span>Person Profiles</span></div>
+      <div class="nav-item" id="navTimeline" onclick="switchTab('timeline')" style="cursor:pointer;"><span>Evidence Timeline</span></div>
+      <div class="nav-item" id="navConnections" onclick="window.location.href='connections.html'" style="cursor:pointer;"><span>Connections</span><span style="margin-left:0.4rem;background:#CC2200;color:#fff;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.48rem;letter-spacing:0.08em;text-transform:uppercase;padding:1px 5px;border-radius:3px;vertical-align:middle;">Soon</span></div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Explore the Record</div>
       <div class="nav-item" id="navFlights" onclick="switchTab('flights')" style="cursor:pointer;"><span>Flight Manifests</span></div>
+      <div class="nav-item" id="navUnidentified" onclick="switchTab('unidentified')" style="cursor:pointer;"><span>Unidentified Passengers</span></div>
+      <div class="nav-item" id="navDocuments" onclick="switchTab('documents')" style="cursor:pointer;"><span>Document Library</span></div>
+      <div class="nav-item" id="navLegal" onclick="switchTab('legal')" style="cursor:pointer;"><span>Legal Tracker</span></div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Visualize</div>
       <div class="nav-item" onclick="window.location.href='graph.html'" style="cursor:pointer;"><span>Network Graph</span></div>
       <div class="nav-item" onclick="window.location.href='money.html'" style="cursor:pointer;"><span>Money Map</span></div>
-      <div class="nav-item" id="navUnidentified" onclick="switchTab('unidentified')" style="cursor:pointer;"><span>Unidentified</span></div>
       <div class="nav-item" id="navLocations" onclick="switchTab('locations')" style="cursor:pointer;"><span>Location Intel</span></div>
-      <div class="nav-item" id="navDocuments" onclick="switchTab('documents')" style="cursor:pointer;"><span>Document Library</span></div>
-      <div class="nav-item" id="navTimeline" onclick="switchTab('timeline')" style="cursor:pointer;"><span>Evidence Timeline</span></div>
-      <div class="nav-item" id="navLegal" onclick="switchTab('legal')" style="cursor:pointer;"><span>Legal Tracker</span></div>
-      <div class="nav-item" onclick="window.location.href='about.html'" style="cursor:pointer;"><span>About</span></div>
-      <div class="nav-item" id="navConnections" style="cursor:default;opacity:0.45;pointer-events:none;"><span>Connections</span><span style="margin-left:0.4rem;background:#CC2200;color:#fff;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.48rem;letter-spacing:0.08em;text-transform:uppercase;padding:1px 5px;border-radius:3px;vertical-align:middle;">Soon</span></div>
     </div>
     <div class="sidebar-section" id="sidebarFilters">
       <div class="sidebar-label">Category</div>
@@ -1872,7 +1958,11 @@ kbd {
       <div class="nav-item filter-item" data-filter="relationship" data-value="mentioned_only"><span>Mentioned Only</span></div>
       <div class="nav-item filter-item" data-filter="relationship" data-value="legal_counsel"><span>Legal Counsel</span></div>
     </div>
-  </aside>
+    <!-- SIDEBAR FOOTER -->
+  <div class="sidebar-footer">
+    <a href="about.html" class="sidebar-footer-link">About</a>
+  </div>
+</aside>
 
   <!-- MAIN — hosts all tab panels -->
   <main class="main" id="main">
@@ -2082,8 +2172,9 @@ kbd {
           <button class="legal-filter-btn active" data-status="all" onclick="filterLegal('all',this)">All</button>
           <button class="legal-filter-btn" data-status="active" onclick="filterLegal('active',this)">Active / Ongoing</button>
           <button class="legal-filter-btn" data-status="conviction" onclick="filterLegal('conviction',this)">Convictions</button>
-          <button class="legal-filter-btn" data-status="settlement" onclick="filterLegal('settlement',this)">Settlements</button>
+          <button class="legal-filter-btn" data-status="settlement" onclick="filterLegal('settlement',this)">Civil / Settlements</button>
           <button class="legal-filter-btn" data-status="immunity" onclick="filterLegal('immunity',this)">Immunity</button>
+          <button class="legal-filter-btn" data-status="resolved" onclick="filterLegal('resolved',this)">Resolved</button>
         </div>
         <div id="legalContent">
           <div class="state-msg"><div class="state-label">LOADING PROCEEDINGS…</div></div>
@@ -2091,8 +2182,11 @@ kbd {
       </div>
     </div>
 
-
-  </main>
+  <!-- MAIN FOOTER -->
+  <footer class="main-footer">
+    <a href="about.html" class="main-footer-link">About</a>
+  </footer>
+</main>
 
   <!-- RIGHT PANEL -->
   <aside class="sidebar-right" id="rightPanel">
@@ -2160,18 +2254,26 @@ kbd {
   <div class="drawer-panel">
     <div class="drawer-close"><button onclick="closeDrawer()">✕ Close</button></div>
     <div class="sidebar-section">
-      <div class="sidebar-label">Query Type</div>
-      <div class="nav-item" onclick="switchTab('profiles'); document.getElementById('searchInput').value=''; document.getElementById('globalSearchClear').style.display='none'; if(typeof closeGSD==='function')closeGSD(); showLanding(); closeDrawer()"><span>Person Profile</span></div>
+      <div class="sidebar-label">Investigate</div>
+      <div class="nav-item" onclick="switchTab('profiles'); document.getElementById('searchInput').value=''; document.getElementById('globalSearchClear').style.display='none'; if(typeof closeGSD==='function')closeGSD(); showLanding(); closeDrawer()"><span>Person Profiles</span></div>
+      <div class="nav-item" onclick="switchTab('timeline');closeDrawer()"><span>Evidence Timeline</span></div>
+      <div class="nav-item" onclick="window.location.href='connections.html'" style="cursor:pointer;"><span>Connections</span><span style="margin-left:0.4rem;background:#CC2200;color:#fff;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.48rem;letter-spacing:0.08em;text-transform:uppercase;padding:1px 5px;border-radius:3px;vertical-align:middle;">Soon</span></div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Explore the Record</div>
       <div class="nav-item" onclick="switchTab('flights');closeDrawer()"><span>Flight Manifests</span></div>
+      <div class="nav-item" onclick="switchTab('unidentified');closeDrawer()"><span>Unidentified Passengers</span></div>
+      <div class="nav-item" onclick="switchTab('documents');closeDrawer()"><span>Document Library</span></div>
+      <div class="nav-item" onclick="switchTab('legal');closeDrawer()"><span>Legal Tracker</span></div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Visualize</div>
       <div class="nav-item" onclick="window.location.href='graph.html'"><span>Network Graph</span></div>
       <div class="nav-item" onclick="window.location.href='money.html'"><span>Money Map</span></div>
-      <div class="nav-item" onclick="switchTab('unidentified');closeDrawer()"><span>Unidentified</span></div>
       <div class="nav-item" onclick="switchTab('locations');closeDrawer()"><span>Location Intel</span></div>
-      <div class="nav-item" onclick="switchTab('documents');closeDrawer()"><span>Document Library</span></div>
-      <div class="nav-item" onclick="switchTab('timeline');closeDrawer()"><span>Evidence Timeline</span></div>
-      <div class="nav-item" onclick="switchTab('legal');closeDrawer()"><span>Legal Tracker</span></div>
-      <div class="nav-item" onclick="window.location.href='about.html';closeDrawer()"><span>About</span></div>
-      <div class="nav-item" style="cursor:default;opacity:0.45;pointer-events:none;"><span>Connections</span><span style="margin-left:0.4rem;background:#CC2200;color:#fff;font-family:'Montserrat',sans-serif;font-weight:700;font-size:0.48rem;letter-spacing:0.08em;text-transform:uppercase;padding:1px 5px;border-radius:3px;vertical-align:middle;">Soon</span></div>
+    </div>
+    <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);text-align:center;">
+      <a href="about.html" style="font-family:'Montserrat',sans-serif;font-size:0.72rem;color:var(--text-tertiary);text-decoration:none;letter-spacing:0.08em;text-transform:uppercase;">About</a>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-label">Category</div>
@@ -2408,8 +2510,8 @@ async function runGlobalSearch(q) {
         .ilike('title', `%${q}%`)
         .limit(4),
       db.from('events')
-        .select('id, event_name, event_date, location_id, event_type')
-        .ilike('event_name', `%${q}%`)
+        .select('id, title, event_date, primary_location_id, event_type')
+        .ilike('title', `%${q}%`)
         .limit(4),
       db.from('flights')
         .select('id, flight_date, origin, destination, tail_number')
@@ -2474,7 +2576,7 @@ async function runGlobalSearch(q) {
         html += `<div class="gsd-item" data-type="event" data-id="${ev.id}">
           <span class="gsd-icon">📅</span>
           <div class="gsd-main">
-            <div class="gsd-name">${highlightMatch(ev.event_name, q)}</div>
+            <div class="gsd-name">${highlightMatch(ev.title, q)}</div>
             ${sub ? `<div class="gsd-sub">${sub}</div>` : ''}
           </div>
           <span class="gsd-badge event">Event</span>
