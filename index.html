@@ -455,7 +455,7 @@ body {
 .app {
   display: grid;
   grid-template-columns: 210px 1fr 260px;
-  grid-template-rows: 64px 1fr;
+  grid-template-rows: 128px 1fr;
   height: 100vh;
   overflow: hidden;
 }
@@ -479,8 +479,10 @@ body {
   grid-row: 2;
   overflow-y: auto;
   border-right: 1px solid var(--border);
-  padding: 6.5rem 0.75rem 1.1rem;
+  padding: 3.5rem 0.75rem 1.1rem;
   background: var(--bg-secondary);
+  display: flex;
+  flex-direction: column;
 }
 .main {
   grid-column: 2;
@@ -1834,7 +1836,7 @@ kbd {
   text-transform: uppercase !important;
   margin-bottom: 0.4rem;
   padding: 0 0.25rem;
-  text-align: left !important;
+  text-align: center !important;
 }
 
 /* ── SIDEBAR FOOTER ── */
@@ -2183,9 +2185,6 @@ kbd {
     </div>
 
   <!-- MAIN FOOTER -->
-  <footer class="main-footer">
-    <a href="about.html" class="main-footer-link">About</a>
-  </footer>
 </main>
 
   <!-- RIGHT PANEL -->
@@ -2274,26 +2273,6 @@ kbd {
     </div>
     <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);text-align:center;">
       <a href="about.html" style="font-family:'Montserrat',sans-serif;font-size:0.72rem;color:var(--text-tertiary);text-decoration:none;letter-spacing:0.08em;text-transform:uppercase;">About</a>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">Category</div>
-      <div class="nav-item filter-item-m" data-filter="category" data-value="finance"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#2E6F40;margin-right:0.5rem;flex-shrink:0;"></span>Finance</span></div>
-      <div class="nav-item filter-item-m" data-filter="category" data-value="politics"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#FF2C2C;margin-right:0.5rem;flex-shrink:0;"></span>Politics</span></div>
-      <div class="nav-item filter-item-m" data-filter="category" data-value="technology"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#000080;margin-right:0.5rem;flex-shrink:0;"></span>Technology</span></div>
-      <div class="nav-item filter-item-m" data-filter="category" data-value="legal"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#FFEF00;margin-right:0.5rem;flex-shrink:0;border:1px solid #ccc;"></span>Legal</span></div>
-      <div class="nav-item filter-item-m" data-filter="category" data-value="academia"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#2B1700;margin-right:0.5rem;flex-shrink:0;"></span>Academia</span></div>
-      <div class="nav-item filter-item-m" data-filter="category" data-value="entertainment"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#FF5C00;margin-right:0.5rem;flex-shrink:0;"></span>Entertainment</span></div>
-      <div class="nav-item filter-item-m" data-filter="category" data-value="royalty"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#FFC8D3;margin-right:0.5rem;flex-shrink:0;border:1px solid #ccc;"></span>Royalty</span></div>
-      <div class="nav-item filter-item-m" data-filter="category" data-value="media"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#00B9B3;margin-right:0.5rem;flex-shrink:0;"></span>Media</span></div>
-      <div class="nav-item filter-item-m" data-filter="category" data-value="other"><span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#FFA21F;margin-right:0.5rem;flex-shrink:0;"></span>Other</span></div>
-    </div>
-    <div class="sidebar-section">
-      <div class="sidebar-label">Relationship</div>
-      <div class="nav-item filter-item-m" data-filter="relationship" data-value="direct_contact"><span>Direct Contact</span></div>
-      <div class="nav-item filter-item-m" data-filter="relationship" data-value="employee"><span>Employee / Staff</span></div>
-      <div class="nav-item filter-item-m" data-filter="relationship" data-value="associate"><span>Associate</span></div>
-      <div class="nav-item filter-item-m" data-filter="relationship" data-value="mentioned_only"><span>Mentioned Only</span></div>
-      <div class="nav-item filter-item-m" data-filter="relationship" data-value="legal_counsel"><span>Legal Counsel</span></div>
     </div>
   </div>
 </div>
