@@ -371,6 +371,22 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(-
   white-space: nowrap;
 }
 .chip:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+.suggestion-chip {
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--text-primary);
+  transition: opacity 0.12s;
+  white-space: nowrap;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: var(--border-strong);
+}
+.suggestion-chip:hover {
+  text-decoration-color: var(--text-primary);
+  opacity: 0.7;
+}
 
 /* ── PROFILE CARDS ── */
 .profiles-grid { width: 100%; padding: 0.5rem 1.5rem 3rem; }
@@ -632,160 +648,7 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(-
 }
 
 /* ── UNIDENTIFIED PASSENGERS ── */
-#tabUnidentified .page-header {
-  width: 100%;
-  background: var(--bg);
-  border-bottom: 1px solid var(--border);
-  padding: 3rem 2rem 2.5rem;
-  box-sizing: border-box;
-}
-#tabUnidentified .header-inner {
-  max-width: 760px; margin: 0 auto;
-}
-#tabUnidentified .header-classification {
-  font-family: var(--font-sans); font-size: 0.68rem;
-  letter-spacing: 0.2em; text-transform: uppercase;
-  color: var(--text-tertiary); margin-bottom: 1.2rem;
-  display: flex; align-items: center; gap: 1rem;
-}
-#tabUnidentified .header-classification::before,
-#tabUnidentified .header-classification::after {
-  content: ''; flex: 1; height: 1px; background: var(--border);
-}
-#tabUnidentified .header-title {
-  font-family: var(--font-display); font-weight: 500;
-  font-size: clamp(1.6rem, 4vw, 2.6rem);
-  line-height: 1.05; letter-spacing: -0.02em;
-  margin-bottom: 1rem; color: var(--text-primary);
-}
-#tabUnidentified .header-title em { font-style: normal; color: var(--text-tertiary); }
-#tabUnidentified .header-desc {
-  font-size: 0.95rem; line-height: 1.65;
-  color: var(--text-secondary); max-width: 520px; margin-bottom: 1.75rem;
-}
-#tabUnidentified .header-stats { display: flex; gap: 2rem; flex-wrap: wrap; }
-#tabUnidentified .stat-item { display: flex; flex-direction: column; gap: 0.2rem; }
-#tabUnidentified .stat-num {
-  font-family: var(--font-display); font-size: 1.75rem; font-weight: 600;
-  color: var(--text-primary); line-height: 1;
-}
-#tabUnidentified .stat-label {
-  font-family: var(--font-sans); font-size: 0.62rem;
-  letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-tertiary);
-}
-#tabUnidentified .stat-divider { width: 1px; background: var(--border); align-self: stretch; }
-#tabUnidentified .methodology {
-  width: 100%; background: var(--bg);
-  border-bottom: 1px solid var(--border-mid); padding: 1rem 2rem;
-}
-#tabUnidentified .methodology-inner {
-  max-width: 760px; margin: 0 auto;
-  display: flex; align-items: flex-start; gap: 1rem;
-}
-#tabUnidentified .method-icon { font-size: 0.8rem; color: var(--text-tertiary); margin-top: 0.15rem; flex-shrink: 0; }
-#tabUnidentified .method-text { font-size: 0.82rem; line-height: 1.6; color: var(--text-secondary); }
-#tabUnidentified .method-text strong { color: var(--text-primary); font-weight: 600; }
-#tabUnidentified .u-main { width: 100%; max-width: 760px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
-#tabUnidentified .section-label {
-  font-family: var(--font-sans); font-size: 0.65rem;
-  letter-spacing: 0.18em; text-transform: uppercase;
-  color: var(--text-tertiary); margin-bottom: 1.5rem;
-  display: flex; align-items: center; gap: 0.75rem;
-}
-#tabUnidentified .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border-mid); }
-#tabUnidentified .featured-flight {
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 10px; padding: 1.5rem; margin-bottom: 1.5rem; position: relative;
-}
-#tabUnidentified .flight-card {
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 8px; padding: 1.1rem 1.25rem; margin-bottom: 0.6rem;
-}
-#tabUnidentified .flight-meta {
-  display: flex; flex-wrap: wrap; align-items: center;
-  gap: 0.6rem; margin-bottom: 0.75rem;
-}
-#tabUnidentified .flight-date {
-  font-family: var(--font-sans); font-size: 0.72rem;
-  font-weight: 700; color: var(--text-secondary); letter-spacing: 0.05em;
-}
-#tabUnidentified .flight-route {
-  font-family: var(--font-sans); font-size: 0.8rem; font-weight: 600;
-  color: var(--text-primary); display: flex; align-items: center; gap: 0.3rem;
-}
-#tabUnidentified .route-arrow { color: var(--text-tertiary); }
-#tabUnidentified .flight-route-name {
-  font-family: var(--font-body); font-size: 0.75rem; color: var(--text-tertiary);
-}
-#tabUnidentified .unknown-count-pill {
-  font-family: var(--font-sans); font-size: 0.6rem; font-weight: 700;
-  letter-spacing: 0.08em; text-transform: uppercase;
-  background: rgba(204,34,0,0.08); color: #cc2200;
-  padding: 0.15rem 0.45rem; border-radius: 3px;
-}
-#tabUnidentified .manifest-label {
-  font-family: var(--font-sans); font-size: 0.6rem; font-weight: 700;
-  letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--text-tertiary); margin-bottom: 0.5rem;
-}
-#tabUnidentified .passenger-list { display: flex; flex-direction: column; gap: 0.35rem; }
-#tabUnidentified .passenger-row {
-  display: flex; align-items: center; gap: 0.6rem;
-  padding: 0.3rem 0; font-family: var(--font-body); font-size: 0.82rem;
-  color: var(--text-primary); cursor: pointer;
-}
-#tabUnidentified .passenger-row:hover { color: var(--accent); }
-#tabUnidentified .pax-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
-#tabUnidentified .passenger-row.unnamed { color: var(--text-tertiary); font-style: italic; cursor: default; }
-#tabUnidentified .passenger-row.unnamed:hover { color: var(--text-tertiary); }
-#tabUnidentified .featured-stamp {
-  font-family: var(--font-sans); font-size: 0.58rem; font-weight: 700;
-  letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--text-tertiary); margin-bottom: 0.75rem;
-}
-#tabUnidentified .pattern-block {
-  margin-top: 3rem;
-  border-top: 1px solid var(--border); padding-top: 2rem;
-}
-#tabUnidentified .pattern-title {
-  font-family: var(--font-display); font-size: 1.1rem; font-weight: 600;
-  color: var(--text-primary); margin-bottom: 1.5rem;
-}
-#tabUnidentified .pattern-list { display: flex; flex-direction: column; gap: 1.25rem; }
-#tabUnidentified .pattern-item {
-  display: flex; gap: 1.25rem;
-  font-family: var(--font-body); font-size: 0.85rem;
-  color: var(--text-secondary); line-height: 1.6;
-}
-#tabUnidentified .pattern-num {
-  font-family: var(--font-sans); font-size: 0.65rem; font-weight: 700;
-  color: var(--text-tertiary); flex-shrink: 0; padding-top: 0.15rem;
-}
-#tabUnidentified .summary-section {
-  margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 2rem;
-}
-#tabUnidentified .summary-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
-  margin-top: 1.25rem;
-}
-#tabUnidentified .summary-cell {
-  background: var(--surface); border-radius: 8px; padding: 1rem;
-}
-#tabUnidentified .summary-cell-label {
-  font-family: var(--font-sans); font-size: 0.6rem; font-weight: 700;
-  letter-spacing: 0.1em; text-transform: uppercase;
-  color: var(--text-tertiary); margin-bottom: 0.5rem;
-}
-#tabUnidentified .summary-cell-value {
-  font-family: var(--font-body); font-size: 0.82rem;
-  color: var(--text-primary); line-height: 1.5;
-}
-#tabUnidentified .loading-state {
-  padding: 3rem 1rem; text-align: center;
-  font-family: var(--font-sans); font-size: 0.72rem;
-  font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--text-tertiary);
-}
+/* (styles now use design system inline) */
 
 /* ── FLIGHT MANIFESTS ── */
 .fm-row {
@@ -857,6 +720,16 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(-
 .loc-item:hover { background: var(--accent-dim); }
 .loc-item.active { background: var(--surface); font-weight: 600; }
 .loc-count { font-family: var(--font-sans); font-size: 0.65rem; color: var(--text-tertiary); font-weight: 600; }
+.loc-card { padding: 0.65rem 1rem; cursor: pointer; border-bottom: 1px solid var(--border); transition: background 0.1s; }
+.loc-card:hover { background: var(--accent-dim); }
+.loc-card.active { background: rgba(26,26,26,0.06); border-left: 2px solid var(--accent); }
+.loc-card-name { font-family: var(--font-body); font-size: 0.85rem; font-weight: 500; color: var(--text-primary); margin-bottom: 0.15rem; }
+.loc-card-sub { font-family: var(--font-sans); font-size: 0.65rem; color: var(--text-tertiary); letter-spacing: 0.04em; margin-bottom: 0.35rem; }
+.loc-card-stats { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.loc-stat-pill { font-family: var(--font-sans); font-size: 0.58rem; font-weight: 600; letter-spacing: 0.06em; color: var(--text-secondary); background: var(--accent-dim); padding: 0.15rem 0.4rem; border-radius: 3px; }
+.loc-owned-badge { font-family: var(--font-sans); font-size: 0.58rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #cc2200; background: rgba(204,34,0,0.08); padding: 0.15rem 0.4rem; border-radius: 3px; }
+.loc-detail-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 0.75rem; color: var(--text-tertiary); font-family: var(--font-sans); font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.loc-detail-empty-icon { font-size: 1.5rem; }
 
 /* ── CONNECTIONS TAB ── */
 .conn-layout { display: flex; gap: 2rem; padding: 2rem; max-width: 780px; margin: 0 auto; }
@@ -1018,32 +891,27 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(-
     <!-- ── TAB: UNIDENTIFIED ── -->
     <!-- ── TAB: UNIDENTIFIED ── -->
     <div class="tab-panel" id="tabUnidentified" style="width:100%;">
-      <!-- Dark header band -->
-      <div class="page-header">
-        <div class="header-inner">
-          <div class="header-classification">Classified</div>
-          <h1 class="header-title">Unidentified <em>passengers</em></h1>
-          <p class="header-desc">Flight records from the Epstein archive contain entries logged only as "FEMALE" or "MALE" — no names, no identities. These are those entries.</p>
-          <div class="header-stats">
-            <div class="stat-item">
-              <span class="stat-num" id="statFlights">—</span>
-              <span class="stat-label">Flights with unnamed passengers</span>
-            </div>
-            <div class="stat-divider"></div>
-            <div class="stat-item">
-              <span class="stat-num" id="statPersons">—</span>
-              <span class="stat-label">Unidentified individuals</span>
-            </div>
+      <div style="max-width:780px;margin:0 auto;padding:1.5rem 1.75rem;">
+
+        <div class="subject-name" style="font-size:2.8rem;margin-bottom:0.5rem;">Unidentified Passengers</div>
+        <div style="font-family:'Montserrat',sans-serif;font-size:0.78rem;color:var(--text-secondary);margin-bottom:2rem;letter-spacing:0.06em;">Flight records logged only as "FEMALE" or "MALE" — no names, no identities</div>
+
+        <!-- Stats row -->
+        <div style="display:flex;gap:3rem;margin-bottom:2rem;padding-bottom:2rem;border-bottom:1px solid var(--border);">
+          <div>
+            <div style="font-family:'neue-haas-grotesk-display',sans-serif;font-size:2.2rem;font-weight:600;color:var(--text-primary);line-height:1;" id="statFlights">—</div>
+            <div style="font-family:'Montserrat',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-tertiary);margin-top:0.25rem;">Flights with unnamed passengers</div>
+          </div>
+          <div>
+            <div style="font-family:'neue-haas-grotesk-display',sans-serif;font-size:2.2rem;font-weight:600;color:var(--text-primary);line-height:1;" id="statPersons">—</div>
+            <div style="font-family:'Montserrat',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-tertiary);margin-top:0.25rem;">Unidentified individuals</div>
           </div>
         </div>
-      </div>
-      <!-- Methodology band -->
-      <div class="methodology">
-        <div class="methodology-inner">
-          <span class="method-icon">◆</span>
-          <p class="method-text"><strong>Source and methodology:</strong> All entries are drawn directly from pilot logbooks entered as evidence in <em>United States v. Maxwell</em> (SDNY, 2021). Passenger names were logged by the pilot. Entries appearing only as "FEMALE" or "MALE" without further identification are displayed here exactly as recorded. No editorial judgment has been applied.</p>
+
+        <!-- Methodology note -->
+        <div style="font-family:'Inter',sans-serif;font-size:0.8rem;color:var(--text-secondary);line-height:1.65;margin-bottom:2rem;padding-bottom:2rem;border-bottom:1px solid var(--border);">
+          <strong style="color:var(--text-primary);">Source and methodology:</strong> All entries are drawn directly from pilot logbooks entered as evidence in <em>United States v. Maxwell</em> (SDNY, 2021). Passenger names were logged by the pilot. Entries appearing only as "FEMALE" or "MALE" without further identification are displayed here exactly as recorded. No editorial judgment has been applied.
         </div>
-      </div>
       <!-- Flight cards injected here -->
       <div class="u-main">
         <div id="uFlightContainer">
@@ -1158,7 +1026,7 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(-
     <!-- ── TAB: DOCUMENT LIBRARY ── -->
     <!-- ── TAB: DOCUMENT LIBRARY ── -->
     <div class="tab-panel" id="tabDocuments" style="width:100%;">
-      <div id="docLibContent" style="padding:1.5rem 1.75rem;max-width:780px;margin:0 auto;">
+      <div id="docLibContent" style="padding:1.5rem 1.75rem;max-width:780px;margin:0 auto;width:100%;">
         <div class="state-msg"><div class="state-label">LOADING ARCHIVE…</div></div>
       </div>
     </div>
@@ -1186,8 +1054,8 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(-
     <!-- ── TAB: LEGAL TRACKER ── -->
     <!-- ── TAB: LEGAL TRACKER ── -->
     <div class="tab-panel" id="tabLegal" style="width:100%;">
-      <div style="max-width:780px;margin:0 auto;padding:1.5rem 1.75rem;">
-        <div class="subject-name" style="font-size:1.6rem;margin-bottom:0.25rem;">Legal Tracker</div>
+      <div style="max-width:780px;margin:0 auto;padding:1.5rem 1.75rem;width:100%;">
+        <div class="subject-name" style="font-size:2.8rem;margin-bottom:0.5rem;">Legal Tracker</div>
         <div style="font-family:'Montserrat',sans-serif;font-size:0.78rem;color:var(--text-tertiary);margin-bottom:1.25rem;letter-spacing:0.06em;">Active proceedings, convictions, settlements, and immunity agreements</div>
         <div class="legal-status-filters" id="legalFilters">
           <button class="legal-filter-btn active" data-status="all" onclick="filterLegal('all',this)">All</button>
