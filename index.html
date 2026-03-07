@@ -388,6 +388,16 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(-
   opacity: 0.7;
 }
 
+/* landing-suggestions = same as suggestion-chips container */
+.landing-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  max-width: 580px;
+}
+
 /* ── PROFILE CARDS ── */
 .profiles-grid { width: 100%; padding: 0.5rem 1.5rem 3rem; }
 .profile-card {
@@ -963,6 +973,8 @@ html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(-
         </div>
       </div>
     </div>
+
+    </div><!-- /tabUnidentified -->
 
     <!-- ── TAB: CONNECTIONS ── -->
     <!-- ── TAB: CONNECTIONS ── -->
@@ -2679,14 +2691,19 @@ function connUpdateSidebar(personA, personB, pathResult) {
 }
 function cap(str) { if (!str) return ''; return str.charAt(0).toUpperCase() + str.slice(1); }
 
-// Handle ?search= and ?tab= params
-(function() {
+// Handle ?search= and ?tab= params — run after DOM ready
+document.addEventListener('DOMContentLoaded', function() {
   const params = new URLSearchParams(window.location.search);
   const s = params.get('search');
   const t = params.get('tab');
   if (t) switchTab(t);
-  if (s) { searchInput.value = s; doSearch(s); }
-})();
+  if (s) {
+    const si = document.getElementById('searchInput');
+    if (si) { si.value = s; doSearch(s); }
+  }
+  // Pre-load global search data
+  if (typeof loadGlobalSearchData === 'function') loadGlobalSearchData();
+});
 
 // ════════════════════════════════════════
 // ── UNIDENTIFIED TAB JS ──
